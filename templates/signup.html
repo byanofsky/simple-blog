@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>{{ page_title }}</h1>
+
+<!-- TODO: error styling -->
+<form method="post">
+    <label>
+        <div>Username</div>
+        <input type="text" name="username" value="{{ username }}">
+        {% if errors and errors.username %}
+            {{ errors.username }}
+        {% endif %}
+    </label>
+
+    <label>
+        <div>Password</div>
+        <input type="password" name="password">
+        {% if errors and errors.password %}
+            {{ errors.password }}
+        {% endif %}
+    </label>
+
+    <label>
+        <div>Verify Password</div>
+        <input type="password" name="verify">
+        {% if errors and errors.verify %}
+            {{ errors.verify }}
+        {% endif %}
+    </label>
+
+    <label>
+        <div>Email (optional)</div>
+        <input type="email" name="email" value="{{ email }}">
+        {% if errors and errors.email %}
+            {{ errors.email }}
+        {% endif %}
+    </label>
+
+    <div>
+        <input type="submit">
+    </div>
+</form>
+{% endblock %}

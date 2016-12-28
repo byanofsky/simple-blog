@@ -1,7 +1,9 @@
 import os
 import jinja2
 import webapp2
+import validate
 from google.appengine.ext import db
+from datacls import *
 
 # Jinja templating setup
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
@@ -11,6 +13,9 @@ jinja_env = jinja2.Environment(
 )
 
 class Handler(webapp2.RequestHandler):
+    # TODO: can we have a config file for this?
+    site_title = "Simple Blog"
+
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
@@ -19,20 +24,66 @@ class Handler(webapp2.RequestHandler):
         return t.render(params)
 
     def render(self, template, **kw):
-        self.write(self.render_str(template, **kw))
+        self.write(self.render_str(
+            template,
+            page_title=self.get_page_title(),
+            seo_title=self.get_seo_title(),
+            **kw
+        ))
 
-    def get_url(self, name):
+    def get_seo_title(self):
+        if hasattr(self, 'page_title') and self.page_title:
+            return self.page_title + " - " + self.site_title
+        else:
+            return self.site_title
+
+    def get_page_title(self):
+        if hasattr(self, 'page_title') and self.page_title:
+            return self.page_title
+        else:
+            return self.site_title
+
+    def get_url(self):
         return webapp2.uri_for(name)
+
+    def get_user(self):
+        # if user cookie, return user id
+        pass
+
+
+    def intialize(self, request, response):
+        super().initialize(request, response)
 
 class FrontPageHandler(Handler):
     def get(self):
-        # posts = Post.all().order("-created").run(limit=10)
-        # self.render("front.html", posts=posts)
-        self.write("hello")
+        posts = Post.query().order(-Post.created).fetch_page(10)
+        self.render('frontpage.html', posts=posts)
+
+class SignUpHandler(Handler):
+    page_title = 'Signup'
+
+    def get(self):
+        self.render('signup.html')
+
+    def post(self):
+        un = self.request.get('username')
+        pw = self.request.get('password')
+        verify = self.request.get('verify')
+        email = self.request.get('email')
+
+        # Validate signup
+        errors = validate.signup_errors(un, pw, verify, email)
+
+        # Does user exist
+
+        if errors:
+            self.render('signup.html', username=un, email=email, errors=errors)
+        else:
+            self.write('success')
 
 app = webapp2.WSGIApplication([
     webapp2.Route('/', handler=FrontPageHandler, name='frontpage'),
-    # webapp2.Route('/signup', handler=SignUpHandler, name='signup'),
+    webapp2.Route('/signup', handler=SignUpHandler, name='signup'),
     # webapp2.Route('/welcome', handler=WelcomeHandler, name='welcome'),
     # webapp2.Route('/login', handler=LoginHandler, name='login'),
     # webapp2.Route('/logout', handler=LogoutHandler, name='logout'),
