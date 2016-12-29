@@ -97,6 +97,8 @@ class SignUpHandler(Handler):
             self.redirect(self.get_url('welcome'))
 
 class WelcomeHandler(Handler):
+    page_title = 'Welcome'
+
     def get(self):
         if not self.u_id:
             self.redirect(self.get_url('signup'))
