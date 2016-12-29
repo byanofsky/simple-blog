@@ -47,9 +47,13 @@ class Handler(webapp2.RequestHandler):
     def get_url(self, name):
         return webapp2.uri_for(name)
 
-    def get_user(self):
-        # if user cookie, return user id
-        pass
+    # if user cookie, return user id
+    def get_user_id(self):
+        u_cookie = self.request.cookies.get('user_id')
+        if u_cookie:
+            return auth.check_secure_val(u_cookie)
+        else:
+            return None
 
     def intialize(self, request, response):
         super().initialize(request, response)
@@ -95,11 +99,10 @@ class SignUpHandler(Handler):
 
 class WelcomeHandler(Handler):
     def get(self):
-        u_cookie = self.request.cookies.get('user_id')
-        if not u_cookie:
+        u_id = self.get_user_id()
+        if not u_id:
             self.redirect(self.get_url('signup'))
         else:
-            u_id = auth.check_secure_val(u_cookie)
             displayname = User.get_display_name(u_id)
             self.render('welcome.html', displayname=displayname)
 
