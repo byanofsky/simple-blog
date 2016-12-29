@@ -55,8 +55,9 @@ class Handler(webapp2.RequestHandler):
         else:
             return None
 
-    def intialize(self, request, response):
-        super().initialize(request, response)
+    def initialize(self, request, response):
+        super(Handler, self).initialize(request, response)
+        self.u_id = self.get_user_id()
 
 class FrontPageHandler(Handler):
     def get(self):
@@ -92,18 +93,17 @@ class SignUpHandler(Handler):
                 errors=errors)
         else:
             u_key = User.create(email, pw, displayname)
-            # TODO: can we move cooki creation to User model class?
+            # TODO: can we move cookie creation to User model class?
             u_cookie = auth.make_secure_val(str(u_key.id()))
             self.response.set_cookie('user_id', u_cookie)
             self.redirect(self.get_url('welcome'))
 
 class WelcomeHandler(Handler):
     def get(self):
-        u_id = self.get_user_id()
-        if not u_id:
+        if not self.u_id:
             self.redirect(self.get_url('signup'))
         else:
-            displayname = User.get_display_name(u_id)
+            displayname = User.get_display_name(self.u_id)
             self.render('welcome.html', displayname=displayname)
 
 app = webapp2.WSGIApplication([
