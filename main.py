@@ -13,6 +13,8 @@ jinja_env = jinja2.Environment(
     autoescape = True,
 )
 
+# TODO: can we move these classes to their own files and not reimport?
+
 class Handler(webapp2.RequestHandler):
     # TODO: can we have a config file for this?
     site_title = "Simple Blog"
