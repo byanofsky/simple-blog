@@ -12,11 +12,11 @@ class Post(ndb.Model):
     last_modified = ndb.DateTimeProperty(auto_now = True)
 
 class User(ndb.Model):
-    username = ndb.StringProperty(required = True)
+    email = ndb.StringProperty(required = True)
+    displayname = ndb.StringProperty(required = False)
     password = ndb.StringProperty(required = True)
-    email = ndb.StringProperty(required = False)
     created = ndb.DateTimeProperty(auto_now_add = True)
-    
+
     # @classmethod
     # def check_user_cookie(cls):
     #     return check_secure_val
@@ -26,11 +26,11 @@ class User(ndb.Model):
     #     return cls.query().order(cls.username)
 
     @classmethod
-    def create(cls, un, pw, email):
+    def create(cls, email, pw, displayname):
         hashed_pw = make_pw_hash(pw)
-        u = cls(username=un, password=hashed_pw, email=email )
+        u = cls(email=email, password=hashed_pw, displayname=displayname )
         return u.put()
 
     @classmethod
-    def exists(cls, un):
-        return cls.query(cls.username == un).fetch()
+    def exists(cls, email):
+        return cls.query(cls.email == email).fetch()

@@ -66,23 +66,28 @@ class SignUpHandler(Handler):
         self.render('signup.html')
 
     def post(self):
-        un = self.request.get('username')
+        email = self.request.get('email')
         pw = self.request.get('password')
         verify = self.request.get('verify')
-        email = self.request.get('email')
+        displayname = self.request.get('displayname')
 
         # Validate signup
-        errors = validate.signup_errors(un, pw, verify, email)
+        errors = validate.signup_errors(email, pw, verify)
 
         # Check if user exists
         # TODO: can move to validate signup errors
-        if User.exists(un):
-            errors['user_exists'] = 'This username already exists.'
+        if User.exists(email):
+            errors['user_exists'] = ('There is already a user registered ' +
+                                     'with this email.')
 
         if errors:
-            self.render('signup.html', username=un, email=email, errors=errors)
+            self.render(
+                'signup.html',
+                email=email,
+                displayname=displayname,
+                errors=errors)
         else:
-            u_key = User.create(un, pw, email)
+            u_key = User.create(email, pw, displayname)
             # TODO: can we move cooki creation to User model class?
             u_cookie = auth.make_secure_val(str(u_key.id()))
             self.response.set_cookie("user_id", u_cookie)

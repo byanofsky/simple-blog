@@ -6,10 +6,10 @@
 <!-- TODO: error styling -->
 <form method="post">
     <label>
-        <div>Username</div>
-        <input type="text" name="username" value="{{ username }}">
-        {% if errors and errors.username %}
-            {{ errors.username }}
+        <div>Email</div>
+        <input type="text" name="email" value="{{ email }}">
+        {% if errors and errors.email %}
+            {{ errors.email }}
         {% endif %}
         {% if errors and errors.user_exists %}
             {{ errors.user_exists }}
@@ -33,10 +33,10 @@
     </label>
 
     <label>
-        <div>Email (optional)</div>
-        <input type="email" name="email" value="{{ email }}">
-        {% if errors and errors.email %}
-            {{ errors.email }}
+        <div>Display Name (optional)</div>
+        <input type="text" name="displayname" value="{{ displayname }}">
+        {% if errors and errors.displayname %}
+            {{ errors.displayname }}
         {% endif %}
     </label>
 
