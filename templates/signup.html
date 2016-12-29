@@ -11,6 +11,9 @@
         {% if errors and errors.username %}
             {{ errors.username }}
         {% endif %}
+        {% if errors and errors.user_exists %}
+            {{ errors.user_exists }}
+        {% endif %}
     </label>
 
     <label>

@@ -2,7 +2,8 @@ import os
 import jinja2
 import webapp2
 import validate
-from google.appengine.ext import db
+import auth
+# from google.appengine.ext import ndb
 from datacls import *
 
 # Jinja templating setup
@@ -43,13 +44,12 @@ class Handler(webapp2.RequestHandler):
         else:
             return self.site_title
 
-    def get_url(self):
+    def get_url(self, name):
         return webapp2.uri_for(name)
 
     def get_user(self):
         # if user cookie, return user id
         pass
-
 
     def intialize(self, request, response):
         super().initialize(request, response)
@@ -74,12 +74,18 @@ class SignUpHandler(Handler):
         # Validate signup
         errors = validate.signup_errors(un, pw, verify, email)
 
-        # Does user exist
+        # Check if user exists
+        if User.exists(un):
+            errors['user_exists'] = 'This username already exists.'
 
         if errors:
             self.render('signup.html', username=un, email=email, errors=errors)
         else:
-            self.write('success')
+            u_key = User.create(un, pw, email)
+            # TODO: secure user key, see google docs
+            self.response.set_cookie("user_id", auth.make_secure_val(u_key.id()))
+            self.response.out.write('success')
+            # self.redirect(self.get_url('welcome'))
 
 app = webapp2.WSGIApplication([
     webapp2.Route('/', handler=FrontPageHandler, name='frontpage'),

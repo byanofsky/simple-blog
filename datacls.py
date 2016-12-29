@@ -1,5 +1,6 @@
 from auth import make_secure_val, check_secure_val
 from google.appengine.ext import ndb
+from auth import make_pw_hash
 
 # TODO: check other datastore options
 
@@ -27,10 +28,11 @@ class User(ndb.Model):
     #     return check_secure_val
 
     @classmethod
-    def create_user(cls, un, pw, email):
-        u = cls(username=un, password=pw, email=email )
-        return u
+    def create(cls, un, pw, email):
+        hashed_pw = make_pw_hash(pw)
+        u = cls(id=un, username=un, password=hashed_pw, email=email )
+        return u.put()
 
-
-# new_id = ndb.Model.allocate_ids(size=1)[0]
-# print "ID: " + str(new_id)
+    @classmethod
+    def exists(cls, un):
+        return ndb.Key(cls, un).get()
