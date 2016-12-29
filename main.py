@@ -104,11 +104,18 @@ class WelcomeHandler(Handler):
             displayname = User.get_display_name(self.u_id)
             self.render('welcome.html', displayname=displayname)
 
+class LoginHandler(Handler):
+    def get(self):
+        self.render('login.html')
+
+    def post(self):
+        pass
+
 app = webapp2.WSGIApplication([
     webapp2.Route('/', handler=FrontPageHandler, name='frontpage'),
     webapp2.Route('/signup', handler=SignUpHandler, name='signup'),
     webapp2.Route('/welcome', handler=WelcomeHandler, name='welcome'),
-    # webapp2.Route('/login', handler=LoginHandler, name='login'),
+    webapp2.Route('/login', handler=LoginHandler, name='login'),
     # webapp2.Route('/logout', handler=LogoutHandler, name='logout'),
     # webapp2.Route('/newpost', handler=NewPostHandler, name='newpost'),
     # webapp2.Route('/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost')
