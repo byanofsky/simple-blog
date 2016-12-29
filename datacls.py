@@ -59,5 +59,5 @@ class User(ndb.Model):
         return cls.exists(email)[0]
 
     @classmethod
-    def get_by_id(cls, u_id):
+    def key_by_id(cls, u_id):
         return ndb.Key(cls, u_id)

@@ -150,7 +150,7 @@ class NewPostHandler(Handler):
         if not self.u_id:
             self.redirect(self.get_url('login'))
         else:
-            u_key = User.get_by_id(self.u_id)
+            u_key = User.key_by_id(self.u_id)
             title = self.request.get('title')
             body = self.request.get('body')
 
