@@ -84,6 +84,7 @@ class SignUpHandler(Handler):
             u_key = User.create(un, pw, email)
             # TODO: secure user key, see google docs
             u_cookie = auth.make_secure_val(str(u_key.id()))
+            print User.by_name().fetch(1)
             self.response.set_cookie("user_id", u_cookie)
             self.response.out.write('success')
             # self.redirect(self.get_url('welcome'))

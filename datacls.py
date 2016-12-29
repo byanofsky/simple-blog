@@ -28,12 +28,15 @@ class User(ndb.Model):
     #     return check_secure_val
 
     @classmethod
+    def by_name(cls):
+        return cls.query().order(cls.username)
+
+    @classmethod
     def create(cls, un, pw, email):
         hashed_pw = make_pw_hash(pw)
         u = cls(username=un, password=hashed_pw, email=email )
         return u.put()
 
     @classmethod
-    def exists(cls, user_id):
-        # TODO: make sure email hasn't been used already
-        return ndb.Key(cls, user_id).get()
+    def exists(cls, un):
+        return cls.query(cls.username == un).fetch()
