@@ -96,9 +96,12 @@ class SignUpHandler(Handler):
 class WelcomeHandler(Handler):
     def get(self):
         u_cookie = self.request.cookies.get('user_id')
-        u_id = auth.check_secure_val(u_cookie)
-        displayname = User.get_display_name(u_id)
-        self.render('welcome.html', displayname=displayname)
+        if not u_cookie:
+            self.redirect(self.get_url('signup'))
+        else:
+            u_id = auth.check_secure_val(u_cookie)
+            displayname = User.get_display_name(u_id)
+            self.render('welcome.html', displayname=displayname)
 
 app = webapp2.WSGIApplication([
     webapp2.Route('/', handler=FrontPageHandler, name='frontpage'),
