@@ -83,12 +83,6 @@ class SignUpHandler(Handler):
         # Validate signup
         errors = validate.signup_errors(email, pw, verify)
 
-        # Check if user exists
-        # TODO: can move to validate signup errors
-        if User.exists(email):
-            errors['user_exists'] = ('There is already a user registered ' +
-                                     'with this email.')
-
         if errors:
             self.render(
                 'signup.html',

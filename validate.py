@@ -1,4 +1,5 @@
 import re
+from datacls import User
 
 # USER_RE = re.compile(r'^[a-zA-Z0-9_-]{3,20}$')
 PASSWORD_RE = re.compile(r'^.{3,20}$')
@@ -19,6 +20,9 @@ def password_match(pw, verify):
 def signup_errors(email, pw, verify):
     errors = {}
 
+    if User.exists(email):
+        errors['user_exists'] = ('There is already a user registered ' +
+                                 'with this email.')
     if not valid_email(email):
         errors['email'] = 'Please enter a valid email address.'
     # if not valid_username(un):
