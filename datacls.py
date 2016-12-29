@@ -30,9 +30,10 @@ class User(ndb.Model):
     @classmethod
     def create(cls, un, pw, email):
         hashed_pw = make_pw_hash(pw)
-        u = cls(id=un, username=un, password=hashed_pw, email=email )
+        u = cls(username=un, password=hashed_pw, email=email )
         return u.put()
 
     @classmethod
-    def exists(cls, un):
-        return ndb.Key(cls, un).get()
+    def exists(cls, user_id):
+        # TODO: make sure email hasn't been used already
+        return ndb.Key(cls, user_id).get()
