@@ -6,10 +6,19 @@ from auth import make_pw_hash
 
 # TODO: Need to associate author to user. Most likely as parent
 class Post(ndb.Model):
-    subject = ndb.StringProperty(required = True)
-    content = ndb.TextProperty(required = True)
+    title = ndb.StringProperty(required = True)
+    body = ndb.TextProperty(required = True)
     created = ndb.DateTimeProperty(auto_now_add = True)
     last_modified = ndb.DateTimeProperty(auto_now = True)
+
+    @classmethod
+    def create(cls, title, body, author_key):
+        p = cls(
+            title=title,
+            body=body,
+            parent=author_key
+        )
+        return p.put()
 
 class User(ndb.Model):
     email = ndb.StringProperty(required = True)
@@ -48,3 +57,7 @@ class User(ndb.Model):
     @classmethod
     def get_by_email(cls, email):
         return cls.exists(email)[0]
+
+    @classmethod
+    def get_by_id(cls, u_id):
+        return ndb.Key(cls, u_id)

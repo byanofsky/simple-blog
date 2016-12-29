@@ -54,3 +54,13 @@ def login_errors(email, pw):
         errors = 'The password is incorrect. Please try again.'
 
     return errors
+
+def newpost_errors(title, body):
+    errors = {}
+
+    if not title:
+        errors['title'] = 'Please enter a title.'
+    if not body:
+        errors['body'] = 'Your blog post cannot be blank.'
+
+    return errors

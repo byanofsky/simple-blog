@@ -61,6 +61,9 @@ class Handler(webapp2.RequestHandler):
         u_cookie = auth.make_secure_val(str(user_key.id()))
         self.response.set_cookie('user_id', u_cookie)
 
+    def clear_user_cookie(self):
+        self.response.set_cookie('user_id', None)
+
     def initialize(self, request, response):
         super(Handler, self).initialize(request, response)
         self.u_id = self.get_user_id()
@@ -107,6 +110,8 @@ class WelcomeHandler(Handler):
             self.render('welcome.html', displayname=displayname)
 
 class LoginHandler(Handler):
+    page_title = 'Login'
+
     def get(self):
         self.render('login.html')
 
@@ -124,12 +129,45 @@ class LoginHandler(Handler):
             self.set_user_cookie(u_key)
             self.redirect(self.get_url('welcome'))
 
+class LogoutHandler(Handler):
+    def get(self):
+        if self.u_id:
+            self.clear_user_cookie()
+        self.redirect(self.get_url('login'))
+
+class NewPostHandler(Handler):
+    page_title = 'New Post'
+
+    def get(self):
+        # TODO: move redirect to intialize?
+        if not self.u_id:
+            self.redirect(self.get_url('login'))
+        else:
+            self.render('newpost.html')
+
+    def post(self):
+        # TODO: move redirect to initialize?
+        if not self.u_id:
+            self.redirect(self.get_url('login'))
+        else:
+            u_key = User.get_by_id(self.u_id)
+            title = self.request.get('title')
+            body = self.request.get('body')
+
+            errors = validate.newpost_errors(title, body)
+
+            if errors:
+                self.render('newpost.html', title=title, body=body, errors=errors)
+            else:
+                p_key = Post.create(title, body, u_key)
+                self.write('success')
+
 app = webapp2.WSGIApplication([
     webapp2.Route('/', handler=FrontPageHandler, name='frontpage'),
     webapp2.Route('/signup', handler=SignUpHandler, name='signup'),
     webapp2.Route('/welcome', handler=WelcomeHandler, name='welcome'),
     webapp2.Route('/login', handler=LoginHandler, name='login'),
-    # webapp2.Route('/logout', handler=LogoutHandler, name='logout'),
-    # webapp2.Route('/newpost', handler=NewPostHandler, name='newpost'),
+    webapp2.Route('/logout', handler=LogoutHandler, name='logout'),
+    webapp2.Route('/newpost', handler=NewPostHandler, name='newpost'),
     # webapp2.Route('/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost')
 ], debug=True)
