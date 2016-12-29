@@ -23,11 +23,3 @@ def make_pw_hash(pw):
 
 def verify_pw(pw, hash):
     return pbkdf2_sha256.verify(pw, hash)
-
-# def create_user_cookie(user_key):
-#     return make_secure_val(str(user_key.id()))
-#
-# def check_user_cookie_val(user_cookie_val):
-#     if not user_cookie_val:
-#         return None
-#     return check_scure_val(user_cookie_val)

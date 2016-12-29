@@ -11,25 +11,19 @@ class Post(ndb.Model):
     created = ndb.DateTimeProperty(auto_now_add = True)
     last_modified = ndb.DateTimeProperty(auto_now = True)
 
-    # @classmethod
-    # def create_post(cls)
-    #
 class User(ndb.Model):
     username = ndb.StringProperty(required = True)
     password = ndb.StringProperty(required = True)
     email = ndb.StringProperty(required = False)
     created = ndb.DateTimeProperty(auto_now_add = True)
-
-    def create_user_cookie(self):
-        return make_secure_val(self.key().id())
-
+    
     # @classmethod
     # def check_user_cookie(cls):
     #     return check_secure_val
 
-    @classmethod
-    def by_name(cls):
-        return cls.query().order(cls.username)
+    # @classmethod
+    # def by_name(cls):
+    #     return cls.query().order(cls.username)
 
     @classmethod
     def create(cls, un, pw, email):
