@@ -55,6 +55,10 @@ class Handler(webapp2.RequestHandler):
         else:
             return None
 
+    def set_user_cookie(self, user_key):
+        u_cookie = auth.make_secure_val(str(user_key.id()))
+        self.response.set_cookie('user_id', u_cookie)
+
     def initialize(self, request, response):
         super(Handler, self).initialize(request, response)
         self.u_id = self.get_user_id()
@@ -93,9 +97,7 @@ class SignUpHandler(Handler):
                 errors=errors)
         else:
             u_key = User.create(email, pw, displayname)
-            # TODO: can we move cookie creation to User model class?
-            u_cookie = auth.make_secure_val(str(u_key.id()))
-            self.response.set_cookie('user_id', u_cookie)
+            self.set_user_cookie(u_key)
             self.redirect(self.get_url('welcome'))
 
 class WelcomeHandler(Handler):
