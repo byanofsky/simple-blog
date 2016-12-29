@@ -17,6 +17,11 @@ class User(ndb.Model):
     password = ndb.StringProperty(required = True)
     created = ndb.DateTimeProperty(auto_now_add = True)
 
+    @classmethod
+    def get_display_name(cls, u_id):
+        u = ndb.Key(cls, int(u_id)).get()
+        return u.displayname or u.email
+
     # @classmethod
     # def check_user_cookie(cls):
     #     return check_secure_val

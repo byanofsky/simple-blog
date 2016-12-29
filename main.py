@@ -91,13 +91,19 @@ class SignUpHandler(Handler):
             # TODO: can we move cooki creation to User model class?
             u_cookie = auth.make_secure_val(str(u_key.id()))
             self.response.set_cookie('user_id', u_cookie)
-            self.response.out.write('success')
-            # self.redirect(self.get_url('welcome'))
+            self.redirect(self.get_url('welcome'))
+
+class WelcomeHandler(Handler):
+    def get(self):
+        u_cookie = self.request.cookies.get('user_id')
+        u_id = auth.check_secure_val(u_cookie)
+        displayname = User.get_display_name(u_id)
+        self.render('welcome.html', displayname=displayname)
 
 app = webapp2.WSGIApplication([
     webapp2.Route('/', handler=FrontPageHandler, name='frontpage'),
     webapp2.Route('/signup', handler=SignUpHandler, name='signup'),
-    # webapp2.Route('/welcome', handler=WelcomeHandler, name='welcome'),
+    webapp2.Route('/welcome', handler=WelcomeHandler, name='welcome'),
     # webapp2.Route('/login', handler=LoginHandler, name='login'),
     # webapp2.Route('/logout', handler=LogoutHandler, name='logout'),
     # webapp2.Route('/newpost', handler=NewPostHandler, name='newpost'),
