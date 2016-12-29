@@ -160,7 +160,13 @@ class NewPostHandler(Handler):
                 self.render('newpost.html', title=title, body=body, errors=errors)
             else:
                 p_key = Post.create(title, body, u_key)
+                print p_key
                 self.write('success')
+
+class SinglePostHandler(Handler):
+    def get(self, post_id):
+        p = Post.get_by_id(int(post_id))
+
 
 app = webapp2.WSGIApplication([
     webapp2.Route('/', handler=FrontPageHandler, name='frontpage'),
@@ -169,5 +175,5 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/login', handler=LoginHandler, name='login'),
     webapp2.Route('/logout', handler=LogoutHandler, name='logout'),
     webapp2.Route('/newpost', handler=NewPostHandler, name='newpost'),
-    # webapp2.Route('/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost')
+    webapp2.Route('/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost')
 ], debug=True)
