@@ -111,7 +111,18 @@ class LoginHandler(Handler):
         self.render('login.html')
 
     def post(self):
-        pass
+        email = self.request.get('email')
+        pw = self.request.get('password')
+
+        errors = validate.login_errors(email, pw)
+
+        if errors:
+            self.render('login.html', email=email, errors=errors)
+        else:
+            # TODO: making 2 calls to db. 1 here and 2 in
+            u_key = User.get_by_email(email).key
+            self.set_user_cookie(u_key)
+            self.redirect(self.get_url('welcome'))
 
 app = webapp2.WSGIApplication([
     webapp2.Route('/', handler=FrontPageHandler, name='frontpage'),

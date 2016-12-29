@@ -22,6 +22,11 @@ class User(ndb.Model):
         u = ndb.Key(cls, int(u_id)).get()
         return u.displayname or u.email
 
+    @classmethod
+    def get_pw_hash(cls, email):
+        u = cls.get_by_email(email)
+        return u.password
+
     # @classmethod
     # def check_user_cookie(cls):
     #     return check_secure_val
@@ -39,3 +44,7 @@ class User(ndb.Model):
     @classmethod
     def exists(cls, email):
         return cls.query(cls.email == email).fetch()
+
+    @classmethod
+    def get_by_email(cls, email):
+        return cls.exists(email)[0]

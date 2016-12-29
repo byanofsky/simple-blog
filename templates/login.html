@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>{{ page_title }}</h1>
+
+<!-- TODO: error styling -->
+<form method="post">
+    <label>
+        <div>Email</div>
+        <input type="text" name="email" value="{{ email }}">
+    </label>
+
+    <label>
+        <div>Password</div>
+        <input type="password" name="password">
+    </label>
+
+    {% if errors %}
+    <div>
+        {{ errors }}
+    </div>
+    {% endif %}
+
+    <div>
+        <input type="submit">
+    </div>
+</form>
+{% endblock %}
