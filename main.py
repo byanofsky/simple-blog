@@ -48,17 +48,14 @@ class Handler(webapp2.RequestHandler):
         else:
             return self.site_title
 
-    def get_url(self, name):
-        return webapp2.uri_for(name)
+    # simpler way to get urls for route handling
+    def get_url(self, name, **kw):
+        return webapp2.uri_for(name, **kw)
 
-    # Check if a user is logged in and return that User object
-    def get_loggedin_user(self):
-        u_cookie = self.request.cookies.get('user_id')
-        if u_cookie:
-            u_id = auth.check_secure_val(u_cookie)
-            if u_id:
-                return User.get_by_id(int(u_id))
-
+    # get, set, and clear user cookies for login and out
+    def get_user_cookie(self):
+        return self.request.cookies.get('user_id')
+    #TODO stoppedhere
     def set_user_cookie(self, user_key):
         u_cookie = auth.make_secure_val(str(user_key.id()))
         self.response.set_cookie('user_id', u_cookie)
@@ -66,6 +63,15 @@ class Handler(webapp2.RequestHandler):
     def clear_user_cookie(self):
         self.response.set_cookie('user_id', None)
 
+    # Check if a user is logged in and return that User object
+    def get_loggedin_user(self):
+        u_cookie = self.get_user_cookie()
+        if u_cookie:
+            u_id = auth.check_secure_val(u_cookie)
+            if u_id:
+                return User.get_by_id(int(u_id))
+
+    # on every page load, save user object to instance variable
     def initialize(self, request, response):
         super(Handler, self).initialize(request, response)
         self.u = self.get_loggedin_user()
@@ -131,7 +137,7 @@ class LoginHandler(Handler):
         if errors:
             self.render('login.html', email=email, errors=errors)
         else:
-            # TODO: making 2 calls to db. 1 here and 2 in
+            # TODO: making 2 calls to db. 1 here and 2 in error check. maybe return user from validate
             u_key = User.get_by_email(email).key
             self.set_user_cookie(u_key)
             self.redirect(self.get_url('welcome'))
@@ -167,7 +173,7 @@ class NewPostHandler(Handler):
                 self.render('newpost.html', title=title, body=body, errors=errors)
             else:
                 p_key = Post.create(title, body, self.u)
-                p_url = webapp2.uri_for('singlepost', post_id=p_key.id())
+                p_url = self.get_url('singlepost', post_id=p_key.id())
                 self.redirect(p_url)
 
 class SinglePostHandler(Handler):
