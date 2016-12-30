@@ -50,33 +50,32 @@ class Handler(webapp2.RequestHandler):
         return webapp2.uri_for(name)
 
     # if user cookie, return user id
-    def get_user_id(self):
-        u_cookie = self.request.cookies.get('user_id')
-        if u_cookie:
-            return auth.check_secure_val(u_cookie)
-        else:
-            return None
+    # def get_user_id(self):
+    #     u_cookie = self.request.cookies.get('user_id')
+    #     if u_cookie:
+    #         return auth.check_secure_val(u_cookie)
+    #     else:
+    #         return None
 
     def get_loggedin_user(self):
-        u_id = self.get_user_id()
+        u_id = auth.get_user_cookie_id(self)
         if u_id:
-            u = User.key_by_id(int(u_id)).get()
-            return u
+            return User.key_by_id(int(u_id)).get()
         else:
             return None
-
-    def set_user_cookie(self, user_key):
-        u_cookie = auth.make_secure_val(str(user_key.id()))
-        self.response.set_cookie('user_id', u_cookie)
-
-    def clear_user_cookie(self):
-        self.response.set_cookie('user_id', None)
+    #
+    # def set_user_cookie(self, user_key):
+    #     u_cookie = auth.make_secure_val(str(user_key.id()))
+    #     self.response.set_cookie('user_id', u_cookie)
+    #
+    # def clear_user_cookie(self):
+    #     self.response.set_cookie('user_id', None)
 
     def initialize(self, request, response):
         super(Handler, self).initialize(request, response)
         self.u = self.get_loggedin_user()
         if not self.u:
-            self.clear_user_cookie()
+            auth.clear_user_cookie(self)
 
 class FrontPageHandler(Handler):
     def get(self):
@@ -106,7 +105,7 @@ class SignUpHandler(Handler):
                 errors=errors)
         else:
             u_key = User.create(email, pw, displayname)
-            self.set_user_cookie(u_key)
+            auth.set_user_cookie(self, u_key)
             self.redirect(self.get_url('welcome'))
 
 class WelcomeHandler(Handler):
@@ -136,13 +135,13 @@ class LoginHandler(Handler):
         else:
             # TODO: making 2 calls to db. 1 here and 2 in
             u_key = User.get_by_email(email).key
-            self.set_user_cookie(u_key)
+            auth.set_user_cookie(self, u_key)
             self.redirect(self.get_url('welcome'))
 
 class LogoutHandler(Handler):
     def get(self):
         if self.u:
-            self.clear_user_cookie()
+            auth.clear_user_cookie(self)
         self.redirect(self.get_url('login'))
 
 class NewPostHandler(Handler):
