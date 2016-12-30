@@ -132,6 +132,8 @@ class LoginHandler(Handler):
         email = self.request.get('email')
         pw = self.request.get('password')
 
+        # TODO: right now we call db like 3 times with validate, checking pw, etc. Simplify
+
         errors = validate.login_errors(email, pw)
 
         if errors:
