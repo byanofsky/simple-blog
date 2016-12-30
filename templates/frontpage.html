@@ -3,13 +3,13 @@
 {% block body %}
 <h1>{{ page_title }}</h1>
 
-{% for post in posts %}
+{% for p in posts %}
     <div class="post">
         <div class="post-title">
-            {{ post.subject }}
+            <a href="/post/{{ p.key.id() }}">{{ p.title }}</a>
         </div>
         <pre class="post-body">
-            {{post.content }}
+            {{ p.body }}
         </pre>
     </div>
 {% endfor %}

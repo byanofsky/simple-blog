@@ -80,7 +80,10 @@ class Handler(webapp2.RequestHandler):
 
 class FrontPageHandler(Handler):
     def get(self):
-        posts = Post.query().order(-Post.created).fetch_page(10)
+        # posts = Post.query().order(-Post.created).fetch_page(10)
+        # TODO: multi page with fetch_page
+        posts = Post.query().order(-Post.created).fetch()
+        print posts
         self.render('frontpage.html', posts=posts)
 
 class SignUpHandler(Handler):
