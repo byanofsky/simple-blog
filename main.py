@@ -19,6 +19,7 @@ class Handler(webapp2.RequestHandler):
     # TODO: can we have a config file for this?
     site_title = "Simple Blog"
 
+    # code to simplify jinja
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
@@ -26,6 +27,7 @@ class Handler(webapp2.RequestHandler):
         t = jinja_env.get_template(template)
         return t.render(params)
 
+    # TODO: do we need to pass page_title if it's not used?
     def render(self, template, **kw):
         self.write(self.render_str(
             template,
@@ -34,6 +36,7 @@ class Handler(webapp2.RequestHandler):
             **kw
         ))
 
+    # handle page titles
     def get_seo_title(self):
         if hasattr(self, 'page_title') and self.page_title:
             return self.page_title + " - " + self.site_title
@@ -183,6 +186,7 @@ class SinglePostHandler(Handler):
 
     def get(self, post_id):
         p = Post.get_by_id(int(post_id))
+        self.page_title = p.title
         author_name = User.get_display_name(p.author.id())
         self.render('singlepost.html', title=p.title, body=p.body)
 
