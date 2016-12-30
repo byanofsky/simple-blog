@@ -157,6 +157,7 @@ class NewPostHandler(Handler):
 
     def post(self):
         # TODO: move redirect to initialize?
+        # TODO: do I really need an else statement here?
         if not self.u:
             self.redirect(self.get_url('login'))
         else:
