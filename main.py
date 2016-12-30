@@ -169,12 +169,13 @@ class NewPostHandler(Handler):
             if errors:
                 self.render('newpost.html', title=title, body=body, errors=errors)
             else:
-                p_key = Post.create(title, body, self.u.key)
+                p_key = Post.create(title, body, self.u)
                 self.write('success')
 
 class SinglePostHandler(Handler):
     def get(self, post_id):
-        p = Post.get_by_id(int(post_id))
+        # p = Post.get_by_id(int(post_id))
+        self.write('success')
 
 
 app = webapp2.WSGIApplication([

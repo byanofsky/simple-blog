@@ -10,13 +10,14 @@ class Post(ndb.Model):
     body = ndb.TextProperty(required = True)
     created = ndb.DateTimeProperty(auto_now_add = True)
     last_modified = ndb.DateTimeProperty(auto_now = True)
+    author = ndb.KeyProperty(required = True, kind = 'User')
 
     @classmethod
-    def create(cls, title, body, author_key):
+    def create(cls, title, body, author):
         p = cls(
             title=title,
             body=body,
-            parent=author_key
+            author=author.key
         )
         return p.put()
 
