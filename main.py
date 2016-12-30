@@ -82,9 +82,9 @@ class FrontPageHandler(Handler):
     def get(self):
         # posts = Post.query().order(-Post.created).fetch_page(10)
         # TODO: multi page with fetch_page
+        base_url = self.get_url('frontpage')
         posts = Post.query().order(-Post.created).fetch()
-        print posts
-        self.render('frontpage.html', posts=posts)
+        self.render('frontpage.html', base_url=base_url, posts=posts)
 
 class SignUpHandler(Handler):
     page_title = 'Signup'
@@ -193,5 +193,5 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/login', handler=LoginHandler, name='login'),
     webapp2.Route('/logout', handler=LogoutHandler, name='logout'),
     webapp2.Route('/newpost', handler=NewPostHandler, name='newpost'),
-    webapp2.Route('/post/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost')
+    webapp2.Route('/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost')
 ], debug=True)

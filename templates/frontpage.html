@@ -6,7 +6,8 @@
 {% for p in posts %}
     <div class="post">
         <div class="post-title">
-            <a href="/post/{{ p.key.id() }}">{{ p.title }}</a>
+            <!-- TODO: better url handling, maybe with permalinks -->
+            <a href="{{ base_url}}{{ p.key.id() }}">{{ p.title }}</a>
         </div>
         <pre class="post-body">
             {{ p.body }}
