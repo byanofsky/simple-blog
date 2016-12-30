@@ -173,9 +173,14 @@ class NewPostHandler(Handler):
                 self.write('success')
 
 class SinglePostHandler(Handler):
+    # TODO: add blog
+    # add comments
+    # add ability to edit
+
     def get(self, post_id):
-        # p = Post.get_by_id(int(post_id))
-        self.write('success')
+        p = Post.get_by_id(int(post_id))
+        author_name = User.get_display_name(p.author.id())
+        self.render('singlepost.html', title=p.title, body=p.body)
 
 
 app = webapp2.WSGIApplication([
@@ -185,5 +190,5 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/login', handler=LoginHandler, name='login'),
     webapp2.Route('/logout', handler=LogoutHandler, name='logout'),
     webapp2.Route('/newpost', handler=NewPostHandler, name='newpost'),
-    webapp2.Route('/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost')
+    webapp2.Route('/post/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost')
 ], debug=True)
