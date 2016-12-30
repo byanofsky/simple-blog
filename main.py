@@ -173,7 +173,8 @@ class NewPostHandler(Handler):
                 self.render('newpost.html', title=title, body=body, errors=errors)
             else:
                 p_key = Post.create(title, body, self.u)
-                self.write('success')
+                p_url = webapp2.uri_for('singlepost', post_id=p_key.id())
+                self.redirect(p_url)
 
 class SinglePostHandler(Handler):
     # TODO: add blog
