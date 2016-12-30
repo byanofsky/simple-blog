@@ -23,3 +23,20 @@ def make_pw_hash(pw):
 
 def verify_pw(pw, hash):
     return pbkdf2_sha256.verify(pw, hash)
+
+def get_user_cookie(handler):
+    return handler.request.cookies.get('user_id')
+
+def get_user_cookie_id(handler):
+    u_cookie = get_user_cookie(handler)
+    if u_cookie:
+        return check_secure_val(u_cookie)
+    else:
+        return None
+
+def set_user_cookie(handler, user_key):
+    u_cookie = make_secure_val(str(user_key.id()))
+    handler.response.set_cookie('user_id', u_cookie)
+
+def clear_user_cookie(handler):
+    handler.response.set_cookie('user_id', None)
