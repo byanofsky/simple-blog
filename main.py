@@ -27,7 +27,6 @@ class Handler(webapp2.RequestHandler):
         t = jinja_env.get_template(template)
         return t.render(params)
 
-    # TODO: do we need to pass page_title if it's not used?
     def render(self, template, **kw):
         self.write(self.render_str(
             template,
@@ -52,21 +51,13 @@ class Handler(webapp2.RequestHandler):
     def get_url(self, name):
         return webapp2.uri_for(name)
 
-    # if user cookie, return user id
-    def get_user_id(self):
+    # Check if a user is logged in and return that User object
+    def get_loggedin_user(self):
         u_cookie = self.request.cookies.get('user_id')
         if u_cookie:
-            return auth.check_secure_val(u_cookie)
-        else:
-            return None
-
-    def get_loggedin_user(self):
-        u_id = self.get_user_id()
-        if u_id:
-            u = User.key_by_id(int(u_id)).get()
-            return u
-        else:
-            return None
+            u_id = auth.check_secure_val(u_cookie)
+            if u_id:
+                return User.get_by_id(int(u_id))
 
     def set_user_cookie(self, user_key):
         u_cookie = auth.make_secure_val(str(user_key.id()))
