@@ -57,6 +57,14 @@ class Handler(webapp2.RequestHandler):
         else:
             return None
 
+    def get_loggedin_user(self):
+        u_id = self.get_user_id()
+        if u_id:
+            u = User.key_by_id(int(u_id)).get()
+            return u
+        else:
+            return None
+
     def set_user_cookie(self, user_key):
         u_cookie = auth.make_secure_val(str(user_key.id()))
         self.response.set_cookie('user_id', u_cookie)
@@ -66,7 +74,9 @@ class Handler(webapp2.RequestHandler):
 
     def initialize(self, request, response):
         super(Handler, self).initialize(request, response)
-        self.u_id = self.get_user_id()
+        self.u = self.get_loggedin_user()
+        if not self.u:
+            self.clear_user_cookie()
 
 class FrontPageHandler(Handler):
     def get(self):
@@ -103,10 +113,10 @@ class WelcomeHandler(Handler):
     page_title = 'Welcome'
 
     def get(self):
-        if not self.u_id:
+        if not self.u:
             self.redirect(self.get_url('signup'))
         else:
-            displayname = User.get_display_name(self.u_id)
+            displayname = self.u.displayname
             self.render('welcome.html', displayname=displayname)
 
 class LoginHandler(Handler):
@@ -131,7 +141,7 @@ class LoginHandler(Handler):
 
 class LogoutHandler(Handler):
     def get(self):
-        if self.u_id:
+        if self.u:
             self.clear_user_cookie()
         self.redirect(self.get_url('login'))
 
@@ -140,17 +150,16 @@ class NewPostHandler(Handler):
 
     def get(self):
         # TODO: move redirect to intialize?
-        if not self.u_id:
+        if not self.u:
             self.redirect(self.get_url('login'))
         else:
             self.render('newpost.html')
 
     def post(self):
         # TODO: move redirect to initialize?
-        if not self.u_id:
+        if not self.u:
             self.redirect(self.get_url('login'))
         else:
-            u_key = User.key_by_id(self.u_id)
             title = self.request.get('title')
             body = self.request.get('body')
 
@@ -159,8 +168,7 @@ class NewPostHandler(Handler):
             if errors:
                 self.render('newpost.html', title=title, body=body, errors=errors)
             else:
-                p_key = Post.create(title, body, u_key)
-                print p_key
+                p_key = Post.create(title, body, self.u.key)
                 self.write('success')
 
 class SinglePostHandler(Handler):
