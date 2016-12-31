@@ -2,12 +2,8 @@ import re
 from auth import verify_pw
 from datacls import User
 
-# USER_RE = re.compile(r'^[a-zA-Z0-9_-]{3,20}$')
 PASSWORD_RE = re.compile(r'^.{3,20}$')
 EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
-
-# def valid_username(un):
-#     return USER_RE.match(un)
 
 def valid_email(email):
     return EMAIL_RE.match(email)
