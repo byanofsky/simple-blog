@@ -4,6 +4,8 @@ import random
 import string
 from passlib.hash import pbkdf2_sha256
 
+# TODO: need to organize auth and validate
+
 # TODO: get secret key from config file
 SECRET_KEY = 'insert secret key'
 
