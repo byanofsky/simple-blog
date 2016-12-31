@@ -101,8 +101,6 @@ class SignUpHandler(Handler):
                 errors=errors)
         else:
             # TODO: Can I combine these to one function call?
-            # u_key = User.create(email, pw, displayname)
-            # auth.set_user_cookie(self, u_key)
             User.signup(self, email, pw, displayname)
             self.redirect(self.get_url('welcome'))
 
