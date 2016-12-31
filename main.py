@@ -110,10 +110,10 @@ class WelcomeHandler(Handler):
 
     def get(self):
         if not self.u:
+            # TODO: make a redirect function
             self.redirect(self.get_url('signup'))
         else:
             displayname = self.u.get_displayname()
-            print displayname
             self.render('welcome.html', displayname=displayname)
 
 class LoginHandler(Handler):
