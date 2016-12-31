@@ -73,8 +73,8 @@ class FrontPageHandler(Handler):
     def get(self):
         # posts = Post.query().order(-Post.created).fetch_page(10)
         # TODO: multi page with fetch_page
-        # base_url = self.get_url('frontpage')
         posts = Post.get_all()
+        # TODO: can I fix up url handling some more?
         self.render('frontpage.html', posts=posts, url_handler=self.get_url)
 
 class SignUpHandler(Handler):
