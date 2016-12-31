@@ -19,8 +19,7 @@ def password_match(pw, verify):
     return pw == verify
 
 def valid_login(u, pw):
-    hashed_pw = u.hashed_pw
-    return verify_pw(pw, hashed_pw)
+    return verify_pw(pw, u.hashed_pw)
 
 # TODO: make a parent class for errors
 
