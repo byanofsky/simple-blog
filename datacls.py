@@ -4,7 +4,6 @@ from auth import make_hashed_pw, set_user_cookie
 
 # TODO: check other datastore options
 
-# TODO: Need to associate author to user. Most likely as parent
 class Post(ndb.Model):
     title = ndb.StringProperty(required = True)
     body = ndb.TextProperty(required = True)
@@ -12,18 +11,7 @@ class Post(ndb.Model):
     last_modified = ndb.DateTimeProperty(auto_now = True)
     author = ndb.KeyProperty(required = True, kind = 'User')
 
-    # def set_url(self, base_url):
-    #     self.url = base_url + self.key.id()
-
-    # def getx(self):
-    #     return self._x
-    #
-    # def setx(self, value):
-    #     self._x = value
-    #
-    # def delx(self):
-    #     del self._x
-
+    # TODO: should this be part of handler?
     def get_uri(self, uri_handler):
         return uri_handler('singlepost', post_id=self.key.id())
 
@@ -47,22 +35,7 @@ class User(ndb.Model):
     created = ndb.DateTimeProperty(auto_now_add = True)
 
     def get_displayname(self):
-        # u = ndb.Key(cls, int(u_id)).get()
         return self.displayname or self.email
-
-    # TODO: probably can remove
-    # @classmethod
-    # def get_pw_hash(cls, email):
-    #     u = cls.get_by_email(email)
-    #     return u.hashed_pw
-
-    # @classmethod
-    # def check_user_cookie(cls):
-    #     return check_secure_val
-
-    # @classmethod
-    # def by_name(cls):
-    #     return cls.query().order(cls.username)
 
     @classmethod
     def create(cls, email, pw, displayname):
