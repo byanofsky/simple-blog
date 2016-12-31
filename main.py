@@ -90,6 +90,7 @@ class SignUpHandler(Handler):
         displayname = self.request.get('displayname')
 
         # Validate signup
+        # TODO: finetune validation
         errors = validate.signup_errors(email, pw, verify)
 
         if errors:
@@ -99,8 +100,10 @@ class SignUpHandler(Handler):
                 displayname=displayname,
                 errors=errors)
         else:
-            u_key = User.create(email, pw, displayname)
-            auth.set_user_cookie(self, u_key)
+            # TODO: Can I combine these to one function call?
+            # u_key = User.create(email, pw, displayname)
+            # auth.set_user_cookie(self, u_key)
+            User.signup(self, email, pw, displayname)
             self.redirect(self.get_url('welcome'))
 
 class WelcomeHandler(Handler):
@@ -110,7 +113,8 @@ class WelcomeHandler(Handler):
         if not self.u:
             self.redirect(self.get_url('signup'))
         else:
-            displayname = self.u.displayname
+            displayname = self.u.get_displayname()
+            print displayname
             self.render('welcome.html', displayname=displayname)
 
 class LoginHandler(Handler):

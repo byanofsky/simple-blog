@@ -1,6 +1,6 @@
 from auth import make_secure_val, check_secure_val
 from google.appengine.ext import ndb
-from auth import make_pw_hash
+from auth import make_pw_hash, set_user_cookie
 
 # TODO: check other datastore options
 
@@ -43,18 +43,17 @@ class Post(ndb.Model):
 class User(ndb.Model):
     email = ndb.StringProperty(required = True)
     displayname = ndb.StringProperty(required = False)
-    password = ndb.StringProperty(required = True)
+    hashed_pw = ndb.StringProperty(required = True)
     created = ndb.DateTimeProperty(auto_now_add = True)
 
-    @classmethod
-    def get_display_name(cls, u_id):
-        u = ndb.Key(cls, int(u_id)).get()
-        return u.displayname or u.email
+    def get_displayname(self):
+        # u = ndb.Key(cls, int(u_id)).get()
+        return self.displayname or self.email
 
     @classmethod
     def get_pw_hash(cls, email):
         u = cls.get_by_email(email)
-        return u.password
+        return u.hashed_pw
 
     # @classmethod
     # def check_user_cookie(cls):
@@ -67,8 +66,13 @@ class User(ndb.Model):
     @classmethod
     def create(cls, email, pw, displayname):
         hashed_pw = make_pw_hash(pw)
-        u = cls(email=email, password=hashed_pw, displayname=displayname )
+        u = cls(email=email, hashed_pw=hashed_pw, displayname=displayname )
         return u.put()
+
+    @classmethod
+    def signup(cls, handler, email, pw, displayname):
+        u_key = cls.create(email, pw, displayname)
+        set_user_cookie(handler, u_key)
 
     @classmethod
     def exists(cls, email):
