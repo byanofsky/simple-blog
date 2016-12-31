@@ -38,6 +38,7 @@ class Handler(webapp2.RequestHandler):
         )
 
     # handle page titles
+    # TODO: can I simplify this?
     def get_seo_title(self):
         if hasattr(self, 'page_title') and self.page_title:
             return self.page_title + " - " + self.site_title
