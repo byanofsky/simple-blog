@@ -52,8 +52,8 @@ class Handler(webapp2.RequestHandler):
         else:
             return self.site_title
 
-    # simpler way to get urls for route handling
-    def get_url(self, name, **kw):
+    # simpler way to get uris for route handling
+    def get_uri(self, name, **kw):
         return webapp2.uri_for(name, **kw)
 
     # Check if a user is logged in and return that User object
@@ -74,8 +74,8 @@ class FrontPageHandler(Handler):
         # posts = Post.query().order(-Post.created).fetch_page(10)
         # TODO: multi page with fetch_page
         posts = Post.get_all()
-        # TODO: can I fix up url handling some more?
-        self.render('frontpage.html', posts=posts, url_handler=self.get_url)
+        # TODO: can I fix up uri handling some more?
+        self.render('frontpage.html', posts=posts, uri_handler=self.get_uri)
 
 class SignUpHandler(Handler):
     page_title = 'Signup'
@@ -103,7 +103,7 @@ class SignUpHandler(Handler):
             # TODO: Can I combine these to one function call?
             User.signup(self, email, pw, displayname)
             # TODO: make a redirect function
-            self.redirect(self.get_url('welcome'))
+            self.redirect(self.get_uri('welcome'))
 
 class WelcomeHandler(Handler):
     page_title = 'Welcome'
@@ -111,7 +111,7 @@ class WelcomeHandler(Handler):
     def get(self):
         if not self.u:
             # TODO: make a redirect function
-            self.redirect(self.get_url('signup'))
+            self.redirect(self.get_uri('signup'))
         else:
             displayname = self.u.get_displayname()
             self.render('welcome.html', displayname=displayname)
@@ -134,26 +134,26 @@ class LoginHandler(Handler):
             self.render('login.html', email=email, errors=errors)
         else:
             auth.set_user_cookie(self, u.key)
-            self.redirect(self.get_url('welcome'))
+            self.redirect(self.get_uri('welcome'))
 
 class LogoutHandler(Handler):
     def get(self):
         if self.u:
             auth.clear_user_cookie(self)
-        self.redirect(self.get_url('login'))
+        self.redirect(self.get_uri('login'))
 
 class NewPostHandler(Handler):
     page_title = 'New Post'
 
     def get(self):
         if not self.u:
-            self.redirect(self.get_url('login'))
+            self.redirect(self.get_uri('login'))
         else:
             self.render('newpost.html')
 
     def post(self):
         if not self.u:
-            self.redirect(self.get_url('login'))
+            self.redirect(self.get_uri('login'))
         else:
             title = self.request.get('title')
             body = self.request.get('body')
@@ -161,11 +161,15 @@ class NewPostHandler(Handler):
             errors = validate.newpost_errors(title, body)
 
             if errors:
-                self.render('newpost.html', title=title, body=body, errors=errors)
+                self.render(
+                    'newpost.html',
+                    title=title,
+                    body=body,
+                    errors=errors)
             else:
                 p_key = Post.create(title, body, self.u)
-                p_url = self.get_url('singlepost', post_id=p_key.id())
-                self.redirect(p_url)
+                p_uri = self.get_uri('singlepost', post_id=p_key.id())
+                self.redirect(p_uri)
 
 class SinglePostHandler(Handler):
     # TODO: add blog

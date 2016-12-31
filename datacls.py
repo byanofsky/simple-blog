@@ -24,8 +24,8 @@ class Post(ndb.Model):
     # def delx(self):
     #     del self._x
 
-    def get_url(self, url_handler):
-        return url_handler('singlepost', post_id=self.key.id())
+    def get_uri(self, uri_handler):
+        return uri_handler('singlepost', post_id=self.key.id())
 
     @classmethod
     def create(cls, title, body, author):

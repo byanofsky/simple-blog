@@ -6,8 +6,8 @@
 {% for p in posts %}
     <div class="post">
         <div class="post-title">
-            <!-- TODO: better url handling, maybe with permalinks -->
-            <a href="{{ p.get_url(url_handler) }}">{{ p.title }}</a>
+            <!-- TODO: better uri handling, maybe with permalinks -->
+            <a href="{{ p.get_uri(uri_handler) }}">{{ p.title }}</a>
         </div>
         <pre class="post-body">
             {{ p.body }}
