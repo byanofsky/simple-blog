@@ -181,7 +181,7 @@ class SinglePostHandler(Handler):
     def get(self, post_id):
         p = Post.get_by_id(int(post_id))
         self.page_title = p.title
-        author_name = User.get_display_name(p.author.id())
+        # author_name = User.get_display_name(p.author.id())
         self.render('singlepost.html', title=p.title, body=p.body)
 
 
