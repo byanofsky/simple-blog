@@ -28,12 +28,14 @@ class Handler(webapp2.RequestHandler):
         return t.render(params)
 
     def render(self, template, **kw):
-        self.write(self.render_str(
-            template,
-            page_title=self.get_page_title(),
-            seo_title=self.get_seo_title(),
-            **kw
-        ))
+        self.write(
+            self.render_str(
+                template,
+                page_title=self.get_page_title(),
+                seo_title=self.get_seo_title(),
+                **kw
+            )
+        )
 
     # handle page titles
     def get_seo_title(self):
@@ -56,7 +58,7 @@ class Handler(webapp2.RequestHandler):
     def get_loggedin_user(self):
         u_id = auth.get_user_cookie_id(self)
         if u_id:
-            return User.key_by_id(int(u_id)).get()
+            return User.get_by_id(int(u_id))
         else:
             return None
 
