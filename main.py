@@ -3,7 +3,6 @@ import jinja2
 import webapp2
 import validate
 import auth
-# from google.appengine.ext import ndb
 from datacls import *
 
 # TODO: go through imports
