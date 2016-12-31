@@ -21,6 +21,10 @@ class Post(ndb.Model):
         )
         return p.put()
 
+    @classmethod
+    def get_all(cls):
+        return cls.query().order(-cls.created).fetch()
+
 class User(ndb.Model):
     email = ndb.StringProperty(required = True)
     displayname = ndb.StringProperty(required = False)

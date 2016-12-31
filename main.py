@@ -74,7 +74,7 @@ class FrontPageHandler(Handler):
         # posts = Post.query().order(-Post.created).fetch_page(10)
         # TODO: multi page with fetch_page
         base_url = self.get_url('frontpage')
-        posts = Post.query().order(-Post.created).fetch()
+        posts = Post.get_all()
         self.render('frontpage.html', base_url=base_url, posts=posts)
 
 class SignUpHandler(Handler):
