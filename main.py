@@ -146,15 +146,12 @@ class NewPostHandler(Handler):
     page_title = 'New Post'
 
     def get(self):
-        # TODO: move redirect to intialize?
         if not self.u:
             self.redirect(self.get_url('login'))
         else:
             self.render('newpost.html')
 
     def post(self):
-        # TODO: move redirect to initialize?
-        # TODO: do I really need an else statement here?
         if not self.u:
             self.redirect(self.get_url('login'))
         else:
