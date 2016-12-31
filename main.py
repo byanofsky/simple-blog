@@ -6,6 +6,8 @@ import auth
 # from google.appengine.ext import ndb
 from datacls import *
 
+# TODO: go through imports
+
 # Jinja templating setup
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(
@@ -14,7 +16,6 @@ jinja_env = jinja2.Environment(
 )
 
 # TODO: can we move these classes to their own files and not reimport?
-
 class Handler(webapp2.RequestHandler):
     # TODO: can we have a config file for this?
     site_title = "Simple Blog"
@@ -60,8 +61,6 @@ class Handler(webapp2.RequestHandler):
         u_id = auth.get_user_cookie_id(self)
         if u_id:
             return User.get_by_id(int(u_id))
-        else:
-            return None
 
     # on every page load, save user object to instance variable
     def initialize(self, request, response):
