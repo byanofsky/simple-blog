@@ -7,7 +7,7 @@
     <div class="post">
         <div class="post-title">
             <!-- TODO: better url handling, maybe with permalinks -->
-            <a href="{{ base_url}}{{ p.key.id() }}">{{ p.title }}</a>
+            <a href="{{ p.get_url(url_handler) }}">{{ p.title }}</a>
         </div>
         <pre class="post-body">
             {{ p.body }}

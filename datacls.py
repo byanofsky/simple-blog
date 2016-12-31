@@ -12,6 +12,21 @@ class Post(ndb.Model):
     last_modified = ndb.DateTimeProperty(auto_now = True)
     author = ndb.KeyProperty(required = True, kind = 'User')
 
+    # def set_url(self, base_url):
+    #     self.url = base_url + self.key.id()
+
+    # def getx(self):
+    #     return self._x
+    #
+    # def setx(self, value):
+    #     self._x = value
+    #
+    # def delx(self):
+    #     del self._x
+
+    def get_url(self, url_handler):
+        return url_handler('singlepost', post_id=self.key.id())
+
     @classmethod
     def create(cls, title, body, author):
         p = cls(
