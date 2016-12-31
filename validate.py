@@ -46,6 +46,8 @@ def signup_errors(email, pw, verify):
 def login_errors(email, pw):
     errors = {}
 
+    # TODO: too many calls to get user. Simpify
+
     if not valid_email(email):
         errors = 'Please enter a valid email address.'
     elif not User.exists(email):

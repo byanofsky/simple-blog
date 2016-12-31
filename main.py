@@ -19,6 +19,7 @@ class Handler(webapp2.RequestHandler):
     # TODO: can we have a config file for this?
     site_title = "Simple Blog"
 
+    # code to simplify jinja
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
@@ -34,6 +35,7 @@ class Handler(webapp2.RequestHandler):
             **kw
         ))
 
+    # handle page titles
     def get_seo_title(self):
         if hasattr(self, 'page_title') and self.page_title:
             return self.page_title + " - " + self.site_title
@@ -46,31 +48,19 @@ class Handler(webapp2.RequestHandler):
         else:
             return self.site_title
 
-    def get_url(self, name):
-        return webapp2.uri_for(name)
+    # simpler way to get urls for route handling
+    def get_url(self, name, **kw):
+        return webapp2.uri_for(name, **kw)
 
-    # if user cookie, return user id
-    # def get_user_id(self):
-    #     u_cookie = self.request.cookies.get('user_id')
-    #     if u_cookie:
-    #         return auth.check_secure_val(u_cookie)
-    #     else:
-    #         return None
-
+    # Check if a user is logged in and return that User object
     def get_loggedin_user(self):
         u_id = auth.get_user_cookie_id(self)
         if u_id:
             return User.key_by_id(int(u_id)).get()
         else:
             return None
-    #
-    # def set_user_cookie(self, user_key):
-    #     u_cookie = auth.make_secure_val(str(user_key.id()))
-    #     self.response.set_cookie('user_id', u_cookie)
-    #
-    # def clear_user_cookie(self):
-    #     self.response.set_cookie('user_id', None)
 
+    # on every page load, save user object to instance variable
     def initialize(self, request, response):
         super(Handler, self).initialize(request, response)
         self.u = self.get_loggedin_user()
@@ -131,12 +121,14 @@ class LoginHandler(Handler):
         email = self.request.get('email')
         pw = self.request.get('password')
 
+        # TODO: right now we call db like 3 times with validate, checking pw, etc. Simplify
+
         errors = validate.login_errors(email, pw)
 
         if errors:
             self.render('login.html', email=email, errors=errors)
         else:
-            # TODO: making 2 calls to db. 1 here and 2 in
+            # TODO: making 2 calls to db. 1 here and 2 in error check. maybe return user from validate
             u_key = User.get_by_email(email).key
             auth.set_user_cookie(self, u_key)
             self.redirect(self.get_url('welcome'))
@@ -172,7 +164,7 @@ class NewPostHandler(Handler):
                 self.render('newpost.html', title=title, body=body, errors=errors)
             else:
                 p_key = Post.create(title, body, self.u)
-                p_url = webapp2.uri_for('singlepost', post_id=p_key.id())
+                p_url = self.get_url('singlepost', post_id=p_key.id())
                 self.redirect(p_url)
 
 class SinglePostHandler(Handler):
@@ -182,6 +174,7 @@ class SinglePostHandler(Handler):
 
     def get(self, post_id):
         p = Post.get_by_id(int(post_id))
+        self.page_title = p.title
         author_name = User.get_display_name(p.author.id())
         self.render('singlepost.html', title=p.title, body=p.body)
 
