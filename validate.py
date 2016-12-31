@@ -27,14 +27,11 @@ def valid_login(email, pw):
 def signup_errors(email, pw, verify):
     errors = {}
 
-    if User.exists(email):
+    if User.get_by_email(email):
         errors['user_exists'] = ('There is already a user registered ' +
                                  'with this email.')
     if not valid_email(email):
         errors['email'] = 'Please enter a valid email address.'
-    # if not valid_username(un):
-    #     errors['username'] = ('Please enter a valid username. 3-20 characters,'
-    #                           ' using only letters, numbers, "_", or "-".')
     if not valid_password(pw):
         errors['password'] = 'Please enter a valid password. 3-20 characters.'
     if not password_match(pw, verify):

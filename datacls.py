@@ -75,11 +75,5 @@ class User(ndb.Model):
         set_user_cookie(handler, u_key)
 
     @classmethod
-    def exists(cls, email):
-        return cls.query(cls.email == email).fetch()
-
-    @classmethod
     def get_by_email(cls, email):
-        # return cls.exists(email)[0]
-        print cls.query(cls.email == email)
         return cls.query(cls.email == email).get()
