@@ -18,9 +18,9 @@ def valid_password(pw):
 def password_match(pw, verify):
     return pw == verify
 
-def valid_login(email, pw):
-    pw_hash = User.get_pw_hash(email)
-    return verify_pw(pw, pw_hash)
+def valid_login(u, pw):
+    hashed_pw = u.hashed_pw
+    return verify_pw(pw, hashed_pw)
 
 # TODO: make a parent class for errors
 
@@ -40,16 +40,14 @@ def signup_errors(email, pw, verify):
 
     return errors
 
-def login_errors(email, pw):
+def login_errors(email, pw, u):
     errors = {}
-
-    # TODO: too many calls to get user. Simpify
 
     if not valid_email(email):
         errors = 'Please enter a valid email address.'
-    elif not User.exists(email):
+    elif not u:
         errors = 'There is no user with this email address.'
-    elif not valid_login(email, pw):
+    elif not valid_login(u, pw):
         errors = 'The password is incorrect. Please try again.'
 
     return errors

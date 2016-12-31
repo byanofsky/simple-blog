@@ -126,16 +126,14 @@ class LoginHandler(Handler):
         email = self.request.get('email')
         pw = self.request.get('password')
 
-        # TODO: right now we call db like 3 times with validate, checking pw, etc. Simplify
+        u = User.get_by_email(email)
 
-        errors = validate.login_errors(email, pw)
+        errors = validate.login_errors(email, pw, u)
 
         if errors:
             self.render('login.html', email=email, errors=errors)
         else:
-            # TODO: making 2 calls to db. 1 here and 2 in error check. maybe return user from validate
-            u_key = User.get_by_email(email).key
-            auth.set_user_cookie(self, u_key)
+            auth.set_user_cookie(self, u.key)
             self.redirect(self.get_url('welcome'))
 
 class LogoutHandler(Handler):

@@ -18,7 +18,7 @@ def check_secure_val(h):
     if h == make_secure_val(val):
         return val
 
-def make_pw_hash(pw):
+def make_hashed_pw(pw):
     return pbkdf2_sha256.hash(pw)
 
 def verify_pw(pw, hash):

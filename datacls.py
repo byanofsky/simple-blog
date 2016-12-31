@@ -1,6 +1,6 @@
 from auth import make_secure_val, check_secure_val
 from google.appengine.ext import ndb
-from auth import make_pw_hash, set_user_cookie
+from auth import make_hashed_pw, set_user_cookie
 
 # TODO: check other datastore options
 
@@ -50,10 +50,11 @@ class User(ndb.Model):
         # u = ndb.Key(cls, int(u_id)).get()
         return self.displayname or self.email
 
-    @classmethod
-    def get_pw_hash(cls, email):
-        u = cls.get_by_email(email)
-        return u.hashed_pw
+    # TODO: probably can remove
+    # @classmethod
+    # def get_pw_hash(cls, email):
+    #     u = cls.get_by_email(email)
+    #     return u.hashed_pw
 
     # @classmethod
     # def check_user_cookie(cls):
@@ -65,7 +66,7 @@ class User(ndb.Model):
 
     @classmethod
     def create(cls, email, pw, displayname):
-        hashed_pw = make_pw_hash(pw)
+        hashed_pw = make_hashed_pw(pw)
         u = cls(email=email, hashed_pw=hashed_pw, displayname=displayname )
         return u.put()
 
