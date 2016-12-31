@@ -102,6 +102,7 @@ class SignUpHandler(Handler):
         else:
             # TODO: Can I combine these to one function call?
             User.signup(self, email, pw, displayname)
+            # TODO: make a redirect function
             self.redirect(self.get_url('welcome'))
 
 class WelcomeHandler(Handler):
