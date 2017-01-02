@@ -92,7 +92,6 @@ class SignUpHandler(Handler):
         displayname = self.request.get('displayname')
 
         # Validate signup
-        # TODO: finetune validation
         errors = validate.signup_errors(email, pw, verify)
 
         if errors:
@@ -102,9 +101,7 @@ class SignUpHandler(Handler):
                 displayname=displayname,
                 errors=errors)
         else:
-            # TODO: Can I combine these to one function call?
             User.signup(self, email, pw, displayname)
-            # TODO: make a redirect function
             self.redirect_by_name('welcome')
 
 class WelcomeHandler(Handler):
@@ -112,7 +109,6 @@ class WelcomeHandler(Handler):
 
     def get(self):
         if not self.u:
-            # TODO: make a redirect function
             self.redirect_by_name('signup')
         else:
             displayname = self.u.get_displayname()
