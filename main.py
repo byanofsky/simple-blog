@@ -55,6 +55,9 @@ class Handler(webapp2.RequestHandler):
     def get_uri(self, name, **kw):
         return webapp2.uri_for(name, **kw)
 
+    def redirect_by_name(self, name):
+        self.redirect(self.get_uri(name))
+
     # Check if a user is logged in and return that User object
     def get_loggedin_user(self):
         u_id = auth.get_user_cookie_id(self)
@@ -102,7 +105,7 @@ class SignUpHandler(Handler):
             # TODO: Can I combine these to one function call?
             User.signup(self, email, pw, displayname)
             # TODO: make a redirect function
-            self.redirect(self.get_uri('welcome'))
+            self.redirect_by_name('welcome')
 
 class WelcomeHandler(Handler):
     page_title = 'Welcome'
@@ -110,7 +113,7 @@ class WelcomeHandler(Handler):
     def get(self):
         if not self.u:
             # TODO: make a redirect function
-            self.redirect(self.get_uri('signup'))
+            self.redirect_by_name('signup')
         else:
             displayname = self.u.get_displayname()
             self.render('welcome.html', displayname=displayname)
@@ -133,26 +136,26 @@ class LoginHandler(Handler):
             self.render('login.html', email=email, errors=errors)
         else:
             auth.set_user_cookie(self, u.key)
-            self.redirect(self.get_uri('welcome'))
+            self.redirect_by_name('welcome')
 
 class LogoutHandler(Handler):
     def get(self):
         if self.u:
             auth.clear_user_cookie(self)
-        self.redirect(self.get_uri('login'))
+        self.redirect_by_name('login')
 
 class NewPostHandler(Handler):
     page_title = 'New Post'
 
     def get(self):
         if not self.u:
-            self.redirect(self.get_uri('login'))
+            self.redirect_by_name('login')
         else:
             self.render('newpost.html')
 
     def post(self):
         if not self.u:
-            self.redirect(self.get_uri('login'))
+            self.redirect_by_name('login')
         else:
             title = self.request.get('title')
             body = self.request.get('body')
