@@ -180,7 +180,7 @@ class SinglePostHandler(Handler):
         # author_name = User.get_display_name(p.author.id())
         self.render('singlepost.html', title=p.title, body=p.body)
 
-
+# TODO: Handling with or without backslash
 app = webapp2.WSGIApplication([
     webapp2.Route('/', handler=FrontPageHandler, name='frontpage'),
     webapp2.Route('/signup', handler=SignUpHandler, name='signup'),
@@ -188,5 +188,5 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/login', handler=LoginHandler, name='login'),
     webapp2.Route('/logout', handler=LogoutHandler, name='logout'),
     webapp2.Route('/newpost', handler=NewPostHandler, name='newpost'),
-    webapp2.Route('/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost')
+    webapp2.Route('/post/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost')
 ], debug=True)
