@@ -1,6 +1,5 @@
-from auth import make_secure_val, check_secure_val
+from auth import make_secure_val, check_secure_val, make_hashed_pw, set_user_cookie
 from google.appengine.ext import ndb
-from auth import make_hashed_pw, set_user_cookie
 
 # TODO: check other datastore options
 
