@@ -11,6 +11,7 @@ class Post(ndb.Model):
     author = ndb.KeyProperty(required = True, kind = 'User')
 
     # TODO: should this be part of handler?
+    # used on frontpage template
     def get_uri(self, uri_handler):
         return uri_handler('singlepost', post_id=self.key.id())
 
