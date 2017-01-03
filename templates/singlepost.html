@@ -7,13 +7,13 @@
     {% if can_edit %}
     <div>
         <form action="{{ action_url }}" method="get">
-            <input type="hidden" name="post_id" value="{{ post_id }}">
+            <input type="hidden" name="post_id" value="{{ p.key.id() }}">
             <input type="submit" value="Edit">
         </form>
     </div>
     {% endif %}
     <pre class="post-body">
-        {{ body }}
+        {{ p.body }}
     </pre>
 
     <div>

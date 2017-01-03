@@ -240,23 +240,17 @@ class SinglePostHandler(Handler):
         # check if post author is logged in author
         # TODO: handle errors if post does not exist, or author not logged in
         self.p = Post.get_by_id(int(post_id))
-        if self.u and (self.p.author == self.u.key):
-            can_edit = True
-        else:
-            can_edit = False
         self.page_title = self.p.title
         action = self.request.get('action')
         if action == 'like':
+            # TODO: check if user logged in first
             self.p.add_like(self.u.key)
             print 'liked'
-        # author_name = User.get_display_name(p.author.id())
-        edit_url = self.get_uri('editpost', post_id=post_id)
+        edit_url = self.get_uri('editpost')
         self.render(
             'singlepost.html',
-            title=self.p.title,
-            body=self.p.body,
-            can_edit=can_edit,
-            post_id=post_id,
+            p=self.p,
+            can_edit=self.user_can_edit(),
             action_url=edit_url)
 
 # TODO: Handling with or without backslash
