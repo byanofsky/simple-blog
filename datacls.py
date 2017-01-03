@@ -23,7 +23,14 @@ class Post(ndb.Model):
 
     def add_like(self, u_key):
         # add user to list of likes. Assumes user not in list
-        self.likes.append(u_key)
+        if not u_key in self.likes:
+            self.likes.append(u_key)
+            self.put()
+
+    def remove_like(self, u_key):
+        if u_key in self.likes:
+            self.likes.remove(u_key)
+            self.put()
 
     @classmethod
     def create(cls, title, body, author):
@@ -49,6 +56,9 @@ class User(ndb.Model):
 
     def like(self, p):
         p.add_like(self.key)
+
+    def liked_post(self, p):
+        return self.key in p.likes
 
     @classmethod
     def create(cls, email, pw, displayname):

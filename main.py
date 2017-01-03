@@ -64,12 +64,18 @@ class Handler(webapp2.RequestHandler):
         if u_id:
             return User.get_by_id(int(u_id))
 
+    # TODO: should this be moved, and can returns be removed
     def user_can_edit(self):
         if (self.u and self.p) and (self.u.key == self.p.author):
             return True
         else:
             return False
 
+    def user_can_like(self):
+        if self.u and not self.user_can_edit() and not self.u.liked_post(self.p):
+            return True
+        else:
+            return False
 
     # on every page load, save user object to instance variable
     def initialize(self, request, response):
@@ -241,17 +247,29 @@ class SinglePostHandler(Handler):
         # TODO: handle errors if post does not exist, or author not logged in
         self.p = Post.get_by_id(int(post_id))
         self.page_title = self.p.title
-        action = self.request.get('action')
-        if action == 'like':
-            # TODO: check if user logged in first
-            self.p.add_like(self.u.key)
-            print 'liked'
-        edit_url = self.get_uri('editpost')
-        self.render(
-            'singlepost.html',
-            p=self.p,
-            can_edit=self.user_can_edit(),
-            action_url=edit_url)
+        if self.u:
+            action = self.request.get('action')
+            if action == 'like':
+                # TODO: check if user logged in first
+                self.u.like(self.p)
+            if action == 'unlike':
+                self.p.remove_like(self.u.key)
+            edit_url = self.get_uri('editpost')
+            can_like = self.user_can_like()
+            liked_post = self.u.liked_post(self.p)
+            self.render(
+                'singlepost.html',
+                p=self.p,
+                can_edit=self.user_can_edit(),
+                can_like=can_like,
+                liked_post=liked_post,
+                action_url=edit_url)
+        else:
+            self.render(
+                'singlepost.html',
+                p=self.p)
+
+        # TODO: should change to post on like? So can't share url?
 
 # TODO: Handling with or without backslash
 app = webapp2.WSGIApplication([

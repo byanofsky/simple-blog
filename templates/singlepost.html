@@ -16,12 +16,25 @@
         {{ p.body }}
     </pre>
 
+    {% if can_like %}
     <div>
         <form method="get">
             <input type="hidden" name="action" value="like">
             <input type="submit" value="Like">
         </form>
     </div>
+    {% endif %}
+    {% if liked_post %}
+        <div>
+            You liked this post
+        </div>
+        <div>
+            <form method="get">
+                <input type="hidden" name="action" value="unlike">
+                <input type="submit" value="Unlike">
+            </form>
+        </div>
+    {% endif %}
 </div>
 
 {% endblock %}
