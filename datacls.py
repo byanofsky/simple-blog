@@ -10,6 +10,11 @@ class Post(ndb.Model):
     last_modified = ndb.DateTimeProperty(auto_now = True)
     author = ndb.KeyProperty(required = True, kind = 'User')
 
+    def update(self, title, body):
+        self.title = title
+        self.body = body
+        return self.put()
+
     # TODO: should this be part of handler?
     # used on frontpage template
     def get_uri(self, uri_handler):
