@@ -6,7 +6,7 @@
 <div class="post">
     {% if can_edit %}
     <div>
-        <form action="{{ action_url }}" method="get">
+        <form action="{{ edit_url }}" method="get">
             <input type="hidden" name="post_id" value="{{ p.key.id() }}">
             <input type="submit" value="Edit">
         </form>
@@ -18,7 +18,7 @@
 
     {% if can_like %}
     <div>
-        <form method="get">
+        <form method="post">
             <input type="hidden" name="action" value="like">
             <input type="submit" value="Like">
         </form>
@@ -29,7 +29,7 @@
             You liked this post
         </div>
         <div>
-            <form method="get">
+            <form method="post">
                 <input type="hidden" name="action" value="unlike">
                 <input type="submit" value="Unlike">
             </form>
