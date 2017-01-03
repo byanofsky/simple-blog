@@ -148,6 +148,7 @@ class LogoutHandler(Handler):
         self.redirect_by_name('login')
 
 class EditPostHandler(Handler):
+    # TODO: need to finetune this
     page_title = 'Edit Post'
 
     def get(self):
@@ -166,23 +167,38 @@ class EditPostHandler(Handler):
             self.redirect_by_name('singlepost', post_id=post_id)
 
     def post(self):
-        #check for errors
-
-        #if no errors, put
-
-        #if errors, show errors
         title = self.request.get('title')
         body = self.request.get('body')
         post_id = self.request.get('post_id')
-        post_url = self.get_uri('singlepost', post_id=post_id)
+
         self.p = Post.get_by_id(int(post_id))
-        self.p.update(title, body)
-        self.render(
-            'editpost.html',
-            title=self.p.title,
-            body=self.p.body,
-            post_id=post_id,
-            post_url=post_url)
+        post_url = self.get_uri('singlepost', post_id=post_id)
+
+        #check for errors
+        errors = validate.editpost_errors(title, body)
+
+        #if errors, show errors
+        if not self.user_can_edit():
+            # TODO: need to handle error messages
+            self.redirect_by_name('singlepost', post_id=post_id)
+        elif errors:
+            self.render(
+                'editpost.html',
+                title=title,
+                body=body,
+                post_id=post_id,
+                post_url=post_url,
+                errors=errors)
+
+        #if no errors, put
+        else:
+            self.p.update(title, body)
+            self.render(
+                'editpost.html',
+                title=self.p.title,
+                body=self.p.body,
+                post_id=post_id,
+                post_url=post_url)
 
 
 class NewPostHandler(Handler):

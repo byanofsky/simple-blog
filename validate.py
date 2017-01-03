@@ -57,3 +57,15 @@ def newpost_errors(title, body):
                           'blog post content.')
 
     return errors
+
+def editpost_errors(title, body):
+    errors = {}
+
+    if not title:
+        errors['title'] = 'Title cannot be blank.'
+    if not body:
+        errors['body'] = ('Your blog post cannot be blank. Please enter your ' +
+                          'blog post content.')
+
+    return errors
+    
