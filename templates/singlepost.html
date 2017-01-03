@@ -4,6 +4,14 @@
 <h1>{{ page_title }}</h1>
 
 <div class="post">
+    {% if can_edit %}
+    <div>
+        <form action="{{ action_url }}" method="get">
+            <input type="hidden" name="post_id" value="{{ post_id }}">
+            <input type="submit" value="Edit">
+        </form>
+    </div>
+    {% endif %}
     <pre class="post-body">
         {{ body }}
     </pre>

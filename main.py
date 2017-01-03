@@ -140,6 +140,20 @@ class LogoutHandler(Handler):
             auth.clear_user_cookie(self)
         self.redirect_by_name('login')
 
+class EditPostHandler(Handler):
+    page_title = 'Edit Post'
+    def get(self):
+        post_id = self.request.get('post_id')
+        p = Post.get_by_id(int(post_id))
+        if (self.u and p) and (self.u.key == p.author):
+            self.render(
+                'newpost.html',
+                title=p.title,
+                body=p.body)
+        else:
+            # TODO: need to handle error messages
+            self.redirect_by_name('frontpage')
+
 class NewPostHandler(Handler):
     page_title = 'New Post'
 
@@ -175,10 +189,23 @@ class SinglePostHandler(Handler):
     # add ability to edit
 
     def get(self, post_id):
+        # check if post author is logged in author
         p = Post.get_by_id(int(post_id))
+        if p.author == self.u.key:
+            can_edit = True
+        else:
+            can_edit = False
         self.page_title = p.title
         # author_name = User.get_display_name(p.author.id())
-        self.render('singlepost.html', title=p.title, body=p.body)
+        edit_url = self.get_uri('editpost', post_id=post_id)
+        self.render(
+            'singlepost.html',
+            title=p.title,
+            body=p.body,
+            can_edit=can_edit,
+            post_id=post_id,
+            action_url=edit_url)
+
 
 # TODO: Handling with or without backslash
 app = webapp2.WSGIApplication([
@@ -188,5 +215,6 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/login', handler=LoginHandler, name='login'),
     webapp2.Route('/logout', handler=LogoutHandler, name='logout'),
     webapp2.Route('/newpost', handler=NewPostHandler, name='newpost'),
-    webapp2.Route('/post/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost')
+    webapp2.Route('/post/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost'),
+    webapp2.Route('/editpost', handler=EditPostHandler, name='editpost')
 ], debug=True)
