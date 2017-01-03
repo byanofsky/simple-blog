@@ -153,23 +153,36 @@ class EditPostHandler(Handler):
     def get(self):
         post_id = self.request.get('post_id')
         self.p = Post.get_by_id(int(post_id))
+        post_url = self.get_uri('singlepost', post_id=post_id)
         if self.user_can_edit():
             self.render(
                 'editpost.html',
                 title=self.p.title,
                 body=self.p.body,
-                post_id=post_id)
+                post_id=post_id,
+                post_url=post_url)
         else:
             # TODO: need to handle error messages
             self.redirect_by_name('singlepost', post_id=post_id)
 
     def post(self):
+        #check for errors
+
+        #if no errors, put
+
+        #if errors, show errors
         title = self.request.get('title')
         body = self.request.get('body')
         post_id = self.request.get('post_id')
+        post_url = self.get_uri('singlepost', post_id=post_id)
         self.p = Post.get_by_id(int(post_id))
         self.p.update(title, body)
-        self.write('success')
+        self.render(
+            'editpost.html',
+            title=self.p.title,
+            body=self.p.body,
+            post_id=post_id,
+            post_url=post_url)
 
 
 class NewPostHandler(Handler):
