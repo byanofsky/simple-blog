@@ -55,14 +55,21 @@ class Handler(webapp2.RequestHandler):
     def get_uri(self, name, **kw):
         return webapp2.uri_for(name, **kw)
 
-    def redirect_by_name(self, name):
-        self.redirect(self.get_uri(name))
+    def redirect_by_name(self, name, **kw):
+        self.redirect(self.get_uri(name, **kw))
 
     # Check if a user is logged in and return that User object
     def get_loggedin_user(self):
         u_id = auth.get_user_cookie_id(self)
         if u_id:
             return User.get_by_id(int(u_id))
+
+    def user_can_edit(self):
+        if (self.u and self.p) and (self.u.key == self.p.author):
+            return True
+        else:
+            return False
+
 
     # on every page load, save user object to instance variable
     def initialize(self, request, response):
@@ -142,17 +149,28 @@ class LogoutHandler(Handler):
 
 class EditPostHandler(Handler):
     page_title = 'Edit Post'
+
     def get(self):
         post_id = self.request.get('post_id')
-        p = Post.get_by_id(int(post_id))
-        if (self.u and p) and (self.u.key == p.author):
+        self.p = Post.get_by_id(int(post_id))
+        if self.user_can_edit():
             self.render(
-                'newpost.html',
-                title=p.title,
-                body=p.body)
+                'editpost.html',
+                title=self.p.title,
+                body=self.p.body,
+                post_id=post_id)
         else:
             # TODO: need to handle error messages
-            self.redirect_by_name('frontpage')
+            self.redirect_by_name('singlepost', post_id=post_id)
+
+    def post(self):
+        title = self.request.get('title')
+        body = self.request.get('body')
+        post_id = self.request.get('post_id')
+        self.p = Post.get_by_id(int(post_id))
+        self.p.update(title, body)
+        self.write('success')
+
 
 class NewPostHandler(Handler):
     page_title = 'New Post'
@@ -190,7 +208,7 @@ class SinglePostHandler(Handler):
 
     def get(self, post_id):
         # check if post author is logged in author
-        # TODO: handle errors if post does not exist
+        # TODO: handle errors if post does not exist, or author not logged in
         p = Post.get_by_id(int(post_id))
         if self.u and (p.author == self.u.key):
             can_edit = True
