@@ -55,7 +55,8 @@ class User(ndb.Model):
         return self.displayname or self.email
 
     def like(self, p):
-        p.add_like(self.key)
+        if not self.key == p.author:
+            p.add_like(self.key)
 
     def liked_post(self, p):
         return self.key in p.likes
