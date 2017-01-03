@@ -9,6 +9,7 @@ class Post(ndb.Model):
     created = ndb.DateTimeProperty(auto_now_add = True)
     last_modified = ndb.DateTimeProperty(auto_now = True)
     author = ndb.KeyProperty(required = True, kind = 'User')
+    likes = ndb.KeyProperty(repeated=True, kind= 'User')
 
     def update(self, title, body):
         self.title = title
@@ -19,6 +20,10 @@ class Post(ndb.Model):
     # used on frontpage template
     def get_uri(self, uri_handler):
         return uri_handler('singlepost', post_id=self.key.id())
+
+    def add_like(self, u_key):
+        # add user to list of likes. Assumes user not in list
+        self.likes.append(u_key)
 
     @classmethod
     def create(cls, title, body, author):
@@ -41,6 +46,9 @@ class User(ndb.Model):
 
     def get_displayname(self):
         return self.displayname or self.email
+
+    def like(self, p):
+        p.add_like(self.key)
 
     @classmethod
     def create(cls, email, pw, displayname):

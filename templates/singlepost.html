@@ -15,6 +15,13 @@
     <pre class="post-body">
         {{ body }}
     </pre>
+
+    <div>
+        <form method="get">
+            <input type="hidden" name="action" value="like">
+            <input type="submit" value="Like">
+        </form>
+    </div>
 </div>
 
 {% endblock %}

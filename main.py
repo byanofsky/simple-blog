@@ -239,22 +239,25 @@ class SinglePostHandler(Handler):
     def get(self, post_id):
         # check if post author is logged in author
         # TODO: handle errors if post does not exist, or author not logged in
-        p = Post.get_by_id(int(post_id))
-        if self.u and (p.author == self.u.key):
+        self.p = Post.get_by_id(int(post_id))
+        if self.u and (self.p.author == self.u.key):
             can_edit = True
         else:
             can_edit = False
-        self.page_title = p.title
+        self.page_title = self.p.title
+        action = self.request.get('action')
+        if action == 'like':
+            self.p.add_like(self.u.key)
+            print 'liked'
         # author_name = User.get_display_name(p.author.id())
         edit_url = self.get_uri('editpost', post_id=post_id)
         self.render(
             'singlepost.html',
-            title=p.title,
-            body=p.body,
+            title=self.p.title,
+            body=self.p.body,
             can_edit=can_edit,
             post_id=post_id,
             action_url=edit_url)
-
 
 # TODO: Handling with or without backslash
 app = webapp2.WSGIApplication([
