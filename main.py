@@ -190,8 +190,9 @@ class SinglePostHandler(Handler):
 
     def get(self, post_id):
         # check if post author is logged in author
+        # TODO: handle errors if post does not exist
         p = Post.get_by_id(int(post_id))
-        if p.author == self.u.key:
+        if self.u and (p.author == self.u.key):
             can_edit = True
         else:
             can_edit = False
