@@ -154,8 +154,8 @@ class EditPostHandler(Handler):
     def get(self):
         post_id = self.request.get('post_id')
         self.p = Post.get_by_id(int(post_id))
-        post_url = self.get_uri('singlepost', post_id=post_id)
         if self.user_can_edit():
+            post_url = self.get_uri('singlepost', post_id=post_id)
             self.render(
                 'editpost.html',
                 title=self.p.title,
@@ -167,40 +167,38 @@ class EditPostHandler(Handler):
             self.redirect_by_name('singlepost', post_id=post_id)
 
     def post(self):
-        title = self.request.get('title')
-        body = self.request.get('body')
         post_id = self.request.get('post_id')
-
         self.p = Post.get_by_id(int(post_id))
-        post_url = self.get_uri('singlepost', post_id=post_id)
+        if self.user_can_edit():
+            title = self.request.get('title')
+            body = self.request.get('body')
 
-        #check for errors
-        errors = validate.editpost_errors(title, body)
+            post_url = self.get_uri('singlepost', post_id=post_id)
 
-        #if errors, show errors
-        if not self.user_can_edit():
+            #check for errors
+            errors = validate.editpost_errors(title, body)
+
+            if errors:
+                self.render(
+                    'editpost.html',
+                    title=title,
+                    body=body,
+                    post_id=post_id,
+                    post_url=post_url,
+                    errors=errors)
+            else:
+                msg = 'Post successfully updated.'
+                self.p.update(title, body)
+                self.render(
+                    'editpost.html',
+                    title=self.p.title,
+                    body=self.p.body,
+                    post_id=post_id,
+                    post_url=post_url,
+                    msg=msg)
+        else:
             # TODO: need to handle error messages
             self.redirect_by_name('singlepost', post_id=post_id)
-        elif errors:
-            self.render(
-                'editpost.html',
-                title=title,
-                body=body,
-                post_id=post_id,
-                post_url=post_url,
-                errors=errors)
-
-        #if no errors, put
-        else:
-            msg = 'Post successfully updated.'
-            self.p.update(title, body)
-            self.render(
-                'editpost.html',
-                title=self.p.title,
-                body=self.p.body,
-                post_id=post_id,
-                post_url=post_url,
-                msg=msg)
 
 
 class NewPostHandler(Handler):
