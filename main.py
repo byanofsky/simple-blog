@@ -241,35 +241,50 @@ class SinglePostHandler(Handler):
     # TODO: add blog
     # add comments
     # add ability to edit
+    def initialize(self, request, response):
+        super(SinglePostHandler, self).initialize(request, response)
+        p_id = int(self.request.route_kwargs['post_id'])
+        self.p = Post.get_by_id(p_id)
+        self.page_title = self.p.title
+
+    # render post for a logged in user
+    def render_post_user(self, **kw):
+        edit_url = self.get_uri('editpost')
+        can_edit = self.user_can_edit()
+        can_like = self.user_can_like()
+        liked_post = self.u.liked_post(self.p)
+        self.render(
+            'singlepost.html',
+            p=self.p,
+            edit_url=edit_url,
+            can_edit=can_edit,
+            can_like = can_like,
+            liked_post = liked_post,
+            **kw)
+
+    # render post if no user
+    def render_post(self):
+        self.render('singlepost.html', p=self.p)
 
     def get(self, post_id):
         # check if post author is logged in author
         # TODO: handle errors if post does not exist, or author not logged in
-        self.p = Post.get_by_id(int(post_id))
-        self.page_title = self.p.title
         if self.u:
-            action = self.request.get('action')
-            if action == 'like':
-                # TODO: check if user logged in first
-                self.u.like(self.p)
-            if action == 'unlike':
-                self.p.remove_like(self.u.key)
-            edit_url = self.get_uri('editpost')
-            can_like = self.user_can_like()
-            liked_post = self.u.liked_post(self.p)
-            self.render(
-                'singlepost.html',
-                p=self.p,
-                can_edit=self.user_can_edit(),
-                can_like=can_like,
-                liked_post=liked_post,
-                action_url=edit_url)
+            self.render_post_user()
         else:
-            self.render(
-                'singlepost.html',
-                p=self.p)
+            self.render_post()
 
-        # TODO: should change to post on like? So can't share url?
+    # TODO: does this keep posting if user not logged in?
+    def post(self, post_id):
+        action = self.request.get('action')
+        if self.u and not self.user_can_edit() and action:
+            if action == 'like':
+                self.u.like(self.p)
+            elif action == 'unlike':
+                self.p.remove_like(self.u.key)
+            self.render_post_user()
+        else:
+            self.redirect_by_name('singlepost', post_id=post_id)
 
 # TODO: Handling with or without backslash
 app = webapp2.WSGIApplication([
