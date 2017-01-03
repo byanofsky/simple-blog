@@ -164,7 +164,8 @@ class EditPostHandler(Handler):
                 post_url=post_url)
         else:
             # TODO: need to handle error messages
-            self.redirect_by_name('singlepost', post_id=post_id)
+            error_msg = 'You cannot edit this post.'
+            self.render('error.html', error_msg=error_msg)
 
     def post(self):
         post_id = self.request.get('post_id')
@@ -197,8 +198,8 @@ class EditPostHandler(Handler):
                     post_url=post_url,
                     msg=msg)
         else:
-            # TODO: need to handle error messages
-            self.redirect_by_name('singlepost', post_id=post_id)
+            error_msg = 'You cannot edit this post.'
+            self.render('error.html', error_msg=error_msg)
 
 
 class NewPostHandler(Handler):
