@@ -192,13 +192,15 @@ class EditPostHandler(Handler):
 
         #if no errors, put
         else:
+            msg = 'Post successfully updated.'
             self.p.update(title, body)
             self.render(
                 'editpost.html',
                 title=self.p.title,
                 body=self.p.body,
                 post_id=post_id,
-                post_url=post_url)
+                post_url=post_url,
+                msg=msg)
 
 
 class NewPostHandler(Handler):

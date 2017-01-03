@@ -3,6 +3,10 @@
 {% block body %}
 <h1>{{ page_title }}</h1>
 
+{% if msg %}
+    {{ msg }}
+{% endif %}
+
 <a href="{{ post_url }}">View Post</a>
 
 <form method="POST">
