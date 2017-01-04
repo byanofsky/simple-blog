@@ -251,16 +251,19 @@ class SinglePostHandler(Handler):
         self.render('singlepost.html', p=self.p, **kw)
 
     # render post for a logged in user
-    def render_post_user(self):
+    def render_post_user(self, **kw):
         edit_url = self.get_uri('editpost')
+        can_comment = True
         can_edit = self.user_can_edit()
         can_like = self.user_can_like()
         liked_post = self.u.liked_post(self.p)
         self.render_post(
             edit_url=edit_url,
+            can_comment=can_comment,
             can_edit=can_edit,
             can_like = can_like,
-            liked_post = liked_post)
+            liked_post = liked_post,
+            **kw)
 
     def get(self, post_id):
         # check if post author is logged in author
@@ -273,7 +276,11 @@ class SinglePostHandler(Handler):
     # TODO: does this keep posting if user not logged in?
     def post(self, post_id):
         action = self.request.get('action')
-        if self.u and not self.user_can_edit() and action:
+        if self.u and action == 'comment':
+            comment_form_body = self.request.get('comment_form_body')
+            print 'comment'
+            self.render_post_user(comment_form_body=comment_form_body)
+        elif self.u and not self.user_can_edit() and action:
             if action == 'like':
                 self.u.like(self.p)
             elif action == 'unlike':
