@@ -8,6 +8,7 @@ import yaml
 from datacls import *
 from google.appengine.datastore.datastore_query import Cursor
 
+# load config settings
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.load(ymlfile)
 
