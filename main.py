@@ -247,24 +247,20 @@ class SinglePostHandler(Handler):
         self.p = Post.get_by_id(p_id)
         self.page_title = self.p.title
 
+    def render_post(self, **kw):
+        self.render('singlepost.html', p=self.p, **kw)
+
     # render post for a logged in user
-    def render_post_user(self, **kw):
+    def render_post_user(self):
         edit_url = self.get_uri('editpost')
         can_edit = self.user_can_edit()
         can_like = self.user_can_like()
         liked_post = self.u.liked_post(self.p)
-        self.render(
-            'singlepost.html',
-            p=self.p,
+        self.render_post(
             edit_url=edit_url,
             can_edit=can_edit,
             can_like = can_like,
-            liked_post = liked_post,
-            **kw)
-
-    # render post if no user
-    def render_post(self):
-        self.render('singlepost.html', p=self.p)
+            liked_post = liked_post)
 
     def get(self, post_id):
         # check if post author is logged in author
