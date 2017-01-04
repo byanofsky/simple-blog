@@ -50,6 +50,10 @@ class Post(ndb.Model):
     def get_all(cls):
         return cls.query().order(-cls.created).fetch()
 
+    @classmethod
+    def get_n(cls, n, cursor):
+        return cls.query().order(-cls.created).fetch_page(n, start_cursor=cursor)
+
 class Comment(ndb.Model):
     body = ndb.TextProperty(required = True)
     created = ndb.DateTimeProperty(auto_now_add = True)

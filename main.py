@@ -6,6 +6,7 @@ import validate
 import auth
 import yaml
 from datacls import *
+from google.appengine.datastore.datastore_query import Cursor
 
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.load(ymlfile)
@@ -84,10 +85,15 @@ class Handler(webapp2.RequestHandler):
             auth.clear_user_cookie(self)
 
 class FrontPageHandler(Handler):
+    POSTS_PER_PAGE = 10
+
     def get(self):
-        # posts = Post.query().order(-Post.created).fetch_page(10)
-        # TODO: multi page with fetch_page
-        posts = Post.get_all()
+        cursor = Cursor(urlsafe=self.request.get('cursor'))
+        posts, next_cursor, more = Post.get_n(self.POSTS_PER_PAGE, cursor)
+
+        # next cursor to ouput to url
+        # next_cursor.urlsafe()
+
         # TODO: can I fix up uri handling some more?
         self.render('frontpage.html', posts=posts, uri_handler=self.get_uri)
 
