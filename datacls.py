@@ -17,6 +17,11 @@ class Post(ndb.Model):
         self.body = body
         return self.put()
 
+    def add_comment(self, comment_key):
+        if not comment_key in self.comments:
+            self.comments.append(comment_key)
+            self.put()
+
     # TODO: should this be part of handler?
     # used on frontpage template
     def get_uri(self, uri_handler):
@@ -52,6 +57,16 @@ class Comment(ndb.Model):
     last_modified = ndb.DateTimeProperty(auto_now = True)
     author = ndb.KeyProperty(required = True, kind = 'User')
     post = ndb.KeyProperty(required = True, kind = 'Post')
+
+    @classmethod
+    def create(cls, body, author, p):
+        c = cls(
+            body=body,
+            author=author.key,
+            post=p.key
+        )
+        c_key = c.put()
+        p.add_comment(c_key)
 
 class User(ndb.Model):
     email = ndb.StringProperty(required = True)

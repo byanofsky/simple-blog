@@ -281,6 +281,7 @@ class SinglePostHandler(Handler):
             # user action to comment
             comment_body = self.request.get('comment_body')
             if comment_body:
+                Comment.create(comment_body, self.u, self.p)
                 self.redirect_by_name('singlepost', post_id=post_id)
             else:
                 # blank comment submitted
