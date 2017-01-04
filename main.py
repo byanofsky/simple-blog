@@ -69,22 +69,17 @@ class Handler(webapp2.RequestHandler):
     # TODO: should this be moved, and can returns be removed
     # returns whether current user can edit post
     def user_can_edit(self):
-        if (self.u and self.p) and (self.u.key == self.p.author):
-            return True
-        else:
-            return False
+        return (self.u and self.p) and self.u.can_edit_post(self.p)
 
     # returns whether user can like post
     def user_can_like(self):
-        if self.u and not self.user_can_edit() and not self.u.liked_post(self.p):
-            return True
-        else:
-            return False
+        return (self.u and self.p) and self.u.can_like_post(self.p)
 
     # on every page load, save user object to instance variable
     def initialize(self, request, response):
         super(Handler, self).initialize(request, response)
         self.u = self.get_loggedin_user()
+        # if there isn't a logged in user, clear user cookies
         if not self.u:
             auth.clear_user_cookie(self)
 

@@ -85,6 +85,12 @@ class User(ndb.Model):
     def liked_post(self, p):
         return self.key in p.likes
 
+    def can_edit_post(self, p):
+        return self.key == p.author
+
+    def can_like_post(self, p):
+        return self.key != p.author and not self.liked_post(p)
+
     @classmethod
     def create(cls, email, pw, displayname):
         hashed_pw = make_hashed_pw(pw)
