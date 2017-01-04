@@ -274,19 +274,29 @@ class SinglePostHandler(Handler):
             self.render_post()
 
     # TODO: does this keep posting if user not logged in?
+    # TODO: we need methods to check these on users
     def post(self, post_id):
         action = self.request.get('action')
         if self.u and action == 'comment':
-            comment_form_body = self.request.get('comment_form_body')
-            print 'comment'
-            self.render_post_user(comment_form_body=comment_form_body)
+            # user action to comment
+            comment_body = self.request.get('comment_body')
+            if comment_body:
+                self.redirect_by_name('singlepost', post_id=post_id)
+            else:
+                # blank comment submitted
+                errors = {}
+                errors['comment_body'] = 'Comment cannot be blank.'
+                self.render_post_user(comment_body=comment_body, errors=errors)
         elif self.u and not self.user_can_edit() and action:
+            # user action to like or unlike
+            # TODO: perhaps action can be like, and another says like/unlike
             if action == 'like':
                 self.u.like(self.p)
             elif action == 'unlike':
                 self.p.remove_like(self.u.key)
             self.render_post_user()
         else:
+            # if no user or no action to post, redirect user
             self.redirect_by_name('singlepost', post_id=post_id)
 
 # TODO: Handling with or without backslash
