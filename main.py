@@ -3,7 +3,11 @@ import jinja2
 import webapp2
 import validate
 import auth
+import yaml
 from datacls import *
+
+with open("config.yml", 'r') as ymlfile:
+    cfg = yaml.load(ymlfile)
 
 # TODO: go through imports
 
@@ -17,7 +21,7 @@ jinja_env = jinja2.Environment(
 # TODO: can we move these classes to their own files and not reimport?
 class Handler(webapp2.RequestHandler):
     # TODO: can we have a config file for this?
-    site_title = "Simple Blog"
+    site_title = cfg['site_title']
 
     # code to simplify jinja
     def write(self, *a, **kw):

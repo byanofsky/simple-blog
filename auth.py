@@ -2,12 +2,16 @@ import hashlib
 import hmac
 import random
 import string
+import yaml
 from passlib.hash import pbkdf2_sha256
+
+with open("config.yml", 'r') as ymlfile:
+    cfg = yaml.load(ymlfile)
 
 # TODO: need to organize auth and validate
 
 # TODO: get secret key from config file
-SECRET_KEY = 'insert secret key'
+SECRET_KEY = cfg['secret_key']
 
 def hash_str(s):
     return hmac.new(SECRET_KEY, s).hexdigest()
