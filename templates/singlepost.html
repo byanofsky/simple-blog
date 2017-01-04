@@ -35,6 +35,41 @@
             </form>
         </div>
     {% endif %}
+
+    <div class="comments">
+        <!-- TODO: list comments, or say no comments -->
+        {% for c in p.comments %}
+        <div class="comment">
+            <div class="comment-body">
+                {{ c.body }}
+            </div>
+            <div class="comment-author">
+                {{ c.author }}
+            </div>
+        </div>
+        {% endfor %}
+        <!-- TODO: form to create a new comment -->
+    </div>
+
+    {% if can_comment %}
+    <div class="comment-form">
+        <form method="post">
+            <label>
+                <div>Comment</div>
+                <textarea name="comment_form_body">{{ comment_form_body }}</textarea>
+                {% if comment_errors and comment_errors.body %}
+                    {{ comment_errors.body }}
+                {% endif %}
+            </label>
+
+            <input type="hidden" name="action" value="comment">
+
+            <div>
+                <input type="submit">
+            </div>
+        </form>
+    </div>
+    {% endif %}
 </div>
 
 {% endblock %}
