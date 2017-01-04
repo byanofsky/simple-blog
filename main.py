@@ -1,3 +1,4 @@
+# TODO: go through imports
 import os
 import jinja2
 import webapp2
@@ -9,8 +10,6 @@ from datacls import *
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.load(ymlfile)
 
-# TODO: go through imports
-
 # Jinja templating setup
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(
@@ -20,7 +19,6 @@ jinja_env = jinja2.Environment(
 
 # TODO: can we move these classes to their own files and not reimport?
 class Handler(webapp2.RequestHandler):
-    # TODO: can we have a config file for this?
     site_title = cfg['site_title']
 
     # code to simplify jinja
@@ -69,12 +67,14 @@ class Handler(webapp2.RequestHandler):
             return User.get_by_id(int(u_id))
 
     # TODO: should this be moved, and can returns be removed
+    # returns whether current user can edit post
     def user_can_edit(self):
         if (self.u and self.p) and (self.u.key == self.p.author):
             return True
         else:
             return False
 
+    # returns whether user can like post
     def user_can_like(self):
         if self.u and not self.user_can_edit() and not self.u.liked_post(self.p):
             return True
