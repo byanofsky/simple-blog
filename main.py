@@ -247,6 +247,7 @@ class SinglePostHandler(Handler):
         self.p = Post.get_by_id(p_id)
         self.page_title = self.p.title
 
+    # TODO: add comment display, edit, delete logic here
     def render_post(self, **kw):
         comments = Comment.get_post_comments(self.p)
         self.render(
