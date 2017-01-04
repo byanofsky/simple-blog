@@ -10,6 +10,7 @@ class Post(ndb.Model):
     last_modified = ndb.DateTimeProperty(auto_now = True)
     author = ndb.KeyProperty(required = True, kind = 'User')
     likes = ndb.KeyProperty(repeated=True, kind= 'User')
+    comments = ndb.KeyProperty(repeated=True, kind= 'Comment')
 
     def update(self, title, body):
         self.title = title
@@ -44,6 +45,13 @@ class Post(ndb.Model):
     @classmethod
     def get_all(cls):
         return cls.query().order(-cls.created).fetch()
+
+class Comment(ndb.Model):
+    body = ndb.TextProperty(required = True)
+    created = ndb.DateTimeProperty(auto_now_add = True)
+    last_modified = ndb.DateTimeProperty(auto_now = True)
+    author = ndb.KeyProperty(required = True, kind = 'User')
+    post = ndb.KeyProperty(required = True, kind = 'Post')
 
 class User(ndb.Model):
     email = ndb.StringProperty(required = True)
