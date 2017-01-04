@@ -248,9 +248,13 @@ class SinglePostHandler(Handler):
         self.page_title = self.p.title
 
     def render_post(self, **kw):
-        print self.p.comments
-        print self.p.comments.fetch()
-        self.render('singlepost.html', p=self.p, **kw)
+        comments = Comment.get_post_comments(self.p)
+        self.render(
+            'singlepost.html',
+            p=self.p,
+            comments=comments,
+            **kw
+        )
 
     # render post for a logged in user
     def render_post_user(self, **kw):

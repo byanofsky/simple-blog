@@ -38,14 +38,13 @@
 
     <div class="comments">
         <!-- TODO: list comments, or say no comments -->
-        {% for c in p.comments %}
-        {{ p.comments }}
+        {% for c in comments %}
         <div class="comment">
             <div class="comment-body">
                 {{ c.body }}
             </div>
             <div class="comment-author">
-                {{ c.author }}
+                {{ c.author.get().get_displayname() }}
             </div>
         </div>
         {% endfor %}
