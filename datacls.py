@@ -68,6 +68,12 @@ class Comment(ndb.Model):
         c_key = c.put()
         p.add_comment(c_key)
 
+    # @classmethod
+    # def get_post_comments(cls, p):
+    #     comments = []
+    #     comments = p.comments
+    #     for
+
 class User(ndb.Model):
     email = ndb.StringProperty(required = True)
     displayname = ndb.StringProperty(required = False)

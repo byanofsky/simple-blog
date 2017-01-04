@@ -39,6 +39,7 @@
     <div class="comments">
         <!-- TODO: list comments, or say no comments -->
         {% for c in p.comments %}
+        {{ p.comments }}
         <div class="comment">
             <div class="comment-body">
                 {{ c.body }}

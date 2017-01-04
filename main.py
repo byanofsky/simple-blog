@@ -248,6 +248,8 @@ class SinglePostHandler(Handler):
         self.page_title = self.p.title
 
     def render_post(self, **kw):
+        print self.p.comments
+        print self.p.comments.fetch()
         self.render('singlepost.html', p=self.p, **kw)
 
     # render post for a logged in user
