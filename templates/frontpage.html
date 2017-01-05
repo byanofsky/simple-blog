@@ -9,9 +9,9 @@
             <!-- TODO: better uri handling, maybe with permalinks -->
             <a href="{{ uri_for(p) }}">{{ p.title }}</a>
         </div>
-        <pre class="post-body">
+        <div class="post-body">
             {{ p.body }}
-        </pre>
+        </div>
     </div>
 {% endfor %}
 {% endblock %}
