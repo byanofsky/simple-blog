@@ -186,7 +186,8 @@ class SinglePostHandler(Handler):
     def initialize(self, request, response):
         super(SinglePostHandler, self).initialize(request, response)
         # initialize post object
-        self.p = Post.get_by_id(int(self.request.route_kwargs['post_id']))
+        self.p_id = int(self.request.route_kwargs['post_id'])
+        self.p = Post.get_by_id(self.p_id)
         # set post title
         self.page_title = self.p.title
 
@@ -203,7 +204,7 @@ class SinglePostHandler(Handler):
     # render post for a logged in user
     def render_post_user(self, **kw):
         self.render_post(
-            edit_url=self.get_uri('editpost'),
+            edit_post_uri=self.get_uri('editpost', post_id=self.p_id),
             can_comment=True,
             can_edit=self.u.can_edit_post(self.p),
             can_like=self.u.can_like_post(self.p),

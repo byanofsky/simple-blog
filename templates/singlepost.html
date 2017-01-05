@@ -5,25 +5,24 @@
 
 <div class="post">
     {% if can_edit %}
-    <div>
-        <form action="{{ edit_url }}" method="get">
-            <input type="hidden" name="post_id" value="{{ p.key.id() }}">
-            <input type="submit" value="Edit">
-        </form>
-    </div>
+        <div>
+            <a href="{{ edit_post_uri }}">Edit</a>
+        </div>
     {% endif %}
+
     <pre class="post-body">
         {{ p.body }}
     </pre>
 
     {% if can_like %}
-    <div>
-        <form method="post">
-            <input type="hidden" name="action" value="like">
-            <input type="submit" value="Like">
-        </form>
-    </div>
+        <div>
+            <form method="post">
+                <input type="hidden" name="action" value="like">
+                <input type="submit" value="Like">
+            </form>
+        </div>
     {% endif %}
+
     {% if liked_post %}
         <div>
             You liked this post
@@ -38,17 +37,20 @@
 
     <div class="comments">
         <!-- TODO: list comments, or say no comments -->
-        {% for c in comments %}
-        <div class="comment">
-            <div class="comment-body">
-                {{ c.body }}
-            </div>
-            <div class="comment-author">
-                {{ c.author.get().get_displayname() }}
-            </div>
-        </div>
-        {% endfor %}
-        <!-- TODO: form to create a new comment -->
+        {% if comments %}
+            {% for c in comments %}
+                <div class="comment">
+                    <div class="comment-body">
+                        {{ c.body }}
+                    </div>
+                    <div class="comment-author">
+                        {{ c.author.get().get_displayname() }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No comments</p>
+        {% endif %}
     </div>
 
     {% if can_comment %}
