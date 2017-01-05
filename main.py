@@ -127,6 +127,8 @@ class SignUpHandler(Handler):
         verify = self.request.get('verify')
         displayname = self.request.get('displayname')
 
+        # TODO: move into a function
+
         # Validate signup
         errors = validate.signup_errors(email, pw, verify)
 
@@ -165,18 +167,23 @@ class LoginHandler(Handler):
         email = self.request.get('email')
         pw = self.request.get('password')
 
-        u = User.get_by_email(email)
-
-        errors = validate.login_errors(email, pw, u)
+        # TODO: can this be moved into one function?
+        errors = validate.login_errors(email)
 
         if errors:
             self.render('login.html', email=email, errors=errors)
         else:
-            auth.set_user_cookie(self, u.key)
-            self.redirect_by_name('welcome')
+            u = User.get_by_email(email)
+            errors = validate.validate_login(u, pw)
+            if errors:
+                self.render('login.html', email=email, errors=errors)
+            else:
+                auth.set_user_cookie(self, u)
+                self.redirect_by_name('welcome')
 
 class LogoutHandler(Handler):
     def get(self):
+        # TODO: move to its own function
         if self.u:
             auth.clear_user_cookie(self)
         self.redirect_by_name('login')

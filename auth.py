@@ -40,8 +40,8 @@ def get_user_cookie_id(handler):
     else:
         return None
 
-def set_user_cookie(handler, user_key):
-    u_cookie = make_secure_val(str(user_key.id()))
+def set_user_cookie(handler, u):
+    u_cookie = make_secure_val(str(u.key.id()))
     handler.response.set_cookie('user_id', u_cookie)
 
 def clear_user_cookie(handler):
