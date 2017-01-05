@@ -3,18 +3,13 @@
 {% block body %}
 <h1>{{ page_title }}</h1>
 
-<!-- TODO: error styling -->
 <form method="post">
     <label>
         <div>Email</div>
         <input type="text" name="email" value="{{ email }}">
-        {% if errors and errors.email %}
+        {% if errors and (errors.email or errors.user_exists) %}
             <div class="error">
                 {{ errors.email }}
-            </div>
-        {% endif %}
-        {% if errors and errors.user_exists %}
-            <div class="error">
                 {{ errors.user_exists }}
             </div>
         {% endif %}
