@@ -106,8 +106,6 @@ class FrontPageHandler(Handler):
         # next cursor to ouput to url
         # next_cursor.urlsafe()
 
-        post_loop = self.render_posts(posts)
-
         # TODO: can I fix up uri handling some more?
         self.render(
             'frontpage.html',
@@ -217,7 +215,7 @@ class SinglePostHandler(Handler):
         )
 
     def get(self, post_id):
-        # TODO: handle errors if post does not exist, or author not logged in
+        # TODO: handle errors if post does not exist
         if self.u:
             self.render_post_user()
         else:
