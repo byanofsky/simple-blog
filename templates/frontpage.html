@@ -6,7 +6,6 @@
 {% for p in posts %}
     <div class="post">
         <div class="post-title">
-            <!-- TODO: better uri handling, maybe with permalinks -->
             <a href="{{ uri_for(p) }}">{{ p.title }}</a>
         </div>
         <div class="post-body">
