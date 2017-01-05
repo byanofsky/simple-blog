@@ -73,12 +73,8 @@ class Handler(webapp2.RequestHandler):
         if u_id:
             return User.get_by_id(int(u_id))
 
-    # TODO: should this be moved, and can returns be removed
-    # returns whether current user can edit post
-    def user_can_edit(self):
-        return (self.u and self.p) and self.u.can_edit_post(self.p)
-
     # returns whether user can like post
+    # TODO: remove
     def user_can_like(self):
         return (self.u and self.p) and self.u.can_like_post(self.p)
 
@@ -255,53 +251,48 @@ class EditPostHandler(Handler):
     # TODO: need to finetune this
     page_title = 'Edit Post'
 
+    def initialize(self, request, response):
+        super(EditPostHandler, self).initialize(request, response)
+        # initialize post object
+        self.p = Post.get_by_id(int(self.request.get('post_id')))
+
+    # TODO: need a render post function
+    def render_edit_page(self, **kw):
+        self.render(
+            'editpost.html',
+            p=self.p,
+            # TODO: this may be bad since it is getting post id again
+            post_uri=self.get_post_uri(self.p),
+            **kw
+        )
+
     def get(self):
-        post_id = self.request.get('post_id')
-        self.p = Post.get_by_id(int(post_id))
-        if self.user_can_edit():
-            post_url = self.get_uri('singlepost', post_id=post_id)
-            self.render(
-                'editpost.html',
-                title=self.p.title,
-                body=self.p.body,
-                post_id=post_id,
-                post_url=post_url)
+        if self.u and self.u.can_edit_post(self.p):
+            self.render_edit_page()
         else:
             # TODO: need to handle error messages
+            # TODO: move to function
             error_msg = 'You cannot edit this post.'
             self.render('error.html', error_msg=error_msg)
 
     def post(self):
-        post_id = self.request.get('post_id')
-        self.p = Post.get_by_id(int(post_id))
-        if self.user_can_edit():
+        if self.u and self.u.can_edit_post(self.p):
             title = self.request.get('title')
             body = self.request.get('body')
-
-            post_url = self.get_uri('singlepost', post_id=post_id)
 
             #check for errors
             errors = validate.editpost_errors(title, body)
 
             if errors:
-                self.render(
-                    'editpost.html',
-                    title=title,
-                    body=body,
-                    post_id=post_id,
-                    post_url=post_url,
-                    errors=errors)
+                # TODO: if title is ok but body blank, send title
+                # TODO: maybe move error to msg
+                self.render_edit_page(errors=errors)
             else:
                 msg = 'Post successfully updated.'
                 self.p.update(title, body)
-                self.render(
-                    'editpost.html',
-                    title=self.p.title,
-                    body=self.p.body,
-                    post_id=post_id,
-                    post_url=post_url,
-                    msg=msg)
+                self.render_edit_page(msg=msg)
         else:
+            # TODO: move to function
             error_msg = 'You cannot edit this post.'
             self.render('error.html', error_msg=error_msg)
 

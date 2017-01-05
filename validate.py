@@ -76,7 +76,6 @@ def editpost_errors(title, body):
     if not title:
         errors['title'] = 'Title cannot be blank.'
     if not body:
-        errors['body'] = ('Your blog post cannot be blank. Please enter your ' +
-                          'blog post content.')
+        errors['body'] = 'Your blog post cannot be blank.'
 
     return errors
