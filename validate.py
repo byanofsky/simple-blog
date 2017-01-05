@@ -62,6 +62,14 @@ def newpost_errors(title, body):
 
     return errors
 
+def comment_errors(comment):
+    errors = {}
+
+    if not comment:
+        errors['comment'] = 'Comment cannot be blank.'
+
+    return errors
+
 def editpost_errors(title, body):
     errors = {}
 

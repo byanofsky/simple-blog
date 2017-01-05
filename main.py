@@ -222,30 +222,31 @@ class SinglePostHandler(Handler):
         else:
             self.render_post()
 
-    # TODO: does this keep posting if user not logged in?
     # TODO: we need methods to check these on users
     def post(self, post_id):
         action = self.request.get('action')
-        if self.u and action:
+        action_list = ['comment', 'like', 'unlike']
+        if self.u and (action in action_list):
             # TODO: display error if try to do action not able to
             if action == 'comment':
-                # user action to comment
-                comment_body = self.request.get('comment_body')
-                if comment_body:
-                    Comment.create(comment_body, self.u, self.p)
-                    self.redirect_by_name('singlepost', post_id=post_id)
+                comment = self.request.get('comment')
+                errors = validate.comment_errors(comment)
+
+                if errors:
+                    self.render_post_user(comment=comment, errors=errors)
                 else:
-                    # blank comment submitted
-                    errors = {}
-                    errors['comment_body'] = 'Comment cannot be blank.'
-                    self.render_post_user(comment_body=comment_body, errors=errors)
-            if action == 'like':
-                # user action to like or unlike
-                # TODO: perhaps action can be like, and another says like/unlike
-                self.u.like(self.p)
-            if action == 'unlike':
-                self.u.unlike(self.p)
-            self.render_post_user()
+                    Comment.create(comment, self.u, self.p)
+                    self.redirect_by_name('singlepost', post_id=post_id)
+
+            else:
+                if action == 'like':
+                    # user action to like or unlike
+                    self.u.like(self.p)
+
+                if action == 'unlike':
+                    self.u.unlike(self.p)
+
+                self.redirect_by_name('singlepost', post_id=post_id)
         else:
             # if no user or no action to post, redirect user
             self.redirect_by_name('singlepost', post_id=post_id)

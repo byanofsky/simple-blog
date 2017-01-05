@@ -56,9 +56,9 @@
         <form method="post">
             <label>
                 <div>Comment</div>
-                <textarea name="comment_body">{{ comment_body }}</textarea>
-                {% if errors and errors.comment_body %}
-                    {{ errors.comment_body }}
+                <textarea name="comment">{{ comment }}</textarea>
+                {% if errors and errors.comment %}
+                    {{ errors.comment }}
                 {% endif %}
             </label>
 
