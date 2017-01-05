@@ -306,10 +306,13 @@ class NewPostHandler(Handler):
     page_title = 'New Post'
 
     def get(self):
-        if not self.u:
-            self.redirect_by_name('login')
-        else:
+        if self.u:
             self.render('newpost.html')
+        else:
+            # TODO: move to function
+            error_msg = 'You must be logged in to create a post.'
+            self.render('error.html', error_msg=error_msg)
+
 
     def post(self):
         if not self.u:
