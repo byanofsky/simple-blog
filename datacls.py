@@ -16,11 +16,6 @@ class Post(ndb.Model):
         self.body = body
         return self.put()
 
-    def add_comment(self, comment_key):
-        if not comment_key in self.comments:
-            self.comments.append(comment_key)
-            self.put()
-
     # TODO: should this be part of handler?
     # used on frontpage template
     def get_uri(self, uri_handler):
@@ -100,6 +95,9 @@ class User(ndb.Model):
 
     def can_like_post(self, p):
         return self.key != p.author and not self.liked_post(p)
+
+    def leave_comment(self, comment, p):
+        Comment.create(comment, self, p)
 
     # creates a user and returns the db key
     @classmethod

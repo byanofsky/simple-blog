@@ -235,7 +235,7 @@ class SinglePostHandler(Handler):
                 if errors:
                     self.render_post_user(comment=comment, errors=errors)
                 else:
-                    Comment.create(comment, self.u, self.p)
+                    self.u.leave_comment(comment, self.p)
                     self.redirect_by_name('singlepost', post_id=post_id)
 
             else:
