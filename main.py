@@ -222,13 +222,13 @@ class SinglePostHandler(Handler):
         else:
             self.render_post()
 
-    # TODO: we need methods to check these on users
     def post(self, post_id):
         action = self.request.get('action')
         action_list = ['comment', 'like', 'unlike']
         if self.u and (action in action_list):
             # TODO: display error if try to do action not able to
             if action == 'comment':
+                # TODO: can this be moved to its own function
                 comment = self.request.get('comment')
                 errors = validate.comment_errors(comment)
 
