@@ -109,6 +109,7 @@ class User(ndb.Model):
         u_key = cls.create(email, pw, displayname)
         set_user_cookie(page_handler, u_key)
 
+    # get user object by email
     @classmethod
     def get_by_email(cls, email):
         return cls.query(cls.email == email).get()
