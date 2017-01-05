@@ -284,11 +284,10 @@ class EditPostHandler(Handler):
             errors = validate.editpost_errors(title, body)
 
             if errors:
-                # TODO: if title is ok but body blank, send title
-                # TODO: maybe move error to msg
-                # TODO: if errors, say do again. not saved till fixed.
                 msg = 'Your post was not edited. Please fix errors and resubmit.'
                 self.render_edit_page(
+                    title=title,
+                    body=body,
                     msg=msg,
                     errors=errors
                 )
