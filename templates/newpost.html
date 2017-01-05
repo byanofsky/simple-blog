@@ -8,7 +8,9 @@
         <div>Title</div>
         <input type="text" name="title" value="{{ title }}">
         {% if errors and errors.title %}
-            {{ errors.title }}
+            <div class="error">
+                {{ errors.title }}
+            </div>
         {% endif %}
     </label>
 
@@ -16,7 +18,9 @@
         <div>Body</div>
         <textarea name="body">{{ body }}</textarea>
         {% if errors and errors.body %}
-            {{ errors.body }}
+            <div class="error">
+                {{ errors.body }}
+            </div>
         {% endif %}
     </label>
 
