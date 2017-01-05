@@ -227,6 +227,7 @@ class SinglePostHandler(Handler):
     def post(self, post_id):
         action = self.request.get('action')
         if self.u and action:
+            # TODO: display error if try to do action not able to
             if action == 'comment':
                 # user action to comment
                 comment_body = self.request.get('comment_body')
