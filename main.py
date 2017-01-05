@@ -194,6 +194,7 @@ class SinglePostHandler(Handler):
         # set post title
         self.page_title = self.p.title
 
+    # TODO: can render post be combined into one function
     # TODO: add comment display, edit, delete logic here
     def render_post(self, **kw):
         self.render(
