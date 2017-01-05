@@ -189,42 +189,34 @@ class LogoutHandler(Handler):
         self.redirect_by_name('login')
 
 class SinglePostHandler(Handler):
-    # TODO: add blog
-    # add comments
-    # add ability to edit
     def initialize(self, request, response):
         super(SinglePostHandler, self).initialize(request, response)
-        p_id = int(self.request.route_kwargs['post_id'])
-        self.p = Post.get_by_id(p_id)
+        # initialize post object
+        self.p = Post.get_by_id(int(self.request.route_kwargs['post_id']))
+        # set post title
         self.page_title = self.p.title
 
     # TODO: add comment display, edit, delete logic here
     def render_post(self, **kw):
-        comments = Comment.get_post_comments(self.p)
         self.render(
             'singlepost.html',
             p=self.p,
-            comments=comments,
+            comments=Comment.get_comments(self.p),
             **kw
         )
 
     # render post for a logged in user
     def render_post_user(self, **kw):
-        edit_url = self.get_uri('editpost')
-        can_comment = True
-        can_edit = self.user_can_edit()
-        can_like = self.user_can_like()
-        liked_post = self.u.liked_post(self.p)
         self.render_post(
-            edit_url=edit_url,
-            can_comment=can_comment,
-            can_edit=can_edit,
-            can_like = can_like,
-            liked_post = liked_post,
-            **kw)
+            edit_url=self.get_uri('editpost'),
+            can_comment=True,
+            can_edit=self.u.can_edit_post(self.p),
+            can_like=self.u.can_like_post(self.p),
+            liked_post=self.u.liked_post(self.p),
+            **kw
+        )
 
     def get(self, post_id):
-        # check if post author is logged in author
         # TODO: handle errors if post does not exist, or author not logged in
         if self.u:
             self.render_post_user()
@@ -235,24 +227,24 @@ class SinglePostHandler(Handler):
     # TODO: we need methods to check these on users
     def post(self, post_id):
         action = self.request.get('action')
-        if self.u and action == 'comment':
-            # user action to comment
-            comment_body = self.request.get('comment_body')
-            if comment_body:
-                Comment.create(comment_body, self.u, self.p)
-                self.redirect_by_name('singlepost', post_id=post_id)
-            else:
-                # blank comment submitted
-                errors = {}
-                errors['comment_body'] = 'Comment cannot be blank.'
-                self.render_post_user(comment_body=comment_body, errors=errors)
-        elif self.u and not self.user_can_edit() and action:
-            # user action to like or unlike
-            # TODO: perhaps action can be like, and another says like/unlike
+        if self.u and action:
+            if action == 'comment':
+                # user action to comment
+                comment_body = self.request.get('comment_body')
+                if comment_body:
+                    Comment.create(comment_body, self.u, self.p)
+                    self.redirect_by_name('singlepost', post_id=post_id)
+                else:
+                    # blank comment submitted
+                    errors = {}
+                    errors['comment_body'] = 'Comment cannot be blank.'
+                    self.render_post_user(comment_body=comment_body, errors=errors)
             if action == 'like':
+                # user action to like or unlike
+                # TODO: perhaps action can be like, and another says like/unlike
                 self.u.like(self.p)
-            elif action == 'unlike':
-                self.p.remove_like(self.u.key)
+            if action == 'unlike':
+                self.u.unlike(self.p)
             self.render_post_user()
         else:
             # if no user or no action to post, redirect user

@@ -26,16 +26,16 @@ class Post(ndb.Model):
     def get_uri(self, uri_handler):
         return uri_handler('singlepost', post_id=self.key.id())
 
-    def add_like(self, u_key):
-        # add user to list of likes. Assumes user not in list
-        if not u_key in self.likes:
-            self.likes.append(u_key)
-            self.put()
+    def add_like(self, u):
+        # add user to list of likes. Assume user is not on list
+        self.likes.append(u.key)
+        self.put()
 
-    def remove_like(self, u_key):
-        if u_key in self.likes:
-            self.likes.remove(u_key)
-            self.put()
+    def remove_like(self, u):
+        # remove user from list of likes. Assume user is on list
+        # TODO: we may be able to get the index if liked to shorten time
+        self.likes.remove(u.key)
+        self.put()
 
     @classmethod
     def create(cls, title, body, author):
@@ -70,7 +70,7 @@ class Comment(ndb.Model):
         c_key = c.put()
 
     @classmethod
-    def get_post_comments(cls, p):
+    def get_comments(cls, p):
         return cls.query(ancestor=p.key).order(-cls.created).fetch()
 
 class User(ndb.Model):
@@ -84,10 +84,15 @@ class User(ndb.Model):
         return self.displayname or self.email
 
     def like(self, p):
-        if not self.key == p.author:
-            p.add_like(self.key)
+        if self.can_like_post(p):
+            p.add_like(self)
+
+    def unlike(self, p):
+        if self.liked_post(p):
+            p.remove_like(self)
 
     def liked_post(self, p):
+        # TODO: if found, can we return index to save some time?
         return self.key in p.likes
 
     def can_edit_post(self, p):
