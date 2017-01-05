@@ -17,8 +17,6 @@ def password_match(pw, verify):
 def valid_login(u, pw):
     return verify_pw(pw, u.hashed_pw)
 
-# TODO: make a parent class for errors
-
 def signup_errors(email, pw, verify):
     errors = {}
 
@@ -68,4 +66,3 @@ def editpost_errors(title, body):
                           'blog post content.')
 
     return errors
-    

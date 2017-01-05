@@ -9,10 +9,14 @@
         <div>Email</div>
         <input type="text" name="email" value="{{ email }}">
         {% if errors and errors.email %}
-            {{ errors.email }}
+            <div class="error">
+                {{ errors.email }}
+            </div>
         {% endif %}
         {% if errors and errors.user_exists %}
-            {{ errors.user_exists }}
+            <div class="error">
+                {{ errors.user_exists }}
+            </div>
         {% endif %}
     </label>
 
@@ -20,7 +24,9 @@
         <div>Password</div>
         <input type="password" name="password">
         {% if errors and errors.password %}
-            {{ errors.password }}
+            <div class="error">
+                {{ errors.password }}
+            </div>
         {% endif %}
     </label>
 
@@ -28,16 +34,15 @@
         <div>Verify Password</div>
         <input type="password" name="verify">
         {% if errors and errors.verify %}
-            {{ errors.verify }}
+            <div class="error">
+                {{ errors.verify }}
+            </div>
         {% endif %}
     </label>
 
     <label>
         <div>Display Name (optional)</div>
         <input type="text" name="displayname" value="{{ displayname }}">
-        {% if errors and errors.displayname %}
-            {{ errors.displayname }}
-        {% endif %}
     </label>
 
     <div>

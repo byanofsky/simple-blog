@@ -17,6 +17,8 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(
     loader = jinja2.FileSystemLoader(template_dir),
     autoescape = True,
+    # trim_blocks = True,
+    # lstrip_blocks = True
 )
 
 # TODO: can we move these classes to their own files and not reimport?
@@ -133,7 +135,8 @@ class SignUpHandler(Handler):
                 'signup.html',
                 email=email,
                 displayname=displayname,
-                errors=errors)
+                errors=errors
+            )
         else:
             User.signup(self, email, pw, displayname)
             self.redirect_by_name('welcome')

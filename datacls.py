@@ -95,16 +95,18 @@ class User(ndb.Model):
     def can_like_post(self, p):
         return self.key != p.author and not self.liked_post(p)
 
+    # creates a user and returns the db key
     @classmethod
     def create(cls, email, pw, displayname):
         hashed_pw = make_hashed_pw(pw)
         u = cls(email=email, hashed_pw=hashed_pw, displayname=displayname )
         return u.put()
 
+    # creates a user and uses db key to set user cookie
     @classmethod
-    def signup(cls, handler, email, pw, displayname):
+    def signup(cls, page_handler, email, pw, displayname):
         u_key = cls.create(email, pw, displayname)
-        set_user_cookie(handler, u_key)
+        set_user_cookie(page_handler, u_key)
 
     @classmethod
     def get_by_email(cls, email):
