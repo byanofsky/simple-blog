@@ -14,7 +14,9 @@
         <div>Title</div>
         {% if errors %}
             <input type="text" name="title" value="{{ title }}">
-            {{ errors.title }}
+            <div class="error">
+                {{ errors.title }}
+            </div>
         {% else %}
             <input type="text" name="title" value="{{ p.title }}">
         {% endif %}
@@ -24,7 +26,9 @@
         <div>Body</div>
         {% if errors %}
             <textarea name="body">{{ body }}</textarea>
-            {{ errors.body }}
+            <div class="error">
+                {{ errors.body }}
+            </div>
         {% else %}
             <textarea name="body">{{ p.body }}</textarea>
         {% endif %}
