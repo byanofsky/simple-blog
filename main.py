@@ -305,9 +305,12 @@ class EditPostHandler(Handler):
 class NewPostHandler(Handler):
     page_title = 'New Post'
 
+    def render_newpost(self, **kw):
+        self.render('newpost.html', **kw)
+
     def get(self):
         if self.u:
-            self.render('newpost.html')
+            self.render_newpost()
         else:
             # TODO: move to function
             error_msg = 'You must be logged in to create a post.'
@@ -315,24 +318,25 @@ class NewPostHandler(Handler):
 
 
     def post(self):
-        if not self.u:
-            self.redirect_by_name('login')
-        else:
+        if self.u:
             title = self.request.get('title')
             body = self.request.get('body')
 
             errors = validate.newpost_errors(title, body)
 
             if errors:
-                self.render(
-                    'newpost.html',
+                self.render_newpost(
                     title=title,
                     body=body,
-                    errors=errors)
+                    errors=errors
+                )
             else:
                 p_key = Post.create(title, body, self.u)
-                p_uri = self.get_uri('singlepost', post_id=p_key.id())
-                self.redirect(p_uri)
+                self.redirect_by_name('singlepost', post_id=p_key.id())
+        else:
+            # TODO: move to function
+            error_msg = 'You must be logged in to create a post.'
+            self.render('error.html', error_msg=error_msg)
 
 
 
