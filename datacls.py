@@ -79,6 +79,7 @@ class User(ndb.Model):
     hashed_pw = ndb.StringProperty(required = True)
     created = ndb.DateTimeProperty(auto_now_add = True)
 
+    # gets displayname, either the user display name or email if none
     def get_displayname(self):
         return self.displayname or self.email
 

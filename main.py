@@ -145,11 +145,15 @@ class WelcomeHandler(Handler):
     page_title = 'Welcome'
 
     def get(self):
+        # if no user signed in, redirect to login
         if not self.u:
             self.redirect_by_name('login')
+        # when user signed in, display welcome page
         else:
-            displayname = self.u.get_displayname()
-            self.render('welcome.html', displayname=displayname)
+            self.render(
+                'welcome.html',
+                displayname=self.u.get_displayname()
+            )
 
 class LoginHandler(Handler):
     page_title = 'Login'
