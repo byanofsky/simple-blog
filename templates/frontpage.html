@@ -7,7 +7,7 @@
     <div class="post">
         <div class="post-title">
             <!-- TODO: better uri handling, maybe with permalinks -->
-            <a href="{{ p.get_uri(uri_handler) }}">{{ p.title }}</a>
+            <a href="{{ uri_for(p) }}">{{ p.title }}</a>
         </div>
         <pre class="post-body">
             {{ p.body }}

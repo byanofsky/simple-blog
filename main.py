@@ -59,6 +59,9 @@ class Handler(webapp2.RequestHandler):
     def get_uri(self, name, **kw):
         return webapp2.uri_for(name, **kw)
 
+    def get_post_uri(self, post):
+        return self.get_uri('singlepost', post_id=post.key.id())
+
     def redirect_by_name(self, name, **kw):
         self.redirect(self.get_uri(name, **kw))
 
@@ -88,6 +91,12 @@ class Handler(webapp2.RequestHandler):
 class FrontPageHandler(Handler):
     POSTS_PER_PAGE = 10
 
+    def render_posts(self, posts):
+        post_loop = ''
+        for post in posts:
+            post_loop += self.render_str('post.html', post=post)
+        return post_loop
+
     def get(self):
         cursor = Cursor(urlsafe=self.request.get('cursor'))
         posts, next_cursor, more = Post.get_n(self.POSTS_PER_PAGE, cursor)
@@ -95,8 +104,14 @@ class FrontPageHandler(Handler):
         # next cursor to ouput to url
         # next_cursor.urlsafe()
 
+        post_loop = self.render_posts(posts)
+
         # TODO: can I fix up uri handling some more?
-        self.render('frontpage.html', posts=posts, uri_handler=self.get_uri)
+        self.render(
+            'frontpage.html',
+            posts=posts,
+            uri_for=self.get_post_uri
+        )
 
 class SignUpHandler(Handler):
     page_title = 'Signup'
