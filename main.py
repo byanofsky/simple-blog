@@ -293,6 +293,7 @@ class EditPostHandler(Handler):
                 )
             else:
                 msg = 'Post successfully updated.'
+                # TODO: what if not updated?
                 self.p.update(title, body)
                 self.render_edit_page(msg=msg)
         else:
