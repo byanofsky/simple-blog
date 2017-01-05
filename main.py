@@ -286,7 +286,12 @@ class EditPostHandler(Handler):
             if errors:
                 # TODO: if title is ok but body blank, send title
                 # TODO: maybe move error to msg
-                self.render_edit_page(errors=errors)
+                # TODO: if errors, say do again. not saved till fixed.
+                msg = 'Your post was not edited. Please fix errors and resubmit.'
+                self.render_edit_page(
+                    msg=msg,
+                    errors=errors
+                )
             else:
                 msg = 'Post successfully updated.'
                 self.p.update(title, body)

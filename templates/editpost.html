@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 
+{# if there are form errors, re-render form, or display post #}
+{% set title = p.title %}
+{% set body = p.body %}
+{% if errors %}
+    {% if errors.title %}
+        {% set title = '' %}
+    {% endif %}
+    {% if errors.body %}
+        {% set body = '' %}
+    {% endif %}
+{% endif %}
+
 {% block body %}
 <h1>{{ page_title }}</h1>
 
@@ -12,7 +24,7 @@
 <form method="POST">
     <label>
         <div>Title</div>
-        <input type="text" name="title" value="{{ p.title }}">
+        <input type="text" name="title" value="{{ title }}">
         {% if errors and errors.title %}
             {{ errors.title }}
         {% endif %}
@@ -20,7 +32,7 @@
 
     <label>
         <div>Body</div>
-        <textarea name="body">{{ p.body }}</textarea>
+        <textarea name="body">{{ body }}</textarea>
         {% if errors and errors.body %}
             {{ errors.body }}
         {% endif %}
