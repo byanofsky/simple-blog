@@ -48,7 +48,7 @@
                     </div>
                     {% if user.can_edit_comment(c) %}
                         <div class="comment-edit">
-                            <a href="{{ edit_comment_uri }}">Edit Comment</a>
+                            <a href="{{ uri_for('editcomment', comment_key=c.key.urlsafe()) }}">Edit Comment</a>
                         </div>
                     {% endif %}
                 </div>
