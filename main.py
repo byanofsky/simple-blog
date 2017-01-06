@@ -282,25 +282,32 @@ class EditPostHandler(Handler):
 
     def post(self):
         if self.u and self.u.can_edit_post(self.p):
-            title = self.request.get('title')
-            body = self.request.get('body')
-
-            #check for errors
-            errors = validate.editpost_errors(title, body)
-
-            if errors:
-                msg = 'Your post was not edited. Please fix errors and resubmit.'
-                self.render_edit_page(
-                    title=title,
-                    body=body,
-                    msg=msg,
-                    errors=errors
-                )
+            action = self.request.get('action')
+            if action == 'delete':
+                self.p.delete()
+                # TODO: need a success message, with link to view other posts. And redirect
+                error_msg = 'Post deleted.'
+                self.render('error.html', error_msg=error_msg)
             else:
-                msg = 'Post successfully updated.'
-                # TODO: what if not updated?
-                self.p.update(title, body)
-                self.render_edit_page(msg=msg)
+                title = self.request.get('title')
+                body = self.request.get('body')
+
+                #check for errors
+                errors = validate.editpost_errors(title, body)
+
+                if errors:
+                    msg = 'Your post was not edited. Please fix errors and resubmit.'
+                    self.render_edit_page(
+                        title=title,
+                        body=body,
+                        msg=msg,
+                        errors=errors
+                    )
+                else:
+                    msg = 'Post successfully updated.'
+                    # TODO: what if not updated?
+                    self.p.update(title, body)
+                    self.render_edit_page(msg=msg)
         else:
             # TODO: move to function
             error_msg = 'You cannot edit this post.'

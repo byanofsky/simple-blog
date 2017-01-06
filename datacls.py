@@ -18,6 +18,10 @@ class Post(ndb.Model):
         self.body = body
         return self.put()
 
+    def delete(self):
+        Comment.delete_post_comments(self)
+        self.key.delete()
+
     def add_like(self, u):
         # add user to list of likes. Assume user is not on list
         self.likes.append(u.key)
@@ -64,6 +68,11 @@ class Comment(ndb.Model):
     @classmethod
     def get_comments(cls, p):
         return cls.query(ancestor=p.key).order(-cls.created).fetch()
+
+    @classmethod
+    def delete_post_comments(cls, p):
+        comments = cls.query(ancestor=p.key).order(-cls.created).fetch(keys_only=True)
+        ndb.delete_multi(comments)
 
 class User(ndb.Model):
     email = ndb.StringProperty(required = True)
