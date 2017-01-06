@@ -212,7 +212,7 @@ class SinglePostHandler(Handler):
             uri_for=self.get_uri,
             can_comment=True,
             user=self.u,
-            can_edit=self.u.can_edit_post(self.p),
+            can_edit=self.u.can_edit(self.p),
             can_like=self.u.can_like_post(self.p),
             liked_post=self.u.liked_post(self.p),
             **kw
@@ -312,7 +312,7 @@ class EditPostHandler(Handler):
         )
 
     def get(self):
-        if self.u and self.u.can_edit_post(self.p):
+        if self.u and self.u.can_edit(self.p):
             self.render_edit_page()
         else:
             # TODO: need to handle error messages
@@ -321,7 +321,7 @@ class EditPostHandler(Handler):
             self.render('error.html', error_msg=error_msg)
 
     def post(self):
-        if self.u and self.u.can_edit_post(self.p):
+        if self.u and self.u.can_edit(self.p):
             # TODO: are there are any issues here with security (if someone deletes anothers post)
             action = self.request.get('action')
             if action == 'delete':
@@ -380,7 +380,7 @@ class EditCommentHandler(Handler):
         )
 
     def get(self):
-        if self.u and self.u.can_edit_comment(self.c):
+        if self.u and self.u.can_edit(self.c):
             self.render_edit_page()
         else:
             # TODO: need to handle error messages
@@ -389,7 +389,7 @@ class EditCommentHandler(Handler):
             self.render('error.html', error_msg=error_msg)
 
     def post(self):
-        if self.u and self.u.can_edit_comment(self.c):
+        if self.u and self.u.can_edit(self.c):
             # TODO: are there are any issues here with security (if someone deletes anothers post)
             action = self.request.get('action')
             if action == 'delete':
