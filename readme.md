@@ -24,6 +24,8 @@ To install Cloud SDK, please see instructions here: https://cloud.google.com/sdk
 
 Download Simple Blog.
 
+Install third party libraries `pip install -t lib -r requirements.txt`
+
 Within the Simple Blog directory, run `dev_appserver.py .`
 
 ## Contributors
