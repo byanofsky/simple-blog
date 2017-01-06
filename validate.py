@@ -1,6 +1,5 @@
 import re
 from auth import verify_pw
-from datacls import User
 
 PASSWORD_RE = re.compile(r'^.{3,20}$')
 EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
@@ -17,10 +16,10 @@ def password_match(pw, verify):
 def valid_login(u, pw):
     return verify_pw(pw, u.hashed_pw)
 
-def signup_errors(email, pw, verify):
+def signup_errors(email, pw, verify, user_exists):
     errors = {}
 
-    if User.get_by_email(email):
+    if user_exists:
         errors['user_exists'] = ('There is already a user registered ' +
                                  'with this email.')
     if not valid_email(email):

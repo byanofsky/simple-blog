@@ -124,7 +124,12 @@ class SignUpHandler(Handler):
         # TODO: move into a function
 
         # Validate signup
-        errors = validate.signup_errors(email, pw, verify)
+        errors = validate.signup_errors(
+            email,
+            pw,
+            verify,
+            user_exists = User.get_by_email(email)
+        )
 
         if errors:
             self.render(
@@ -172,7 +177,7 @@ class LoginHandler(Handler):
             if errors:
                 self.render('login.html', email=email, errors=errors)
             else:
-                auth.set_user_cookie(self, u)
+                auth.set_user_cookie(self, u.key)
                 self.redirect_by_name('welcome')
 
 class LogoutHandler(Handler):
