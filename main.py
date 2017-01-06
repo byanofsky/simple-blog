@@ -282,6 +282,7 @@ class EditPostHandler(Handler):
 
     def post(self):
         if self.u and self.u.can_edit_post(self.p):
+            # TODO: are there are any issues here with security (if someone deletes anothers post)
             action = self.request.get('action')
             if action == 'delete':
                 self.p.delete()
