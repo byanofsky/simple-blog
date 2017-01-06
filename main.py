@@ -339,6 +339,7 @@ class NewPostHandler(Handler):
                 self.redirect_by_name('singlepost', post_id=p_key.id())
         else:
             # TODO: move to function
+            # TODO: this may need to be a redirect so it doesn't keep posting
             error_msg = 'You must be logged in to create a post.'
             self.render('error.html', error_msg=error_msg)
 
