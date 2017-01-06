@@ -46,6 +46,11 @@
                     <div class="comment-author">
                         {{ c.author.get().get_displayname() }}
                     </div>
+                    {% if user.can_edit_comment(c) %}
+                        <div class="comment-edit">
+                            <a href="{{ edit_comment_uri }}">Edit Comment</a>
+                        </div>
+                    {% endif %}
                 </div>
             {% endfor %}
         {% else %}

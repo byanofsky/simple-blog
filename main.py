@@ -210,6 +210,7 @@ class SinglePostHandler(Handler):
         self.render_post(
             edit_post_uri=self.get_uri('editpost', post_id=self.p_id),
             can_comment=True,
+            user=self.u,
             can_edit=self.u.can_edit_post(self.p),
             can_like=self.u.can_like_post(self.p),
             liked_post=self.u.liked_post(self.p),

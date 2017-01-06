@@ -99,8 +99,12 @@ class User(ndb.Model):
     def can_like_post(self, p):
         return self.key != p.author and not self.liked_post(p)
 
+    # TODO: can combine these two functions
     def can_edit_post(self, p):
         return self.key == p.author
+
+    def can_edit_comment(self, c):
+        return self.key == c.author
 
     def leave_comment(self, comment, p):
         return Comment.create(comment, self, p)
