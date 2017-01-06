@@ -9,6 +9,7 @@ class Post(ndb.Model):
     body = ndb.TextProperty(required = True)
     created = ndb.DateTimeProperty(auto_now_add = True)
     last_modified = ndb.DateTimeProperty(auto_now = True)
+    # TODO: should author be parent? Will that affect query?
     author = ndb.KeyProperty(required = True, kind = 'User')
     likes = ndb.KeyProperty(repeated=True, kind= 'User')
 
@@ -17,21 +18,16 @@ class Post(ndb.Model):
         self.body = body
         return self.put()
 
-    # TODO: should this be part of handler?
-    # used on frontpage template
-    def get_uri(self, uri_handler):
-        return uri_handler('singlepost', post_id=self.key.id())
-
     def add_like(self, u):
         # add user to list of likes. Assume user is not on list
         self.likes.append(u.key)
-        self.put()
+        return self.put()
 
     def remove_like(self, u):
         # remove user from list of likes. Assume user is on list
         # TODO: we may be able to get the index if liked to shorten time
         self.likes.remove(u.key)
-        self.put()
+        return self.put()
 
     @classmethod
     def create(cls, title, body, author):
@@ -47,7 +43,7 @@ class Post(ndb.Model):
         return cls.query().order(-cls.created).fetch()
 
     @classmethod
-    def get_n(cls, n, cursor):
+    def get_n(cls, n, cursor = None):
         return cls.query().order(-cls.created).fetch_page(n, start_cursor=cursor)
 
 class Comment(ndb.Model):
@@ -63,7 +59,7 @@ class Comment(ndb.Model):
             author=author.key,
             parent=p.key
         )
-        c_key = c.put()
+        return c.put()
 
     @classmethod
     def get_comments(cls, p):
@@ -71,7 +67,7 @@ class Comment(ndb.Model):
 
 class User(ndb.Model):
     email = ndb.StringProperty(required = True)
-    displayname = ndb.StringProperty(required = False)
+    displayname = ndb.StringProperty()
     hashed_pw = ndb.StringProperty(required = True)
     created = ndb.DateTimeProperty(auto_now_add = True)
 
@@ -81,24 +77,24 @@ class User(ndb.Model):
 
     def like(self, p):
         if self.can_like_post(p):
-            p.add_like(self)
+            return p.add_like(self)
 
     def unlike(self, p):
         if self.liked_post(p):
-            p.remove_like(self)
+            return p.remove_like(self)
 
     def liked_post(self, p):
         # TODO: if found, can we return index to save some time?
         return self.key in p.likes
 
-    def can_edit_post(self, p):
-        return self.key == p.author
-
     def can_like_post(self, p):
         return self.key != p.author and not self.liked_post(p)
 
+    def can_edit_post(self, p):
+        return self.key == p.author
+
     def leave_comment(self, comment, p):
-        Comment.create(comment, self, p)
+        return Comment.create(comment, self, p)
 
     # creates a user and returns the db key
     @classmethod
@@ -107,14 +103,15 @@ class User(ndb.Model):
         u = cls(email=email, hashed_pw=hashed_pw, displayname=displayname )
         return u.put()
 
-    # creates a user and uses db key to set user cookie
-    @classmethod
-    def signup(cls, page_handler, email, pw, displayname):
-        u_key = cls.create(email, pw, displayname)
-        set_user_cookie(page_handler, u_key)
-
     # get user object by email
     @classmethod
     def get_by_email(cls, email):
         if valid_email(email):
             return cls.query(cls.email == email).get()
+
+    # TODO: these signup functions can be moved to their own file
+    # creates a user and uses db key to set user cookie
+    @classmethod
+    def signup(cls, page_handler, email, pw, displayname):
+        u_key = cls.create(email, pw, displayname)
+        set_user_cookie(page_handler, u_key)
