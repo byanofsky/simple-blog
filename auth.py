@@ -30,6 +30,9 @@ def make_hashed_pw(pw):
 def verify_pw(pw, hash):
     return pbkdf2_sha256.verify(pw, hash)
 
+def valid_login(u, pw):
+    return verify_pw(pw, u.hashed_pw)
+
 def get_user_cookie(handler):
     return handler.request.cookies.get('user_id')
 

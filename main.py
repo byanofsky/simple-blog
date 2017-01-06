@@ -165,20 +165,18 @@ class LoginHandler(Handler):
     def post(self):
         email = self.request.get('email')
         pw = self.request.get('password')
+        u = User.get_by_email(email)
 
         # TODO: can this be moved into one function?
-        errors = validate.login_errors(email)
+        # TODO: could return errors, user, in one function
+        # u, error = check_login()
+        errors = validate.login_errors(email, u, pw)
 
         if errors:
             self.render('login.html', email=email, errors=errors)
         else:
-            u = User.get_by_email(email)
-            errors = validate.validate_login(u, pw)
-            if errors:
-                self.render('login.html', email=email, errors=errors)
-            else:
-                auth.set_user_cookie(self, u.key)
-                self.redirect_by_name('welcome')
+            auth.set_user_cookie(self, u.key)
+            self.redirect_by_name('welcome')
 
 class LogoutHandler(Handler):
     def get(self):

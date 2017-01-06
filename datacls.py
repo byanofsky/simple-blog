@@ -1,4 +1,5 @@
 from auth import make_secure_val, check_secure_val, make_hashed_pw, set_user_cookie
+from validate import valid_email
 from google.appengine.ext import ndb
 
 # TODO: check other datastore options
@@ -115,4 +116,5 @@ class User(ndb.Model):
     # get user object by email
     @classmethod
     def get_by_email(cls, email):
-        return cls.query(cls.email == email).get()
+        if valid_email(email):
+            return cls.query(cls.email == email).get()

@@ -1,5 +1,5 @@
 import re
-from auth import verify_pw
+from auth import valid_login
 
 PASSWORD_RE = re.compile(r'^.{3,20}$')
 EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
@@ -12,9 +12,6 @@ def valid_password(pw):
 
 def password_match(pw, verify):
     return pw == verify
-
-def valid_login(u, pw):
-    return verify_pw(pw, u.hashed_pw)
 
 def signup_errors(email, pw, verify, user_exists):
     errors = {}
@@ -32,23 +29,13 @@ def signup_errors(email, pw, verify, user_exists):
 
     return errors
 
-def login_errors(email):
-    errors = {}
-
+def login_errors(email, u, pw):
     if not valid_email(email):
-        errors = 'Please enter a valid email address.'
-
-    return errors
-
-def validate_login(u, pw):
-    errors = {}
-
-    if not u:
-        errors = 'There is no user with this email address.'
+        return 'Please enter a valid email address.'
+    elif not u:
+        return 'There is no user with this email address.'
     elif not valid_login(u, pw):
-        errors = 'The password is incorrect. Please try again.'
-
-    return errors
+        return 'The password is incorrect. Please try again.'
 
 def newpost_errors(title, body):
     errors = {}
