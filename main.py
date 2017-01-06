@@ -292,6 +292,25 @@ class NewPostHandler(Handler):
             error_msg = 'You must be logged in to create a post.'
             self.render('error.html', error_msg=error_msg)
 
+# TODO: move this
+class ErrorHandler(Handler):
+    page_title = 'Error'
+
+    def get(self):
+        code = self.request.get('code')
+
+        if code == 'editpost':
+            error_msg = 'You cannot edit this post.'
+            back_text = 'Go to homepage.'
+            back_url = self.uri_for('frontpage')
+
+        self.render(
+            'error.html',
+            error_msg=error_msg,
+            back_url=back_url,
+            back_text=back_text
+        )
+
 class EditPostHandler(Handler):
     # TODO: need to finetune this
     page_title = 'Edit Post'
@@ -311,14 +330,17 @@ class EditPostHandler(Handler):
             **kw
         )
 
+    def error_redirect(self, code):
+        self.redirect_to('error', code=code)
+
     def get(self):
         if self.u and self.u.can_edit(self.p):
             self.render_edit_page()
         else:
             # TODO: need to handle error messages
             # TODO: move to function
-            error_msg = 'You cannot edit this post.'
-            self.render('error.html', error_msg=error_msg)
+            # error_msg = 'You cannot edit this post.'
+            self.error_redirect('editpost')
 
     def post(self):
         if self.u and self.u.can_edit(self.p):
@@ -437,5 +459,6 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/newpost', handler=NewPostHandler, name='newpost'),
     webapp2.Route('/post/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost'),
     webapp2.Route('/editpost', handler=EditPostHandler, name='editpost'),
-    webapp2.Route('/editcomment', handler=EditCommentHandler, name='editcomment')
+    webapp2.Route('/editcomment', handler=EditCommentHandler, name='editcomment'),
+    webapp2.Route('/error', handler=ErrorHandler, name='error')
 ], debug=True)
