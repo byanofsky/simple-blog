@@ -65,3 +65,11 @@ def editpost_errors(title, body):
         errors['body'] = 'Your blog post cannot be blank.'
 
     return errors
+
+def editcomment_errors(body):
+    errors = {}
+
+    if not body:
+        errors['body'] = 'Your comment cannot be blank.'
+
+    return errors
