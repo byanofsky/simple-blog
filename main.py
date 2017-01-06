@@ -254,6 +254,44 @@ class SinglePostHandler(Handler):
             # if no user or no action to post, redirect user
             self.redirect_by_name('singlepost', post_id=post_id)
 
+
+class NewPostHandler(Handler):
+    page_title = 'New Post'
+
+    def render_newpost(self, **kw):
+        self.render('newpost.html', **kw)
+
+    def get(self):
+        if self.u:
+            self.render_newpost()
+        else:
+            # TODO: move to function
+            error_msg = 'You must be logged in to create a post.'
+            self.render('error.html', error_msg=error_msg)
+
+
+    def post(self):
+        if self.u:
+            title = self.request.get('title')
+            body = self.request.get('body')
+
+            errors = validate.newpost_errors(title, body)
+
+            if errors:
+                self.render_newpost(
+                    title=title,
+                    body=body,
+                    errors=errors
+                )
+            else:
+                p_key = Post.create(title, body, self.u)
+                self.redirect_by_name('singlepost', post_id=p_key.id())
+        else:
+            # TODO: move to function
+            # TODO: this may need to be a redirect so it doesn't keep posting
+            error_msg = 'You must be logged in to create a post.'
+            self.render('error.html', error_msg=error_msg)
+
 class EditPostHandler(Handler):
     # TODO: need to finetune this
     page_title = 'Edit Post'
@@ -314,44 +352,6 @@ class EditPostHandler(Handler):
         else:
             # TODO: move to function
             error_msg = 'You cannot edit this post.'
-            self.render('error.html', error_msg=error_msg)
-
-
-class NewPostHandler(Handler):
-    page_title = 'New Post'
-
-    def render_newpost(self, **kw):
-        self.render('newpost.html', **kw)
-
-    def get(self):
-        if self.u:
-            self.render_newpost()
-        else:
-            # TODO: move to function
-            error_msg = 'You must be logged in to create a post.'
-            self.render('error.html', error_msg=error_msg)
-
-
-    def post(self):
-        if self.u:
-            title = self.request.get('title')
-            body = self.request.get('body')
-
-            errors = validate.newpost_errors(title, body)
-
-            if errors:
-                self.render_newpost(
-                    title=title,
-                    body=body,
-                    errors=errors
-                )
-            else:
-                p_key = Post.create(title, body, self.u)
-                self.redirect_by_name('singlepost', post_id=p_key.id())
-        else:
-            # TODO: move to function
-            # TODO: this may need to be a redirect so it doesn't keep posting
-            error_msg = 'You must be logged in to create a post.'
             self.render('error.html', error_msg=error_msg)
 
 class EditCommentHandler(Handler):
