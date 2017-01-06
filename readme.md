@@ -1,12 +1,8 @@
 ## Overview
 
-Simple Blog is a simple blogging framework that can be modified and added to to meet your needs.
+Simple Blog is a simple blogging framework that can be modified and built upon to meet your needs.
 
-It is built using the webapp2 framework (https://cloud.google.com/appengine/docs/python/tools/webapp2) and jinja2 template engine (http://jinja.pocoo.org/). It is built to run in Google App Engine.
-
-## Code Example
-
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
+It is built to be deployed on [Google App Engine](https://cloud.google.com/appengine/docs/python/), upon the [webapp2 framework] (https://cloud.google.com/appengine/docs/python/tools/webapp2) and [jinja2 template engine](http://jinja.pocoo.org/).
 
 ## Motivation
 
@@ -14,23 +10,40 @@ This is one of my projects for my Udacity Full Stack Developer Nanodegree.
 
 ## Installation
 
-Simple Blog requires Python 2.7.x
+Download Simple Blog first.
 
-Because Simple Blog is meant to run on Google App Engine, you will either need to upload it to Google App Engine or run it using Cloud SDK.
+Simple Blog requires Python 2.7.x. Please ensure it is installed.
+
+You will need to install required third party libraries. To do so, create a directory at the root of Simple Blog and run:
+`pip install -t lib -r requirements.txt`
+
+Because Simple Blog is meant to run on Google App Engine, you will need to upload it to Google App Engine or run it locally using Cloud SDK.
 
 I recommend Cloud SDK.
 
-To install Cloud SDK, please see instructions here: https://cloud.google.com/sdk/downloads
+To install Cloud SDK, please see instructions here: (https://cloud.google.com/sdk/downloads)
 
-Download Simple Blog.
+To run Simple Blog locally, within the Simple Blog directory, run:
+`dev_appserver.py .`
 
-Install third party libraries `pip install -t lib -r requirements.txt`
+Open a browser and visit: localhost:8080
 
-Within the Simple Blog directory, run `dev_appserver.py .`
+## Running Simple Blog
 
-## Contributors
+Simple Blog is, as you guessed, a simple blog. It allows basic functionality you would need in a blog.
 
-Let people know how they can dive into the project, include important links to things like issue trackers, irc, twitter accounts if applicable.
+The front page allows you to view all blog posts.
+
+A visitor can:
+1. create a new account (`/signup`)
+2. login (`/login`)
+3. (`/logout`)
+
+When logged in, a user can:
+1. create a new post
+2. edit an existing post
+3. comment on posts
+4. like/unlike posts
 
 ## License
 
