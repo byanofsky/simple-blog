@@ -56,6 +56,13 @@ class Comment(ndb.Model):
     last_modified = ndb.DateTimeProperty(auto_now = True)
     author = ndb.KeyProperty(required = True, kind = 'User')
 
+    def update(self, body):
+        self.body = body
+        return self.put()
+
+    def delete(self):
+        self.key.delete()
+
     @classmethod
     def create(cls, body, author, p):
         c = cls(
