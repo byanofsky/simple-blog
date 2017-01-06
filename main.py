@@ -209,6 +209,7 @@ class SinglePostHandler(Handler):
     def render_post_user(self, **kw):
         self.render_post(
             edit_post_uri=self.get_uri('editpost', post_id=self.p_id),
+            uri_for=self.get_uri,
             can_comment=True,
             user=self.u,
             can_edit=self.u.can_edit_post(self.p),
@@ -353,6 +354,77 @@ class NewPostHandler(Handler):
             error_msg = 'You must be logged in to create a post.'
             self.render('error.html', error_msg=error_msg)
 
+class EditCommentHandler(Handler):
+    # TODO: need to finetune this like edit post
+    # TODO: can combine with editpost?
+    page_title = 'Edit Comment'
+
+    def initialize(self, request, response):
+        super(EditCommentHandler, self).initialize(request, response)
+        # initialize comment object
+        # TODO: fix this up
+        c_key = ndb.Key(urlsafe=self.request.get('comment_key'))
+        self.c = c_key.get()
+        # initialize parent post object
+        self.p = c_key.parent().get()
+
+    # TODO: need a render post function
+    def render_edit_page(self, **kw):
+        self.render(
+            'editcomment.html',
+            c=self.c,
+            # TODO: this may be bad since it is getting post id again
+            # TODO: need to get parent post url
+            post_uri=self.get_post_uri(self.p),
+            **kw
+        )
+
+    def get(self):
+        if self.u and self.u.can_edit_comment(self.c):
+            self.render_edit_page()
+        else:
+            # TODO: need to handle error messages
+            # TODO: move to function
+            error_msg = 'You cannot edit this comment.'
+            self.render('error.html', error_msg=error_msg)
+
+    def post(self):
+        if self.u and self.u.can_edit_comment(self.c):
+            # TODO: are there are any issues here with security (if someone deletes anothers post)
+            action = self.request.get('action')
+            if action == 'delete':
+                self.c.delete()
+                # TODO: need a success message, with link to view other posts. And redirect
+                error_msg = 'Comment deleted.'
+                self.render('error.html', error_msg=error_msg)
+            elif action == 'update':
+                body = self.request.get('body')
+
+                #check for errors
+                errors = validate.editcomment_errors(body)
+
+                if errors:
+                    msg = 'Your comment was not edited. Please fix errors and resubmit.'
+                    self.render_edit_page(
+                        body=body,
+                        msg=msg,
+                        errors=errors
+                    )
+                else:
+                    msg = 'Comment successfully updated.'
+                    # TODO: what if not updated?
+                    self.c.update(body)
+                    self.render_edit_page(msg=msg)
+            else:
+                msg = 'No changes made.'
+                self.c.update(body)
+                self.render_edit_page(msg=msg)
+
+        else:
+            # TODO: move to function
+            error_msg = 'You cannot edit this comment.'
+            self.render('error.html', error_msg=error_msg)
+
 
 
 # TODO: Handling with or without backslash
@@ -364,5 +436,6 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/logout', handler=LogoutHandler, name='logout'),
     webapp2.Route('/newpost', handler=NewPostHandler, name='newpost'),
     webapp2.Route('/post/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost'),
-    webapp2.Route('/editpost', handler=EditPostHandler, name='editpost')
+    webapp2.Route('/editpost', handler=EditPostHandler, name='editpost'),
+    webapp2.Route('/editcomment', handler=EditCommentHandler, name='editcomment')
 ], debug=True)
