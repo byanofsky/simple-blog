@@ -2,4 +2,16 @@
 
 {% block body %}
 <h1>Welcome {{ displayname }}</h1>
+
+<ul>
+    <li>
+        <a href="{{ uri_for('frontpage') }}">View All Posts</a>
+    </li>
+    <li>
+        <a href="{{ uri_for('newpost') }}">Create A New Post</a>
+    </li>
+    <li>
+        <a href="{{ uri_for('logout') }}">Logout</a>
+    </li>
+</ul>
 {% endblock %}

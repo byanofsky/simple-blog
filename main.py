@@ -153,7 +153,8 @@ class WelcomeHandler(Handler):
         else:
             self.render(
                 'welcome.html',
-                displayname=self.u.get_displayname()
+                displayname=self.u.get_displayname(),
+                uri_for=self.get_uri
             )
 
 class LoginHandler(Handler):
