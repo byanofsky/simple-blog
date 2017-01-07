@@ -268,9 +268,7 @@ class NewPostHandler(Handler):
         if self.u:
             self.render_newpost()
         else:
-            # TODO: move to function
-            error_msg = 'You must be logged in to create a post.'
-            self.render('error.html', error_msg=error_msg)
+            self.error_redirect('createpost')
 
     def post(self):
         if self.u:
@@ -314,6 +312,11 @@ class ErrorHandler(Handler):
             back_text = 'Go back to post.'
             # TODO: how can user go back to post
             back_url = self.uri_for('frontpage')
+
+        if code == 'createpost':
+            error_msg = 'You must be logged in to create a post.'
+            back_text = 'Login.'
+            back_url = self.uri_for('login')
 
         self.render(
             'error.html',
