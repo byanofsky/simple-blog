@@ -70,6 +70,9 @@ class Handler(webapp2.RequestHandler):
     def error_redirect(self, code):
         self.redirect_to('error', code=code)
 
+    def success_redirect(self, code):
+        self.redirect_to('success', code=code)
+
     # Check if a user is logged in and return that User object
     def get_loggedin_user(self):
         u_id = auth.get_user_cookie_id(self)
@@ -287,10 +290,8 @@ class NewPostHandler(Handler):
                 p_key = Post.create(title, body, self.u)
                 self.redirect_by_name('singlepost', post_id=p_key.id())
         else:
-            # TODO: move to function
             # TODO: this may need to be a redirect so it doesn't keep posting
-            error_msg = 'You must be logged in to create a post.'
-            self.render('error.html', error_msg=error_msg)
+            self.error_redirect('createpost')
 
 # TODO: move this
 # class StatusHandler(Handler):
@@ -307,22 +308,51 @@ class ErrorHandler(Handler):
             back_text = 'Go to homepage.'
             back_url = self.uri_for('frontpage')
 
-        if code == 'editcomment':
+        elif code == 'editcomment':
             error_msg = 'You cannot edit this comment.'
             back_text = 'Go back to post.'
             # TODO: how can user go back to post
             back_url = self.uri_for('frontpage')
 
-        if code == 'createpost':
+        elif code == 'createpost':
             error_msg = 'You must be logged in to create a post.'
             back_text = 'Login.'
             back_url = self.uri_for('login')
 
+        else:
+            error_msg = 'There was an error.'
+            back_text = 'Go to homepage.'
+            back_url = self.uri_for('frontpage')
+
         self.render(
-            'error.html',
-            error_msg=error_msg,
-            back_url=back_url,
-            back_text=back_text
+            'notice.html',
+            msg=error_msg,
+            url=back_url,
+            text=back_text
+        )
+
+class SuccessHandler(Handler):
+    page_title = 'Success'
+
+    def get(self):
+        code = self.request.get('code')
+
+        if code == 'postdelete':
+            success_msg = 'Post deleted.'
+            next_url = self.uri_for('frontpage')
+            next_text = 'Go to homepage'
+
+        elif code == 'commentdelete':
+            success_msg = 'Comment deleted.'
+            # TODO: how can user go back to post
+            next_url = self.uri_for('frontpage')
+            next_text = 'Back to post'
+
+        self.render(
+            'notice.html',
+            msg=success_msg,
+            url=next_url,
+            text=next_text
         )
 
 class EditPostHandler(Handler):
@@ -357,9 +387,7 @@ class EditPostHandler(Handler):
             action = self.request.get('action')
             if action == 'delete':
                 self.p.delete()
-                # TODO: need a success message, with link to view other posts. And redirect
-                error_msg = 'Post deleted.'
-                self.render('error.html', error_msg=error_msg)
+                self.success_redirect('postdelete')
             else:
                 title = self.request.get('title')
                 body = self.request.get('body')
@@ -420,9 +448,7 @@ class EditCommentHandler(Handler):
             action = self.request.get('action')
             if action == 'delete':
                 self.c.delete()
-                # TODO: need a success message, with link to view other posts. And redirect
-                error_msg = 'Comment deleted.'
-                self.render('error.html', error_msg=error_msg)
+                self.success_redirect('commentdelete')
             elif action == 'update':
                 body = self.request.get('body')
 
@@ -462,5 +488,6 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/post/<post_id:[0-9]+>', handler=SinglePostHandler, name='singlepost'),
     webapp2.Route('/editpost', handler=EditPostHandler, name='editpost'),
     webapp2.Route('/editcomment', handler=EditCommentHandler, name='editcomment'),
-    webapp2.Route('/error', handler=ErrorHandler, name='error')
+    webapp2.Route('/error', handler=ErrorHandler, name='error'),
+    webapp2.Route('/success', handler=SuccessHandler, name='success')
 ], debug=True)
