@@ -167,7 +167,7 @@ class LoginHandler(Handler):
     page_title = 'Login'
 
     def get(self):
-        self.render('login.html')
+        self.render('login.html', signup=self.uri_for('signup'))
 
     def post(self):
         email = self.request.get('email')
@@ -180,7 +180,12 @@ class LoginHandler(Handler):
         errors = validate.login_errors(email, u, pw)
 
         if errors:
-            self.render('login.html', email=email, errors=errors)
+            self.render(
+                'login.html',
+                email=email,
+                errors=errors,
+                signup=self.uri_for('signup')
+            )
         else:
             auth.set_user_cookie(self, u.key)
             self.redirect_by_name('welcome')
