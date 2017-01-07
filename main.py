@@ -67,11 +67,11 @@ class Handler(webapp2.RequestHandler):
     def redirect_by_name(self, name, **kw):
         self.redirect(self.get_uri(name, **kw))
 
-    def error_redirect(self, code):
-        self.redirect_to('error', code=code)
+    def error_redirect(self, code, **kw):
+        self.redirect_to('error', code=code, **kw)
 
-    def success_redirect(self, code):
-        self.redirect_to('success', code=code)
+    def success_redirect(self, code, **kw):
+        self.redirect_to('success', code=code, **kw)
 
     # Check if a user is logged in and return that User object
     def get_loggedin_user(self):
@@ -302,6 +302,7 @@ class ErrorHandler(Handler):
 
     def get(self):
         code = self.request.get('code')
+        p_key = ndb.Key(urlsafe=self.request.get('post'))
 
         if code == 'editpost':
             error_msg = 'You cannot edit this post.'
@@ -312,7 +313,7 @@ class ErrorHandler(Handler):
             error_msg = 'You cannot edit this comment.'
             back_text = 'Go back to post.'
             # TODO: how can user go back to post
-            back_url = self.uri_for('frontpage')
+            back_url = self.uri_for('singlepost', post_id=p_key.id())
 
         elif code == 'createpost':
             error_msg = 'You must be logged in to create a post.'
@@ -336,6 +337,7 @@ class SuccessHandler(Handler):
 
     def get(self):
         code = self.request.get('code')
+        p_key = ndb.Key(urlsafe=self.request.get('post'))
 
         if code == 'postdelete':
             success_msg = 'Post deleted.'
@@ -345,7 +347,7 @@ class SuccessHandler(Handler):
         elif code == 'commentdelete':
             success_msg = 'Comment deleted.'
             # TODO: how can user go back to post
-            next_url = self.uri_for('frontpage')
+            next_url = self.uri_for('singlepost', post_id=p_key.id())
             next_text = 'Back to post'
 
         self.render(
@@ -440,7 +442,7 @@ class EditCommentHandler(Handler):
         if self.u and self.u.can_edit(self.c):
             self.render_edit_page()
         else:
-            self.error_redirect('editcomment')
+            self.error_redirect('editcomment', post=self.p.key.urlsafe())
 
     def post(self):
         if self.u and self.u.can_edit(self.c):
@@ -448,7 +450,7 @@ class EditCommentHandler(Handler):
             action = self.request.get('action')
             if action == 'delete':
                 self.c.delete()
-                self.success_redirect('commentdelete')
+                self.success_redirect('commentdelete', post=self.p.key.urlsafe())
             elif action == 'update':
                 body = self.request.get('body')
 
@@ -473,7 +475,7 @@ class EditCommentHandler(Handler):
                 self.render_edit_page(msg=msg)
 
         else:
-            self.error_redirect('editcomment')
+            self.error_redirect('editcomment', post=self.p.key.urlsafe())
 
 
 
