@@ -67,6 +67,9 @@ class Handler(webapp2.RequestHandler):
     def redirect_by_name(self, name, **kw):
         self.redirect(self.get_uri(name, **kw))
 
+    def error_redirect(self, code):
+        self.redirect_to('error', code=code)
+
     # Check if a user is logged in and return that User object
     def get_loggedin_user(self):
         u_id = auth.get_user_cookie_id(self)
@@ -269,7 +272,6 @@ class NewPostHandler(Handler):
             error_msg = 'You must be logged in to create a post.'
             self.render('error.html', error_msg=error_msg)
 
-
     def post(self):
         if self.u:
             title = self.request.get('title')
@@ -293,6 +295,9 @@ class NewPostHandler(Handler):
             self.render('error.html', error_msg=error_msg)
 
 # TODO: move this
+# class StatusHandler(Handler):
+#     def get(self):
+
 class ErrorHandler(Handler):
     page_title = 'Error'
 
@@ -302,6 +307,12 @@ class ErrorHandler(Handler):
         if code == 'editpost':
             error_msg = 'You cannot edit this post.'
             back_text = 'Go to homepage.'
+            back_url = self.uri_for('frontpage')
+
+        if code == 'editcomment':
+            error_msg = 'You cannot edit this comment.'
+            back_text = 'Go back to post.'
+            # TODO: how can user go back to post
             back_url = self.uri_for('frontpage')
 
         self.render(
@@ -330,15 +341,10 @@ class EditPostHandler(Handler):
             **kw
         )
 
-    def error_redirect(self, code):
-        self.redirect_to('error', code=code)
-
     def get(self):
         if self.u and self.u.can_edit(self.p):
             self.render_edit_page()
         else:
-            # TODO: need to handle error messages
-            # TODO: move to function
             # error_msg = 'You cannot edit this post.'
             self.error_redirect('editpost')
 
@@ -372,9 +378,7 @@ class EditPostHandler(Handler):
                     self.p.update(title, body)
                     self.render_edit_page(msg=msg)
         else:
-            # TODO: move to function
-            error_msg = 'You cannot edit this post.'
-            self.render('error.html', error_msg=error_msg)
+            self.error_redirect('editpost')
 
 class EditCommentHandler(Handler):
     # TODO: need to finetune this like edit post
@@ -405,10 +409,7 @@ class EditCommentHandler(Handler):
         if self.u and self.u.can_edit(self.c):
             self.render_edit_page()
         else:
-            # TODO: need to handle error messages
-            # TODO: move to function
-            error_msg = 'You cannot edit this comment.'
-            self.render('error.html', error_msg=error_msg)
+            self.error_redirect('editcomment')
 
     def post(self):
         if self.u and self.u.can_edit(self.c):
@@ -443,9 +444,7 @@ class EditCommentHandler(Handler):
                 self.render_edit_page(msg=msg)
 
         else:
-            # TODO: move to function
-            error_msg = 'You cannot edit this comment.'
-            self.render('error.html', error_msg=error_msg)
+            self.error_redirect('editcomment')
 
 
 
