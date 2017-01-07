@@ -46,7 +46,7 @@
                     <div class="comment-author">
                         {{ c.author.get().get_displayname() }}
                     </div>
-                    {% if user.can_edit(c) %}
+                    {% if user and user.can_edit(c) %}
                         <div class="comment-edit">
                             <a href="{{ uri_for('editcomment', comment_key=c.key.urlsafe()) }}">Edit Comment</a>
                         </div>
