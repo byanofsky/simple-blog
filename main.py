@@ -69,10 +69,6 @@ class Handler(webapp2.RequestHandler):
     def get_post_uri(self, post):
         return self.get_uri('singlepost', post_id=post.key.id())
 
-    # TODO: Pretty sure this can be removed
-    def redirect_by_name(self, name, **kw):
-        self.redirect(self.get_uri(name, **kw))
-
     # Redirect to the error handler
     def error_redirect(self, code, **kw):
         self.redirect_to('error', code=code, **kw)
@@ -139,7 +135,7 @@ class SignUpHandler(Handler):
             # If form data is ok, add user to database and direct to
             # welcome page.
             User.signup(self, email, pw, displayname)
-            self.redirect_by_name('welcome')
+            self.redirect_to('welcome')
 
 
 class WelcomeHandler(Handler):
@@ -148,7 +144,7 @@ class WelcomeHandler(Handler):
     def get(self):
         if not self.u:
             # if no user signed in, redirect to login
-            self.redirect_by_name('login')
+            self.redirect_to('login')
         else:
             self.render('welcome.html', displayname=self.u.get_displayname(),
                         uri_for=self.get_uri)
@@ -180,7 +176,7 @@ class LoginHandler(Handler):
         else:
             # If form validates, set user cookie and direct to welcome page
             auth.set_user_cookie(self, u.key)
-            self.redirect_by_name('welcome')
+            self.redirect_to('welcome')
 
 
 class LogoutHandler(Handler):
@@ -189,7 +185,7 @@ class LogoutHandler(Handler):
         # If there is a user logged in, clear cookies.
         if self.u:
             auth.clear_user_cookie(self)
-        self.redirect_by_name('login')
+        self.redirect_to('login')
 
 
 class SinglePostHandler(Handler):
@@ -242,7 +238,7 @@ class SinglePostHandler(Handler):
                     self.render_post_user(comment=comment, errors=errors)
                 else:
                     self.u.leave_comment(comment, self.p)
-                    self.redirect_by_name('singlepost', post_id=post_id)
+                    self.redirect_to('singlepost', post_id=post_id)
             else:
                 # If action isn't comment, it must be like or unlike.
                 # Uses "else" instead of "elif" so redirect can be used.
@@ -250,10 +246,10 @@ class SinglePostHandler(Handler):
                     self.u.like(self.p)
                 if action == 'unlike':
                     self.u.unlike(self.p)
-                self.redirect_by_name('singlepost', post_id=post_id)
+                self.redirect_to('singlepost', post_id=post_id)
         else:
             # If no user or no action, redirect user to post
-            self.redirect_by_name('singlepost', post_id=post_id)
+            self.redirect_to('singlepost', post_id=post_id)
 
 
 class NewPostHandler(Handler):
@@ -278,7 +274,7 @@ class NewPostHandler(Handler):
             else:
                 # Create post in database, and redirect to singlepost
                 p_key = Post.create(title, body, self.u)
-                self.redirect_by_name('singlepost', post_id=p_key.id())
+                self.redirect_to('singlepost', post_id=p_key.id())
         else:
             # If no user logged in, redirect to error page
             self.error_redirect('createpost')
