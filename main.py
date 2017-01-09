@@ -6,9 +6,9 @@ import webapp2
 
 import validate
 import auth
-# TODO: shouldn't import *
-from datacls import *
+from datacls import Post, Comment, User
 from google.appengine.datastore.datastore_query import Cursor
+from google.appengine.ext import ndb
 
 # load config settings
 with open("config.yml", 'r') as ymlfile:
@@ -25,6 +25,8 @@ jinja_env = jinja2.Environment(
 # TODO: can we move these classes to their own files and not reimport?
 class Handler(webapp2.RequestHandler):
     site_title = cfg['site_title']
+
+    # TODO: check these funcs
 
     # Helper to condense response.out.write
     def write(self, *a, **kw):
@@ -62,6 +64,7 @@ class Handler(webapp2.RequestHandler):
 
     # simpler way to get uris for route handling
     # TODO: can this be removed?
+    # TODO: Replace with uri_for
     def get_uri(self, name, **kw):
         return webapp2.uri_for(name, **kw)
 
@@ -244,7 +247,7 @@ class SinglePostHandler(Handler):
                 # Uses "else" instead of "elif" so redirect can be used.
                 if action == 'like':
                     self.u.like(self.p)
-                if action == 'unlike':
+                elif action == 'unlike':
                     self.u.unlike(self.p)
                 self.redirect_to('singlepost', post_id=post_id)
         else:
@@ -289,14 +292,13 @@ class ErrorHandler(Handler):
     def get(self):
         # Get error code passed
         code = self.request.get('code')
-        # Get post key passed to allow redirect back to post
-        p_key = ndb.Key(urlsafe=self.request.get('post'))
-
         if code == 'editpost':
             error_msg = 'You cannot edit this post.'
             back_url = self.uri_for('frontpage')
             back_text = 'Go to homepage.'
-        elif code == 'editcomment':
+        elif code == 'editcomment' and self.request.get('post'):
+            # Get post key passed to allow redirect back to post
+            p_key = ndb.Key(urlsafe=self.request.get('post'))
             error_msg = 'You cannot edit this comment.'
             back_url = self.uri_for('singlepost', post_id=p_key.id())
             back_text = 'Go back to post.'
@@ -308,7 +310,6 @@ class ErrorHandler(Handler):
             error_msg = 'There was an error.'
             back_url = self.uri_for('frontpage')
             back_text = 'Go to homepage.'
-
         self.render('notice.html', msg=error_msg, url=back_url, text=back_text)
 
 
@@ -319,19 +320,20 @@ class SuccessHandler(Handler):
     def get(self):
         # Get success code
         code = self.request.get('code')
-        # Get post key to allow return to post
-        p_key = ndb.Key(urlsafe=self.request.get('post'))
-
         if code == 'postdelete':
             success_msg = 'Post deleted.'
             next_url = self.uri_for('frontpage')
             next_text = 'Go to homepage'
-
-        elif code == 'commentdelete':
+        elif code == 'commentdelete' and self.request.get('post'):
+            # Get post key to allow return to post
+            p_key = ndb.Key(urlsafe=self.request.get('post'))
             success_msg = 'Comment deleted.'
             next_url = self.uri_for('singlepost', post_id=p_key.id())
             next_text = 'Back to post'
-
+        else:
+            success_msg = 'Action completed successfully.'
+            next_url = self.uri_for('frontpage')
+            next_text = 'Go to homepage'
         self.render('notice.html', msg=success_msg, url=next_url,
                     text=next_text)
 
@@ -385,6 +387,7 @@ class EditPostHandler(Handler):
                     # No errors, update post
                     msg = 'Post successfully updated.'
                     self.p.update(title, body)
+                    # TODO: should we redirect so user can't go back and post?
                     self.render_edit_page(msg=msg)
         else:
             # If no user logged in, redirect to error page
