@@ -19,11 +19,13 @@ Simple Blog requires Python 2.7.x. Please ensure it is installed.
 You will need to install required third party libraries. To do so, create a directory at the root of Simple Blog and run:
 `pip install -t lib -r requirements.txt`
 
-Because Simple Blog is meant to run on Google App Engine, you will need to upload it to Google App Engine or run it locally using Cloud SDK.
+Because Simple Blog is meant to run on Google App Engine, you will need to deploy it to Google App Engine or run it locally.
 
-I recommend Cloud SDK.
+You can use Cloud SDK for both of these.
 
 To install Cloud SDK, please see instructions here: (https://cloud.google.com/sdk/downloads)
+
+To deploy to Google App Engine, see instructions here: (https://cloud.google.com/appengine/docs/python/getting-started/deploying-the-application)
 
 To run Simple Blog locally, within the Simple Blog directory, run:
 `dev_appserver.py .`
