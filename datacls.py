@@ -1,17 +1,18 @@
-from auth import make_secure_val, check_secure_val, make_hashed_pw, set_user_cookie
+from auth import (make_secure_val, check_secure_val, make_hashed_pw,
+                  set_user_cookie)
 from validate import valid_email
 from google.appengine.ext import ndb
 
-# TODO: check other datastore options
 
+# TODO: check other datastore options
 class Post(ndb.Model):
-    title = ndb.StringProperty(required = True)
-    body = ndb.TextProperty(required = True)
-    created = ndb.DateTimeProperty(auto_now_add = True)
-    last_modified = ndb.DateTimeProperty(auto_now = True)
+    title = ndb.StringProperty(required=True)
+    body = ndb.TextProperty(required=True)
+    created = ndb.DateTimeProperty(auto_now_add=True)
+    last_modified = ndb.DateTimeProperty(auto_now=True)
     # TODO: should author be parent? Will that affect query?
-    author = ndb.KeyProperty(required = True, kind = 'User')
-    likes = ndb.KeyProperty(repeated=True, kind= 'User')
+    author = ndb.KeyProperty(required=True, kind='User')
+    likes = ndb.KeyProperty(repeated=True, kind='User')
 
     def update(self, title, body):
         self.title = title
@@ -23,23 +24,19 @@ class Post(ndb.Model):
         self.key.delete()
 
     def add_like(self, u):
-        # add user to list of likes. Assume user is not on list
+        # Add user to list of likes. Assumes user is not on list, or will add
+        # a duplicate entry.
         self.likes.append(u.key)
         return self.put()
 
     def remove_like(self, u):
-        # remove user from list of likes. Assume user is on list
-        # TODO: we may be able to get the index if liked to shorten time
+        # Remove user from list of likes. Assumes user is on list.
         self.likes.remove(u.key)
         return self.put()
 
     @classmethod
     def create(cls, title, body, author):
-        p = cls(
-            title=title,
-            body=body,
-            author=author.key
-        )
+        p = cls(title=title, body=body, author=author.key)
         return p.put()
 
     @classmethod
@@ -47,14 +44,16 @@ class Post(ndb.Model):
         return cls.query().order(-cls.created).fetch()
 
     @classmethod
-    def get_n(cls, n, cursor = None):
-        return cls.query().order(-cls.created).fetch_page(n, start_cursor=cursor)
+    def get_n(cls, n, cursor=None):
+        query = cls.query().order(-cls.created)
+        return query.fetch_page(n, start_cursor=cursor)
+
 
 class Comment(ndb.Model):
-    body = ndb.TextProperty(required = True)
-    created = ndb.DateTimeProperty(auto_now_add = True)
-    last_modified = ndb.DateTimeProperty(auto_now = True)
-    author = ndb.KeyProperty(required = True, kind = 'User')
+    body = ndb.TextProperty(required=True)
+    created = ndb.DateTimeProperty(auto_now_add=True)
+    last_modified = ndb.DateTimeProperty(auto_now=True)
+    author = ndb.KeyProperty(required=True, kind='User')
 
     def update(self, body):
         self.body = body
@@ -65,69 +64,78 @@ class Comment(ndb.Model):
 
     @classmethod
     def create(cls, body, author, p):
-        c = cls(
-            body=body,
-            author=author.key,
-            parent=p.key
-        )
+        c = cls(body=body, author=author.key, parent=p.key)
         return c.put()
 
     @classmethod
     def get_comments(cls, p):
         return cls.query(ancestor=p.key).order(-cls.created).fetch()
 
+    # Delete all of post p's comments
     @classmethod
     def delete_post_comments(cls, p):
-        comments = cls.query(ancestor=p.key).order(-cls.created).fetch(keys_only=True)
+        query = cls.query(ancestor=p.key).order(-cls.created)
+        comments = query.fetch(keys_only=True)
         ndb.delete_multi(comments)
 
-class User(ndb.Model):
-    email = ndb.StringProperty(required = True)
-    displayname = ndb.StringProperty()
-    hashed_pw = ndb.StringProperty(required = True)
-    created = ndb.DateTimeProperty(auto_now_add = True)
 
-    # gets displayname, either the user display name or email if none
+class User(ndb.Model):
+    email = ndb.StringProperty(required=True)
+    displayname = ndb.StringProperty()
+    hashed_pw = ndb.StringProperty(required=True)
+    created = ndb.DateTimeProperty(auto_now_add=True)
+
+    # Gets user's displayname. If no displayname, returns email.
     def get_displayname(self):
         return self.displayname or self.email
 
     def like(self, p):
+        # Checks if user can like post, and if so, calls add_like
         if self.can_like_post(p):
             return p.add_like(self)
 
     def unlike(self, p):
+        # Checks if user liked post before removing like
         if self.liked_post(p):
+            # TODO: Because liked_post can get index, can we pass that here?
             return p.remove_like(self)
 
     def liked_post(self, p):
-        # TODO: if found, can we return index to save some time?
+        # TODO: if found, can we return index to save some time in unlike?
         return self.key in p.likes
 
+    # Check if user can like post
     def can_like_post(self, p):
+        # Makes sure user is not post author, and that user hasn't already
+        # liked the post.
         return self.key != p.author and not self.liked_post(p)
 
-    # Returns boolean if user can edit object
+    # Checks if user can edit object. Assumes object has
+    # an author property.
     def can_edit(self, obj):
         return self.key == obj.author
 
+    # Checks if user can leave a comment
     def leave_comment(self, comment, p):
         return Comment.create(comment, self, p)
 
-    # creates a user and returns the db key
+    # Creates a user and returns the db key
     @classmethod
     def create(cls, email, pw, displayname):
+        # Hash pw for storage
         hashed_pw = make_hashed_pw(pw)
-        u = cls(email=email, hashed_pw=hashed_pw, displayname=displayname )
+        u = cls(email=email, hashed_pw=hashed_pw, displayname=displayname)
         return u.put()
 
-    # get user object by email
+    # Get user object by email
     @classmethod
     def get_by_email(cls, email):
+        # Checks if email is valid before querying db
         if valid_email(email):
             return cls.query(cls.email == email).get()
 
     # TODO: these signup functions can be moved to their own file
-    # creates a user and uses db key to set user cookie
+    # Creates a user and uses db key to set user cookie
     @classmethod
     def signup(cls, page_handler, email, pw, displayname):
         u_key = cls.create(email, pw, displayname)
