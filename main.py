@@ -6,6 +6,7 @@ import webapp2
 import validate
 import auth
 import yaml
+# TODO: shouldn't import *
 from datacls import *
 from google.appengine.datastore.datastore_query import Cursor
 
