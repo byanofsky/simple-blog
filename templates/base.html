@@ -5,6 +5,22 @@
         <title>{{ seo_title }}</title>
     </head>
     <body>
+        <nav>
+            <ul>
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a href="/welcome">Dashboard</a>
+                </li>
+                <li>
+                    <a href="/login">Login</a>
+                </li>
+                <li>
+                    <a href="/logout">Logout</a>
+                </li>
+            </ul>
+        </nav>
         {% block body %}{% endblock %}
     </body>
 </html>
