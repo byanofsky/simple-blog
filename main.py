@@ -116,7 +116,7 @@ class SignUpHandler(Handler):
     page_title = 'Signup'
 
     def get(self):
-        self.render('signup.html')
+        self.render('signup.html', login=self.uri_for('login'))
 
     def post(self):
         # Save POST data
@@ -132,8 +132,8 @@ class SignUpHandler(Handler):
         )
 
         if errors:
-            self.render('signup.html', email=email, displayname=displayname,
-                        errors=errors)
+            self.render('signup.html', login=self.uri_for('login'),
+                        email=email, displayname=displayname, errors=errors)
         else:
             # If form data is ok, add user to database and direct to
             # welcome page.
