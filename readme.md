@@ -8,6 +8,8 @@ It is built to be deployed on [Google App Engine](https://cloud.google.com/appen
 
 This is one of my projects for my Udacity Full Stack Developer Nanodegree.
 
+See working example here: https://simple-blog-151718.appspot.com
+
 ## Installation
 
 Download Simple Blog first.
