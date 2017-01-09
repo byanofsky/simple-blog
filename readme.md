@@ -23,9 +23,9 @@ Because Simple Blog is meant to run on Google App Engine, you will need to deplo
 
 You can use Cloud SDK for both of these.
 
-To install Cloud SDK, please see instructions here: (https://cloud.google.com/sdk/downloads)
+To install Cloud SDK, please see instructions here: https://cloud.google.com/sdk/downloads
 
-To deploy to Google App Engine, see instructions here: (https://cloud.google.com/appengine/docs/python/getting-started/deploying-the-application)
+To deploy to Google App Engine, see instructions here: https://cloud.google.com/appengine/docs/python/getting-started/deploying-the-application
 
 To run Simple Blog locally, within the Simple Blog directory, run:
 `dev_appserver.py .`
