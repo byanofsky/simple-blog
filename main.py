@@ -6,7 +6,9 @@ import webapp2
 
 import validate
 import auth
-from datacls import Post, Comment, User
+from models.post import Post
+from models.comment import Comment
+from models.user import User
 from google.appengine.datastore.datastore_query import Cursor
 from google.appengine.ext import ndb
 

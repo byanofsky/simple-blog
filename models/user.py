@@ -1,82 +1,8 @@
+from google.appengine.ext import ndb
+from comment import Comment
 from auth import (make_secure_val, check_secure_val, make_hashed_pw,
                   set_user_cookie)
 from validate import valid_email
-from google.appengine.ext import ndb
-
-
-# TODO: check other datastore options
-class Post(ndb.Model):
-    title = ndb.StringProperty(required=True)
-    body = ndb.TextProperty(required=True)
-    created = ndb.DateTimeProperty(auto_now_add=True)
-    last_modified = ndb.DateTimeProperty(auto_now=True)
-    # TODO: should author be parent? Will that affect query?
-    author = ndb.KeyProperty(required=True, kind='User')
-    likes = ndb.KeyProperty(repeated=True, kind='User')
-
-    def update(self, title, body):
-        self.title = title
-        self.body = body
-        return self.put()
-
-    def delete(self):
-        Comment.delete_post_comments(self)
-        self.key.delete()
-
-    def add_like(self, u):
-        # Add user to list of likes. Assumes user is not on list, or will add
-        # a duplicate entry.
-        self.likes.append(u.key)
-        return self.put()
-
-    def remove_like(self, u):
-        # Remove user from list of likes. Assumes user is on list.
-        self.likes.remove(u.key)
-        return self.put()
-
-    @classmethod
-    def create(cls, title, body, author):
-        p = cls(title=title, body=body, author=author.key)
-        return p.put()
-
-    @classmethod
-    def get_all(cls):
-        return cls.query().order(-cls.created).fetch()
-
-    @classmethod
-    def get_n(cls, n, cursor=None):
-        query = cls.query().order(-cls.created)
-        return query.fetch_page(n, start_cursor=cursor)
-
-
-class Comment(ndb.Model):
-    body = ndb.TextProperty(required=True)
-    created = ndb.DateTimeProperty(auto_now_add=True)
-    last_modified = ndb.DateTimeProperty(auto_now=True)
-    author = ndb.KeyProperty(required=True, kind='User')
-
-    def update(self, body):
-        self.body = body
-        return self.put()
-
-    def delete(self):
-        self.key.delete()
-
-    @classmethod
-    def create(cls, body, author, p):
-        c = cls(body=body, author=author.key, parent=p.key)
-        return c.put()
-
-    @classmethod
-    def get_comments(cls, p):
-        return cls.query(ancestor=p.key).order(-cls.created).fetch()
-
-    # Delete all of post p's comments
-    @classmethod
-    def delete_post_comments(cls, p):
-        query = cls.query(ancestor=p.key).order(-cls.created)
-        comments = query.fetch(keys_only=True)
-        ndb.delete_multi(comments)
 
 
 class User(ndb.Model):
