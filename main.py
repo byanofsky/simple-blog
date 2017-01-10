@@ -12,6 +12,9 @@ from models.user import User
 from google.appengine.datastore.datastore_query import Cursor
 from google.appengine.ext import ndb
 
+# from routes import route_list
+from config import app_config
+
 # load config settings
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.load(ymlfile)
@@ -473,4 +476,4 @@ app = webapp2.WSGIApplication([
                   name='editcomment'),
     webapp2.Route('/error', handler=ErrorHandler, name='error'),
     webapp2.Route('/success', handler=SuccessHandler, name='success')
-], debug=True)
+], debug=app_config.get('debug', False))
