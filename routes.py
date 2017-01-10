@@ -1,4 +1,16 @@
-from handlers.basehandler import *
+import webapp2
+
+from handlers.frontpagehandler import FrontPageHandler
+from handlers.signuphandler import SignUpHandler
+from handlers.welcomehandler import WelcomeHandler
+from handlers.loginhandler import LoginHandler
+from handlers.logouthandler import LogoutHandler
+from handlers.newposthandler import NewPostHandler
+from handlers.singleposthandler import SinglePostHandler
+from handlers.editposthandler import EditPostHandler
+from handlers.editcommenthandler import EditCommentHandler
+from handlers.errorhandler import ErrorHandler
+from handlers.successhandler import SuccessHandler
 
 route_list = [
     webapp2.Route('/', handler=FrontPageHandler, name='frontpage'),
