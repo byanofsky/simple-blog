@@ -49,6 +49,11 @@ When logged in, a user can:
 3. comment on posts
 4. like/unlike posts
 
+
+## Acknowledgements
+
+[Google App Engine Boilerplate] (https://github.com/droot/gae-boilerplate) from Sunil Arora
+
 ## License
 
 MIT License
