@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
+{% block title %}Simple Blog{% endblock %}
+
 {% block body %}
-<h1>{{ page_title }}</h1>
+<h1>Simple Blog</h1>
 
 {% for p in posts %}
     <div class="post">
         <div class="post-title">
-            <a href="{{ uri_for(p) }}">{{ p.title }}</a>
+            <a href="{{ uri_for('singlepost', post_id=p.key.id()) }}">{{ p.title }}</a>
         </div>
         <div class="post-body">
             {{ p.body }}
