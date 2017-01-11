@@ -8,7 +8,7 @@
 <div class="post">
     {% if user and user.can_edit(post) %}
         <div>
-            <a href="{{ edit_post_uri }}">Edit</a>
+            <a href="{{ uri_for('editpost', post_id=post.key.id()) }}">Edit</a>
         </div>
     {% endif %}
 
