@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Comment - Simple Blog{% endblock %}
+{% block title %}Edit Comment - Simple Blog{% endblock %}
 
 {% block body %}
-<h1>Comment</h1>
+<h1>Edit Comment</h1>
 
 {% if msg %}
     {{ msg }}
 {% endif %}
 
-<a href="{{ post_uri }}">View Post</a>
+<a href="{{ uri_for('viewpost', post_id=comment.key.parent().id()) }}">Back To Post</a>
 
 <form method="POST">
     <label>
@@ -20,11 +20,9 @@
                 {{ errors.body }}
             </div>
         {% else %}
-            <textarea name="body">{{ c.body }}</textarea>
+            <textarea name="body">{{ comment.body }}</textarea>
         {% endif %}
     </label>
-
-    <input type="hidden" name="action" value="update">
 
     <div>
         <input type="submit">
