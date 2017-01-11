@@ -62,7 +62,7 @@
 
     {% if user %}
     <div class="comment-form">
-        <form method="post">
+        <form action="{{ uri_for('newcomment', post_id=post.key.id()) }}" method="post">
             <label>
                 <div>Comment</div>
                 <textarea name="comment">{{ comment }}</textarea>
