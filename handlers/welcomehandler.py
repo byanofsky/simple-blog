@@ -1,13 +1,8 @@
 from handlers.basehandler import BaseHandler
+from validation import require_user_or_redirect
 
 
 class WelcomeHandler(BaseHandler):
-    page_title = 'Welcome'
-
-    def get(self):
-        if not self.u:
-            # if no user signed in, redirect to login
-            self.redirect_to('login')
-        else:
-            self.render('welcome.html', displayname=self.u.get_displayname(),
-                        uri_for=self.get_uri)
+    @require_user_or_redirect('login')
+    def get(self, user):
+        self.render('welcome.html', user=user)

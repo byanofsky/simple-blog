@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}Welcome - Simple Blog{% endblock %}
+
 {% block body %}
-<h1>Welcome {{ displayname }}</h1>
+<h1>Welcome {{ user.get_displayname() }}</h1>
 
 <ul>
     <li>
