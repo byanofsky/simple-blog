@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}Login - Simple Blog{% endblock %}
+
 {% block body %}
-<h1>{{ page_title }}</h1>
+<h1>Login</h1>
 
 <!-- TODO: error styling -->
 <form method="post">
@@ -27,6 +29,6 @@
 </form>
 
 <div>
-    Don't have an account? <a href="{{ signup }}">Sign Up</a>
+    Don't have an account? <a href="{{ uri_for('signup') }}">Sign Up</a>
 </div>
 {% endblock %}

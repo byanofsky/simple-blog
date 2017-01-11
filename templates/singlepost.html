@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 
+{% block title %}{{ post.title }} - Simple Blog{% endblock %}
+
 {% block body %}
-<h1>{{ page_title }}</h1>
+<h1>{{ post.title }}</h1>
 
 <div class="post">
-    {% if can_edit %}
+    {% if user and user.can_edit(post) %}
         <div>
             <a href="{{ edit_post_uri }}">Edit</a>
         </div>
     {% endif %}
 
     <pre class="post-body">
-        {{ p.body }}
+        {{ post.body }}
     </pre>
 
-    {% if can_like %}
+    {% if user and user.can_like_post(post) %}
         <div>
             <form method="post">
                 <input type="hidden" name="action" value="like">
@@ -23,7 +25,7 @@
         </div>
     {% endif %}
 
-    {% if liked_post %}
+    {% if user and user.liked_post(post) %}
         <div>
             You liked this post
         </div>
@@ -58,7 +60,7 @@
         {% endif %}
     </div>
 
-    {% if can_comment %}
+    {% if user %}
     <div class="comment-form">
         <form method="post">
             <label>
