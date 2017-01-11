@@ -48,6 +48,8 @@ def require_user_or_redirect(name):
     return decorated_function
 
 
+# Decorator which checks if post exists. And if it does,
+# checks if user is the author.
 def user_owns_post(f):
     @wraps(f)
     @post_exists
@@ -56,6 +58,7 @@ def user_owns_post(f):
         if user and user.key == post.author:
             return f(self, user, post_id, post, *a, **kw)
         else:
+            # TODO: should this be a redirect or error?
             self.redirect_to('viewpost', post_id=post_id)
             return
     return wrapper
