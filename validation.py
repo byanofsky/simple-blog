@@ -53,6 +53,7 @@ def require_user_or_redirect(name):
 def user_owns_post(f):
     @wraps(f)
     @post_exists
+    # TODO: requre user instead
     @get_user
     def wrapper(self, user, post_id, post, *a, **kw):
         if user and user.key == post.author:
@@ -60,6 +61,37 @@ def user_owns_post(f):
         else:
             # TODO: should this be a redirect or error?
             self.redirect_to('viewpost', post_id=post_id)
+            return
+    return wrapper
+
+
+def user_owns_comment(f):
+    @wraps(f)
+    @comment_exists
+    # TODO: requre user instead
+    @get_user
+    def wrapper(self, user, comment, *a, **kw):
+        if user and user.key == comment.author:
+            return f(self, user, comment, *a, **kw)
+        else:
+            # TODO: should this be a redirect or error?
+            self.abort(404)
+            return
+    return wrapper
+
+
+def comment_exists(f):
+    @wraps(f)
+    def wrapper(self, comment_key, *a, **kw):
+        # TODO: is there really no better way to handle this?
+        try:
+            comment = ndb.Key(urlsafe=comment_key).get()
+        except ndb.google_imports.ProtocolBuffer.ProtocolBufferDecodeError:
+            comment = None
+        if comment:
+            return f(self, comment, *a, **kw)
+        else:
+            self.abort(404)
             return
     return wrapper
 
@@ -74,7 +106,3 @@ def post_exists(f):
             self.abort(404)
             return
     return wrapper
-# comment_exists
-# user_logged_in
-# user_owns_post
-# user_owns_comment
