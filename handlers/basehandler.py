@@ -26,7 +26,6 @@ jinja_env.globals['uri_for'] = webapp2.uri_for
 # TODO: can we move these classes to their own files and not reimport?
 class BaseHandler(webapp2.RequestHandler):
     # TODO: check these funcs
-
     # Helper to condense response.out.write
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
@@ -38,12 +37,7 @@ class BaseHandler(webapp2.RequestHandler):
 
     # Helper to combine jinja render and write
     def render(self, template, **kw):
-        self.write(
-            self.render_str(
-                template,
-                **kw
-            )
-        )
+        self.write(self.render_str(template, **kw))
 
     # Helper for returning a singlepost uri
     def get_post_uri(self, post):
@@ -63,11 +57,3 @@ class BaseHandler(webapp2.RequestHandler):
         u_id = auth.get_user_cookie_id(self)
         if u_id:
             return User.get_by_id(int(u_id))
-
-    # On page load, save user object to instance variable
-    def initialize(self, request, response):
-        super(BaseHandler, self).initialize(request, response)
-        self.u = self.get_loggedin_user()
-        # if there isn't a logged in user, clear user cookies
-        if not self.u:
-            auth.clear_user_cookie(self)
