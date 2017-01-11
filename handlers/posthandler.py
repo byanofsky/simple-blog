@@ -1,5 +1,7 @@
 from handlers.basehandler import BaseHandler
-from validation import get_user, require_user, post_exists
+from validation import (get_user, require_user, post_exists,
+                        require_user_or_redirect,
+                        user_owns_post)
 from models.post import Post
 from models.comment import Comment
 
@@ -42,3 +44,9 @@ class ViewPostHandler(BaseHandler):
             # elif action == 'unlike':
             #     self.u.unlike(self.p)
         self.redirect_to('singlepost', post_id=post_id)
+
+
+class EditPostHandler(BaseHandler):
+    @user_owns_post
+    def get(self, user, post_id, post):
+        self.render('editpost.html', post=post)
