@@ -11,6 +11,7 @@ from handlers.editposthandler import EditPostHandler
 from handlers.deleteposthandler import DeletePostHandler
 from handlers.newcommenthandler import NewCommentHandler
 from handlers.editcommenthandler import EditCommentHandler
+from handlers.deletecommenthandler import DeleteCommentHandler
 from handlers.errorhandler import ErrorHandler
 from handlers.successhandler import SuccessHandler
 
@@ -33,6 +34,9 @@ route_list = [
     webapp2.Route('/editcomment/<comment_key:[a-zA-Z0-9_-]+>',
                   handler=EditCommentHandler,
                   name='editcomment'),
+    webapp2.Route('/deletecomment/<comment_key:[a-zA-Z0-9_-]+>',
+                  handler=DeleteCommentHandler,
+                  name='deletecomment'),
     webapp2.Route('/error', handler=ErrorHandler, name='error'),
     webapp2.Route('/success', handler=SuccessHandler, name='success')
 ]

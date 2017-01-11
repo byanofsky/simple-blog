@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Comment - Simple Blog{% endblock %}
+
+{% block body %}
+<h1>Delete Comment</h1>
+
+{% if deleted %}
+
+<p>
+    Comment has been deleted.
+</p>
+
+<p>
+    <a href="{{ uri_for('viewpost', post_id=parent_post_id) }}">Back to post.</a>
+</p>
+
+{% else %}
+
+<p>
+    You are about to delete a comment. You can view the comment below.
+</p>
+<p>
+    Please confirm or cancel.
+</p>
+
+<a href="{{ uri_for('editcomment', comment_key=comment.key.urlsafe()) }}">Cancel and go back to edit the comment.</a>
+
+<form method="POST">
+    <input type="submit" value="Delete Comment">
+</form>
+
+<pre>
+    {{ comment.body }}
+</pre>
+
+{% endif %}
+{% endblock %}
