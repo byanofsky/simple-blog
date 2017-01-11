@@ -5,31 +5,6 @@ from models.comment import Comment
 
 
 class SinglePostHandler(BaseHandler):
-    # def initialize(self, request, response):
-    #     super(SinglePostHandler, self).initialize(request, response)
-    #     # Get post_id from route
-    #     # self.p_id = int(self.request.route_kwargs['post_id'])
-    #     # Save post object
-    #     # self.p = Post.get_by_id(self.p_id)
-
-    # TODO: can render post be combined into one function
-    # TODO: add comment display, edit, delete logic here
-    # Helper for singlepost jinja template
-    # def render_post(self, **kw):
-    #     self.render('singlepost.html', p=self.p,
-    #                 comments=Comment.get_comments(self.p), **kw)
-    #
-    # # Extends render_post for a logged in user
-    # def render_post_user(self, **kw):
-    #     self.render_post(
-    #         edit_post_uri=self.uri_for('editpost', post_id=self.p_id),
-    #         can_comment=True,
-    #         user=self.u,
-    #         can_edit=self.u.can_edit(self.p),
-    #         can_like=self.u.can_like_post(self.p),
-    #         liked_post=self.u.liked_post(self.p),
-    #         **kw)
-
     @post_exists
     @get_user
     def get(self, user, post_id, post):
