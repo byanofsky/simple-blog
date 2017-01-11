@@ -6,11 +6,9 @@ from handlers.welcomehandler import WelcomeHandler
 from handlers.loginhandler import LoginHandler
 from handlers.logouthandler import LogoutHandler
 from handlers.newposthandler import NewPostHandler
-from handlers.posthandler import (
-    ViewPostHandler,
-    DeletePostHandler
-)
+from handlers.viewposthandler import ViewPostHandler
 from handlers.editposthandler import EditPostHandler
+from handlers.deleteposthandler import DeletePostHandler
 from handlers.editcommenthandler import EditCommentHandler
 from handlers.errorhandler import ErrorHandler
 from handlers.successhandler import SuccessHandler
