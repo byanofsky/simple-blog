@@ -1,11 +1,11 @@
 from handlers.basehandler import BaseHandler
+from models.user import User
+import validate
 
 
 class SignUpHandler(BaseHandler):
-    page_title = 'Signup'
-
     def get(self):
-        self.render('signup.html', login=self.uri_for('login'))
+        self.render('signup.html')
 
     def post(self):
         # Save POST data
@@ -14,6 +14,7 @@ class SignUpHandler(BaseHandler):
         verify = self.request.get('verify')
         displayname = self.request.get('displayname')
 
+        # TODO: finetune this
         # Validate signup form data
         errors = validate.signup_errors(
             email, pw, verify,
@@ -21,8 +22,12 @@ class SignUpHandler(BaseHandler):
         )
 
         if errors:
-            self.render('signup.html', login=self.uri_for('login'),
-                        email=email, displayname=displayname, errors=errors)
+            self.render(
+                'signup.html',
+                email=email,
+                displayname=displayname,
+                errors=errors
+            )
         else:
             # If form data is ok, add user to database and direct to
             # welcome page.

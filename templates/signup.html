@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}Signup - Simple Blog{% endblock %}
+
 {% block body %}
-<h1>{{ page_title }}</h1>
+<h1>Signup</h1>
 
 <form method="post">
     <label>
@@ -46,6 +48,6 @@
 </form>
 
 <div>
-    Already have an account? <a href="{{ login }}">Login</a>
+    Already have an account? <a href="{{ uri_for('login') }}">Login</a>
 </div>
 {% endblock %}
