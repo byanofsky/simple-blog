@@ -31,6 +31,9 @@ class Post(ndb.Model):
         self.likes.remove(u.key)
         return self.put()
 
+    def get_comments(self):
+        return Comment.get_comments(self)
+
     @classmethod
     def create(cls, title, body, author):
         p = cls(title=title, body=body, author=author.key)
