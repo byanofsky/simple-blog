@@ -1,10 +1,12 @@
 from handlers.basehandler import BaseHandler
+from validation import get_user
+import auth
 
 
 class LogoutHandler(BaseHandler):
-    def get(self):
-        # TODO: move to its own function
-        # If there is a user logged in, clear cookies.
-        if self.u:
-            auth.clear_user_cookie(self)
+    @get_user
+    def get(self, user):
+        # Clear user cookies
+        # TODO: check out this function
+        auth.clear_user_cookie(self)
         self.redirect_to('login')
