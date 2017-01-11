@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Post - Simple Blog{% endblock %}
+
+{% block body %}
+<h1>Delete Post</h1>
+
+{% if deleted %}
+
+<p>
+    Post has been deleted.
+</p>
+
+<p>
+    <a href="{{ uri_for('frontpage') }}">Continue to the homepage.</a>
+</p>
+
+{% else %}
+
+<p>
+    You are about to delete the post titled "{{ post.title }}".
+</p>
+<p>
+    Please confirm or cancel.
+</p>
+
+<a href="{{ uri_for('viewpost', post_id=post.key.id()) }}">Cancel and go back to post.</a>
+
+<form method="POST">
+    <input type="submit" value="Delete Post">
+</form>
+
+{% endif %}
+{% endblock %}
