@@ -65,13 +65,8 @@
         <form action="{{ uri_for('newcomment', post_id=post.key.id()) }}" method="post">
             <label>
                 <div>Comment</div>
-                <textarea name="comment">{{ comment }}</textarea>
-                {% if errors and errors.comment %}
-                    {{ errors.comment }}
-                {% endif %}
+                <textarea name="comment_body"></textarea>
             </label>
-
-            <input type="hidden" name="action" value="comment">
 
             <div>
                 <input type="submit">

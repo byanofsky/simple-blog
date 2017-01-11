@@ -9,6 +9,7 @@ from handlers.newposthandler import NewPostHandler
 from handlers.viewposthandler import ViewPostHandler
 from handlers.editposthandler import EditPostHandler
 from handlers.deleteposthandler import DeletePostHandler
+from handlers.newcommenthandler import NewCommentHandler
 from handlers.editcommenthandler import EditCommentHandler
 from handlers.errorhandler import ErrorHandler
 from handlers.successhandler import SuccessHandler
@@ -27,6 +28,8 @@ route_list = [
                   name='editpost'),
     webapp2.Route('/deletepost/<post_id:[0-9]+>', handler=DeletePostHandler,
                   name='deletepost'),
+    webapp2.Route('/newcomment/<post_id:[0-9]+>', handler=NewCommentHandler,
+                  name='newcomment'),
     webapp2.Route('/editcomment', handler=EditCommentHandler,
                   name='editcomment'),
     webapp2.Route('/error', handler=ErrorHandler, name='error'),
