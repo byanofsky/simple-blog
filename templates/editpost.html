@@ -41,9 +41,6 @@
     </div>
 </form>
 
-<form method="POST">
-    <input type="hidden" name="action" value="delete">
-    <input type="submit" value="Delete">
-</form>
+<a href="{{ uri_for('deletepost', post_id=post.key.id()) }}">Delete Post</a>
 
 {% endblock %}
