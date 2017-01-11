@@ -6,8 +6,7 @@ from handlers.welcomehandler import WelcomeHandler
 from handlers.loginhandler import LoginHandler
 from handlers.logouthandler import LogoutHandler
 from handlers.newposthandler import NewPostHandler
-from handlers.posthandler import ViewPostHandler
-from handlers.editposthandler import EditPostHandler
+from handlers.posthandler import ViewPostHandler, EditPostHandler
 from handlers.editcommenthandler import EditCommentHandler
 from handlers.errorhandler import ErrorHandler
 from handlers.successhandler import SuccessHandler
@@ -21,7 +20,8 @@ route_list = [
     webapp2.Route('/newpost', handler=NewPostHandler, name='newpost'),
     webapp2.Route('/post/<post_id:[0-9]+>', handler=ViewPostHandler,
                   name='viewpost'),
-    webapp2.Route('/editpost', handler=EditPostHandler, name='editpost'),
+    webapp2.Route('/editpost/<post_id:[0-9]+>', handler=EditPostHandler,
+                  name='editpost'),
     webapp2.Route('/editcomment', handler=EditCommentHandler,
                   name='editcomment'),
     webapp2.Route('/error', handler=ErrorHandler, name='error'),
