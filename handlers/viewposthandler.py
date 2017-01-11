@@ -1,10 +1,5 @@
 from handlers.basehandler import BaseHandler
-from validation import (get_user, require_user, post_exists,
-                        require_user_or_redirect,
-                        user_owns_post)
-from models.post import Post
-from models.comment import Comment
-import validate
+from validation import get_user, require_user, post_exists
 
 
 class ViewPostHandler(BaseHandler):
