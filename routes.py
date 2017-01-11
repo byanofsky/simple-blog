@@ -13,6 +13,7 @@ from handlers.editcommenthandler import EditCommentHandler
 from handlers.errorhandler import ErrorHandler
 from handlers.successhandler import SuccessHandler
 
+# TODO: handle routes for just post, deletepost, etc when no post id
 route_list = [
     webapp2.Route('/', handler=FrontPageHandler, name='frontpage'),
     webapp2.Route('/signup', handler=SignUpHandler, name='signup'),
