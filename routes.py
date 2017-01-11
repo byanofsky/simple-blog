@@ -30,7 +30,8 @@ route_list = [
                   name='deletepost'),
     webapp2.Route('/newcomment/<post_id:[0-9]+>', handler=NewCommentHandler,
                   name='newcomment'),
-    webapp2.Route('/editcomment', handler=EditCommentHandler,
+    webapp2.Route('/editcomment/<comment_key:[a-zA-Z0-9_-]+>',
+                  handler=EditCommentHandler,
                   name='editcomment'),
     webapp2.Route('/error', handler=ErrorHandler, name='error'),
     webapp2.Route('/success', handler=SuccessHandler, name='success')
