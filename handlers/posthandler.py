@@ -87,13 +87,10 @@ class DeletePostHandler(BaseHandler):
     @user_owns_post
     def get(self, user, post_id, post):
         # make sure user wants to delete. Confirm or cancel
-        # TODO: fix this if we need post_id or not
-        self.render('deletepost.html', post=post, post_id=post_id)
+        self.render('deletepost.html', post=post)
 
     @user_owns_post
     def post(self, user, post_id, post):
         # if confirm, post here
-        # TODO: fix this. does it pass post or what?
-        deleted = post.delete()
-        print deleted
-        self.render('deletepost.html', deleted=deleted, post=post)
+        post.delete()
+        self.render('deletepost.html', deleted=True)
