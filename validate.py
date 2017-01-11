@@ -33,7 +33,7 @@ def signup_errors(email, pw, verify, user_exists):
     return errors
 
 
-def login_errors(email, u, pw):
+def login_errors(u, email, pw):
     if not valid_email(email):
         return 'Please enter a valid email address.'
     elif not u:
