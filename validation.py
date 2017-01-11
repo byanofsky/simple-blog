@@ -34,7 +34,7 @@ def require_user(f):
 
 
 # TODO: is this something that can be handled with errors and exceptions?
-def require_user_or_redirect(redirect_name):
+def require_user_or_redirect(name):
     def decorated_function(f):
         @wraps(f)
         @get_user
@@ -42,10 +42,23 @@ def require_user_or_redirect(redirect_name):
             if user:
                 return f(self, user, *a, **kw)
             else:
-                self.redirect_to(redirect_name)
+                self.redirect_to(name)
                 return
         return wrapper
     return decorated_function
+
+
+def user_owns_post(f):
+    @wraps(f)
+    @post_exists
+    @get_user
+    def wrapper(self, user, post_id, post, *a, **kw):
+        if user and user.key == post.author:
+            return f(self, user, post_id, post, *a, **kw)
+        else:
+            self.redirect_to('viewpost', post_id=post_id)
+            return
+    return wrapper
 
 
 def post_exists(f):
