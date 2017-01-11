@@ -4,7 +4,7 @@ from models.post import Post
 from models.comment import Comment
 
 
-class SinglePostHandler(BaseHandler):
+class ViewPostHandler(BaseHandler):
     @post_exists
     @get_user
     def get(self, user, post_id, post):
