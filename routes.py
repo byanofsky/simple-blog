@@ -8,9 +8,9 @@ from handlers.logouthandler import LogoutHandler
 from handlers.newposthandler import NewPostHandler
 from handlers.posthandler import (
     ViewPostHandler,
-    EditPostHandler,
     DeletePostHandler
 )
+from handlers.editposthandler import EditPostHandler
 from handlers.editcommenthandler import EditCommentHandler
 from handlers.errorhandler import ErrorHandler
 from handlers.successhandler import SuccessHandler
