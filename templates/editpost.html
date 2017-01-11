@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 
+{% block title %}Edit Post - Simple Blog{% endblock %}
+
 {% block body %}
-<h1>{{ page_title }}</h1>
+<h1>Edit Post</h1>
 
 {% if msg %}
     {{ msg }}
 {% endif %}
 
-<a href="{{ post_uri }}">View Post</a>
+<a href="{{ uri_for('viewpost', post_id=post.key.id()) }}">View Post</a>
 
 <form method="POST">
     <label>
@@ -18,7 +20,7 @@
                 {{ errors.title }}
             </div>
         {% else %}
-            <input type="text" name="title" value="{{ p.title }}">
+            <input type="text" name="title" value="{{ post.title }}">
         {% endif %}
     </label>
 
@@ -30,7 +32,7 @@
                 {{ errors.body }}
             </div>
         {% else %}
-            <textarea name="body">{{ p.body }}</textarea>
+            <textarea name="body">{{ post.body }}</textarea>
         {% endif %}
     </label>
 
