@@ -1,6 +1,6 @@
 from handlers.basehandler import BaseHandler
 from modules.validation import require_user, post_exists
-import modules.validate
+import modules.form_validation as validate
 
 
 class NewCommentHandler(BaseHandler):

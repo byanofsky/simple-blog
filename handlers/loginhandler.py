@@ -1,6 +1,6 @@
 from handlers.basehandler import BaseHandler
 from models.user import User
-import modules.validate
+import modules.form_validation as validate
 import modules.auth
 # TODO: can we get rid of so many imports? User, auth, validate
 

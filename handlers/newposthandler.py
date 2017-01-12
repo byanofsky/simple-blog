@@ -1,6 +1,6 @@
 from handlers.basehandler import BaseHandler
 from modules.validation import require_user
-import modules.validate
+import modules.form_validation as validate
 from models.post import Post
 
 
