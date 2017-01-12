@@ -14,8 +14,6 @@ from handlers.unlikeposthandler import UnlikePostHandler
 from handlers.newcommenthandler import NewCommentHandler
 from handlers.editcommenthandler import EditCommentHandler
 from handlers.deletecommenthandler import DeleteCommentHandler
-from handlers.errorhandler import ErrorHandler
-from handlers.successhandler import SuccessHandler
 
 # TODO: handle routes for just post, deletepost, etc when no post id
 route_list = [
@@ -42,7 +40,5 @@ route_list = [
                   name='editcomment'),
     webapp2.Route('/deletecomment/<comment_key:[a-zA-Z0-9_-]+>',
                   handler=DeleteCommentHandler,
-                  name='deletecomment'),
-    webapp2.Route('/error', handler=ErrorHandler, name='error'),
-    webapp2.Route('/success', handler=SuccessHandler, name='success')
+                  name='deletecomment')
 ]

@@ -43,14 +43,6 @@ class BaseHandler(webapp2.RequestHandler):
     def get_post_uri(self, post):
         return self.get_uri('singlepost', post_id=post.key.id())
 
-    # Redirect to the error handler
-    def error_redirect(self, code, **kw):
-        self.redirect_to('error', code=code, **kw)
-
-    # Redirect to the success handler
-    def success_redirect(self, code, **kw):
-        self.redirect_to('success', code=code, **kw)
-
     # Check if a user is logged in.
     # If there is a user, return that User object.
     def get_loggedin_user(self):
