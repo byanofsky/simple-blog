@@ -6,23 +6,6 @@ import validate
 
 
 class EditCommentHandler(BaseHandler):
-    # TODO: need to finetune this like edit post
-    # TODO: can combine with editpost?
-    # def initialize(self, request, response):
-    #     super(EditCommentHandler, self).initialize(request, response)
-    #     # Initialize comment object
-    #     # TODO: fix this up
-    #     c_key = ndb.Key(urlsafe=self.request.get('comment_key'))
-    #     self.c = c_key.get()
-    #     # Initialize post object from comment parent
-    #     self.p = c_key.parent().get()
-
-    # def render_edit_page(self, **kw):
-    #     # TODO: this may be bad since it is getting post id again
-    #     # TODO: need to get parent post url
-    #     self.render('editcomment.html', c=self.c,
-    #                 post_uri=self.get_post_uri(self.p), **kw)
-
     @user_owns_comment
     def get(self, user, comment):
         self.render('editcomment.html', comment=comment)

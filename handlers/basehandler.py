@@ -39,10 +39,6 @@ class BaseHandler(webapp2.RequestHandler):
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
 
-    # Helper for returning a singlepost uri
-    def get_post_uri(self, post):
-        return self.get_uri('singlepost', post_id=post.key.id())
-
     # Check if a user is logged in.
     # If there is a user, return that User object.
     def get_loggedin_user(self):
