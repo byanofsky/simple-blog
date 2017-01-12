@@ -1,15 +1,11 @@
 import hmac
-import yaml
 
 from passlib.hash import pbkdf2_sha256
 
-with open("config.yml", 'r') as ymlfile:
-    cfg = yaml.load(ymlfile)
-
-# TODO: need to organize auth and validate
+from config import app_config
 
 # Get secret key from config file
-SECRET_KEY = cfg['secret_key']
+SECRET_KEY = app_config['secret_key']
 
 
 def make_hashed_pw(pw):
