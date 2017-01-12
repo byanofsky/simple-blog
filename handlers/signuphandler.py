@@ -1,6 +1,6 @@
 from handlers.basehandler import BaseHandler
 from models.user import User
-import modules.validate
+import modules.form_validation as form_validation
 
 
 class SignUpHandler(BaseHandler):
@@ -11,14 +11,15 @@ class SignUpHandler(BaseHandler):
         # Save POST data
         email = self.request.get('email')
         pw = self.request.get('password')
-        verify = self.request.get('verify')
+        verify_pw = self.request.get('verify_pw')
         displayname = self.request.get('displayname')
 
-        # TODO: finetune this
-        # Validate signup form data
-        errors = validate.signup_errors(
-            email, pw, verify,
-            user_exists=User.get_by_email(email)
+        # TODO: Might be possible to move below to its own file
+
+        errors = form_validation.check_signup(
+            email=email,
+            pw=pw,
+            verify_pw=verify_pw
         )
 
         if errors:
@@ -29,7 +30,9 @@ class SignUpHandler(BaseHandler):
                 errors=errors
             )
         else:
-            # If form data is ok, add user to database and direct to
-            # welcome page.
-            User.signup(self, email, pw, displayname)
+            # If form data is ok, add user to database
+            user_key = User.create(email, pw, displayname)
+            user_id = user_key.id()
+            # Set secure cookie value and redirect to welcome page
+            self.set_secure_cookie('user_id', user_id)
             self.redirect_to('welcome')

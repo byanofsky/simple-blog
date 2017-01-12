@@ -9,10 +9,14 @@
     <label>
         <div>Email</div>
         <input type="text" name="email" value="{{ email }}">
-        {% if errors and (errors.email or errors.user_exists) %}
+        {% if errors and errors.email %}
             <div class="error">
-                {{ errors.email }}
-                {{ errors.user_exists }}
+                Please enter a valid email address.
+            </div>
+        {% endif %}
+        {% if errors and errors.user_exists %}
+            <div class="error">
+                There is already a user registered with this email.
             </div>
         {% endif %}
     </label>
@@ -22,17 +26,17 @@
         <input type="password" name="password">
         {% if errors and errors.password %}
             <div class="error">
-                {{ errors.password }}
+                Please enter a valid password. 3-20 characters.
             </div>
         {% endif %}
     </label>
 
     <label>
         <div>Verify Password</div>
-        <input type="password" name="verify">
-        {% if errors and errors.verify %}
+        <input type="password" name="verify_pw">
+        {% if errors and errors.verify_pw %}
             <div class="error">
-                {{ errors.verify }}
+                Your passwords do not match. Please re-enter your passwords.
             </div>
         {% endif %}
     </label>
