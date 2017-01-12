@@ -7,7 +7,7 @@ class ViewPostHandler(BaseHandler):
     @get_user
     def get(self, user, post_id, post):
         self.render(
-            'singlepost.html',
+            'post.html',
             user=user,
             post=post,
             comments=post.get_comments()
