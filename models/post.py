@@ -40,10 +40,10 @@ class Post(ndb.Model):
         return p.put()
 
     @classmethod
-    def get_all(cls):
+    def get_all_posts(cls):
         return cls.query().order(-cls.created).fetch()
 
     @classmethod
-    def get_n(cls, n, cursor=None):
+    def get_n_posts(cls, n, cursor=None):
         query = cls.query().order(-cls.created)
         return query.fetch_page(n, start_cursor=cursor)
