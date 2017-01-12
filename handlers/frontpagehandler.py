@@ -1,4 +1,5 @@
 from google.appengine.datastore.datastore_query import Cursor
+
 from handlers.basehandler import BaseHandler
 from models.post import Post
 
