@@ -1,8 +1,8 @@
 from google.appengine.ext import ndb
 from comment import Comment
-from auth import (make_secure_val, check_secure_val, make_hashed_pw,
+from modules.auth import (make_secure_val, check_secure_val, make_hashed_pw,
                   set_user_cookie)
-from validate import valid_email
+from modules.validate import valid_email
 
 
 class User(ndb.Model):

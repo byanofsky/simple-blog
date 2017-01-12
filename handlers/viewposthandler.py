@@ -1,5 +1,5 @@
 from handlers.basehandler import BaseHandler
-from validation import get_user, require_user, post_exists
+from modules.validation import get_user, require_user, post_exists
 
 
 class ViewPostHandler(BaseHandler):

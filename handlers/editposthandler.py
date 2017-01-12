@@ -1,6 +1,6 @@
 from handlers.basehandler import BaseHandler
-from validation import user_owns_post
-import validate
+from modules.validation import user_owns_post
+import modules.validate
 
 
 class EditPostHandler(BaseHandler):

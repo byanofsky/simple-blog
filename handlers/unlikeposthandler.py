@@ -1,5 +1,5 @@
 from handlers.basehandler import BaseHandler
-from validation import user_can_unlike_post
+from modules.validation import user_can_unlike_post
 
 
 class UnlikePostHandler(BaseHandler):

@@ -1,6 +1,6 @@
 from handlers.basehandler import BaseHandler
-from validation import get_user
-import auth
+from modules.validation import get_user
+import modules.auth
 
 
 class LogoutHandler(BaseHandler):

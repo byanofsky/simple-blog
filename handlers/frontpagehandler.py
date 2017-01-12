@@ -7,6 +7,7 @@ class FrontPageHandler(BaseHandler):
     def get(self):
         # Constant for how many posts to display per page
         POSTS_PER_PAGE = 10
+        # TODO: can we move cursor to post? to reduce imports?
         cursor = Cursor(urlsafe=self.request.get('cursor'))
         posts, next_cursor, more = Post.get_n_posts(
             n=POSTS_PER_PAGE,

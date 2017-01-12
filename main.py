@@ -1,7 +1,7 @@
 import webapp2
 import os
 
-from routes import route_list
+from modules.routes import route_list
 from config import app_config
 
 # TODO: Handling with or without backslash

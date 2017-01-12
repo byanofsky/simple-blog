@@ -1,5 +1,5 @@
 from handlers.basehandler import BaseHandler
-from validation import user_owns_post
+from modules.validation import user_owns_post
 
 
 class DeletePostHandler(BaseHandler):

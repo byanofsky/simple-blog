@@ -1,6 +1,6 @@
 from handlers.basehandler import BaseHandler
 from models.user import User
-import validate
+import modules.validate
 
 
 class SignUpHandler(BaseHandler):

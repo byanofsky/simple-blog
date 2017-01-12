@@ -1,5 +1,5 @@
 from handlers.basehandler import BaseHandler
-from validation import require_user_or_redirect
+from modules.validation import require_user_or_redirect
 
 
 class WelcomeHandler(BaseHandler):

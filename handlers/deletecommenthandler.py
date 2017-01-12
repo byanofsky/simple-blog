@@ -1,5 +1,5 @@
 from handlers.basehandler import BaseHandler
-from validation import user_owns_comment
+from modules.validation import user_owns_comment
 
 
 class DeleteCommentHandler(BaseHandler):

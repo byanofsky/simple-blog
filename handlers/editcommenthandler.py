@@ -1,8 +1,6 @@
 from handlers.basehandler import BaseHandler
-from validation import user_owns_comment
-from validation import comment_exists
-from validation import require_user
-import validate
+from modules.validation import user_owns_comment
+import modules.validate
 
 
 class EditCommentHandler(BaseHandler):

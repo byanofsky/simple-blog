@@ -1,5 +1,5 @@
 from handlers.basehandler import BaseHandler
-from validation import user_can_like_post
+from modules.validation import user_can_like_post
 
 
 class LikePostHandler(BaseHandler):
