@@ -1,8 +1,8 @@
 from google.appengine.ext import ndb
 from comment import Comment
+# TODO: I want to remove auth here
 from modules.auth import (make_secure_val, check_secure_val, make_hashed_pw,
                   set_user_cookie)
-from modules.validate import valid_email
 
 
 class User(ndb.Model):
@@ -50,19 +50,14 @@ class User(ndb.Model):
     def create(cls, email, pw, displayname):
         # Hash pw for storage
         hashed_pw = make_hashed_pw(pw)
-        u = cls(email=email, hashed_pw=hashed_pw, displayname=displayname)
+        u = cls(
+            email=email,
+            hashed_pw=hashed_pw,
+            displayname=displayname
+        )
         return u.put()
 
     # Get user object by email
     @classmethod
     def get_by_email(cls, email):
-        # Checks if email is valid before querying db
-        if valid_email(email):
-            return cls.query(cls.email == email).get()
-
-    # TODO: these signup functions can be moved to their own file
-    # Creates a user and uses db key to set user cookie
-    @classmethod
-    def signup(cls, page_handler, email, pw, displayname):
-        u_key = cls.create(email, pw, displayname)
-        set_user_cookie(page_handler, u_key)
+        return cls.query(cls.email == email).get()
