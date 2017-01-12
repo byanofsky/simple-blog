@@ -38,10 +38,3 @@ class BaseHandler(webapp2.RequestHandler):
     # Helper to combine jinja render and write
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
-
-    # Check if a user is logged in.
-    # If there is a user, return that User object.
-    def get_loggedin_user(self):
-        u_id = auth.get_user_cookie_id(self)
-        if u_id:
-            return User.get_by_id(int(u_id))
