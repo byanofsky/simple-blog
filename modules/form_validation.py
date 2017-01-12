@@ -2,6 +2,8 @@ import re
 
 from auth import valid_login
 
+from models.user import User
+
 PASSWORD_RE = re.compile(r'^.{3,20}$')
 EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
 
@@ -10,26 +12,32 @@ def valid_email(email):
     return EMAIL_RE.match(email)
 
 
+def user_exists(email):
+    return User.get_by_email(email)
+
+
 def valid_password(pw):
     return PASSWORD_RE.match(pw)
 
 
-def password_match(pw, verify):
-    return pw == verify
+def password_match(pw, verify_pw):
+    return pw == verify_pw
 
 
-def signup_errors(email, pw, verify, user_exists):
+def check_signup(email, pw, verify_pw):
     errors = {}
-    if user_exists:
-        errors['user_exists'] = ('There is already a user registered ' +
-                                 'with this email.')
+
     if not valid_email(email):
-        errors['email'] = 'Please enter a valid email address.'
+        errors['email'] = True
+    elif user_exists(email):
+        errors['user_exists'] = True
+
     if not valid_password(pw):
-        errors['password'] = 'Please enter a valid password. 3-20 characters.'
-    if not password_match(pw, verify):
-        errors['verify'] = ('Your passwords do not match. Please re-enter ' +
-                            'your passwords.')
+        errors['password'] = True
+
+    if not password_match(pw, verify_pw):
+        errors['verify_pw'] = True
+
     return errors
 
 
