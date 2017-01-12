@@ -4,11 +4,11 @@ import webapp2
 import jinja2
 
 # TODO: is there a better way to import root directory?
-from settings import ROOT_DIR
+from config import app_config
 
 # Jinja templating setup
-# TODO: is there a better way to handle this?
-template_dir = os.path.join(ROOT_DIR, 'templates')
+# TODO: Should this be moved to its own file?
+template_dir = os.path.join(app_config['root_dir'], 'templates')
 jinja_env = jinja2.Environment(
     loader=jinja2.FileSystemLoader(template_dir),
     autoescape=True,
