@@ -5,6 +5,7 @@ import jinja2
 
 # TODO: is there a better way to import root directory?
 from config import app_config
+import modules.secure as secure
 
 # Jinja templating setup
 # TODO: Should this be moved to its own file?
@@ -30,3 +31,9 @@ class BaseHandler(webapp2.RequestHandler):
     # Helper to combine jinja render and write
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
+
+    # Sets a secure cookie
+    def set_secure_cookie(self, name, value):
+        # Turns value into a string
+        secure_value = secure.make_secure_val(str(value))
+        self.response.set_cookie(name, secure_value)
