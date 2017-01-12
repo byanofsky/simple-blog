@@ -5,13 +5,15 @@
 {% block body %}
 <h1>Simple Blog</h1>
 
-{% for p in posts %}
+{% for post in posts %}
     <div class="post">
         <div class="post-title">
-            <a href="{{ uri_for('viewpost', post_id=p.key.id()) }}">{{ p.title }}</a>
+            <a href="{{ uri_for('viewpost', post_id=post.key.id()) }}">
+                {{ post.title }}
+            </a>
         </div>
         <div class="post-body">
-            {{ p.body }}
+            {{ post.body }}
         </div>
     </div>
 {% endfor %}
