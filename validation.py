@@ -80,6 +80,31 @@ def user_owns_comment(f):
     return wrapper
 
 
+def user_can_like_post(f):
+    @wraps(f)
+    @post_exists
+    @require_user
+    def wrapper(self, user, post_id, post, *a, **kw):
+        if user.can_like_post(post):
+            return f(self, user, post_id, post, *a, **kw)
+        else:
+            self.abort(404)
+            return
+    return wrapper
+
+def user_can_unlike_post(f):
+    @wraps(f)
+    @post_exists
+    @require_user
+    def wrapper(self, user, post_id, post, *a, **kw):
+        if user.liked_post(post):
+            return f(self, user, post_id, post, *a, **kw)
+        else:
+            self.abort(404)
+            return
+    return wrapper
+
+
 def comment_exists(f):
     @wraps(f)
     def wrapper(self, comment_key, *a, **kw):
