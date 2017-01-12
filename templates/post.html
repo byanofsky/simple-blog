@@ -18,8 +18,7 @@
 
     {% if user and user.can_like_post(post) %}
         <div>
-            <form method="post">
-                <input type="hidden" name="action" value="like">
+            <form action="{{ uri_for('likepost', post_id=post.key.id()) }}" method="post">
                 <input type="submit" value="Like">
             </form>
         </div>
@@ -30,8 +29,7 @@
             You liked this post
         </div>
         <div>
-            <form method="post">
-                <input type="hidden" name="action" value="unlike">
+            <form action="{{ uri_for('unlikepost', post_id=post.key.id()) }}" method="post">
                 <input type="submit" value="Unlike">
             </form>
         </div>

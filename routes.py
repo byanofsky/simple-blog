@@ -9,6 +9,8 @@ from handlers.newposthandler import NewPostHandler
 from handlers.viewposthandler import ViewPostHandler
 from handlers.editposthandler import EditPostHandler
 from handlers.deleteposthandler import DeletePostHandler
+from handlers.likeposthandler import LikePostHandler
+from handlers.unlikeposthandler import UnlikePostHandler
 from handlers.newcommenthandler import NewCommentHandler
 from handlers.editcommenthandler import EditCommentHandler
 from handlers.deletecommenthandler import DeleteCommentHandler
@@ -29,6 +31,10 @@ route_list = [
                   name='editpost'),
     webapp2.Route('/deletepost/<post_id:[0-9]+>', handler=DeletePostHandler,
                   name='deletepost'),
+    webapp2.Route('/likepost/<post_id:[0-9]+>', handler=LikePostHandler,
+                  name='likepost'),
+    webapp2.Route('/unlikepost/<post_id:[0-9]+>', handler=UnlikePostHandler,
+                  name='unlikepost'),
     webapp2.Route('/newcomment/<post_id:[0-9]+>', handler=NewCommentHandler,
                   name='newcomment'),
     webapp2.Route('/editcomment/<comment_key:[a-zA-Z0-9_-]+>',
