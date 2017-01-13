@@ -5,16 +5,17 @@ from models.post import Post
 
 
 class NewPostHandler(BaseHandler):
-    @require_user
+    @require_user('login')
     def get(self, user):
         self.render('newpost.html')
 
-    @require_user
+    @require_user('login')
     def post(self, user):
         title = self.request.get('title')
         body = self.request.get('body')
+
         # Validate newpost form
-        errors = validate.newpost_errors(title, body)
+        errors = validate.check_newpost(title, body)
 
         if errors:
             self.render(
@@ -25,5 +26,9 @@ class NewPostHandler(BaseHandler):
             )
         else:
             # Create post in database, and redirect to singlepost
-            post_key = Post.create(title, body, user)
+            post_key = Post.create(
+                title=title,
+                body=body,
+                author=user
+            )
             self.redirect_to('viewpost', post_id=post_key.id())

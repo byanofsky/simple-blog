@@ -53,13 +53,15 @@ def check_login(email, pw):
     return errors
 
 
-def newpost_errors(title, body):
+def check_newpost(title, body):
     errors = {}
+
     if not title:
-        errors['title'] = 'Please enter a title.'
+        errors['title'] = True
+
     if not body:
-        errors['body'] = ('Your blog post cannot be blank. ' +
-                          'Please enter your blog post content.')
+        errors['body'] = True
+
     return errors
 
 

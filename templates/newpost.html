@@ -11,7 +11,7 @@
         <input type="text" name="title" value="{{ title }}">
         {% if errors and errors.title %}
             <div class="error">
-                {{ errors.title }}
+                Please enter a title.
             </div>
         {% endif %}
     </label>
@@ -21,7 +21,7 @@
         <textarea name="body">{{ body }}</textarea>
         {% if errors and errors.body %}
             <div class="error">
-                {{ errors.body }}
+                Your blog post cannot be blank. Please enter your blog post content.
             </div>
         {% endif %}
     </label>
