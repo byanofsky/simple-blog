@@ -8,10 +8,6 @@ class LoginHandler(BaseHandler):
         self.render('login.html')
 
     def post(self):
-        # Default state
-        user = None
-        valid_login = False
-
         # Get Login POST data
         email = self.request.get('email')
         pw = self.request.get('password')
