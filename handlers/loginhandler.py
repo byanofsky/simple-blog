@@ -19,7 +19,7 @@ class LoginHandler(BaseHandler):
         pw = self.request.get('password')
 
         # Check for login form errors
-        # TODO: can this be simplified?
+        # TODO: can this be simplified? Might be with exceptions
         errors = form_validation.check_login(email, pw)
         if not errors:
             # Let's get user associated with email
@@ -34,11 +34,6 @@ class LoginHandler(BaseHandler):
                 if not valid_login:
                     # Password is incorrect
                     errors['login'] = True
-
-        # Let's double check that user checks
-        if not errors and user and secure.verify_pw(pw, user.hashed_pw):
-            # Passes checks, and login is valid
-            valid_login = True
 
         if valid_login:
             # If form validates, set user cookie and direct to welcome page
