@@ -34,6 +34,7 @@ class Post(ndb.Model):
     def get_comments(self):
         return Comment.get_comments(self)
 
+    # Creates a post. Author assumed to be user object.
     @classmethod
     def create(cls, title, body, author):
         p = cls(title=title, body=body, author=author.key)
