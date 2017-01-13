@@ -32,8 +32,16 @@ class BaseHandler(webapp2.RequestHandler):
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
 
+    def clear_cookie(self, name):
+        self.response.set_cookie(name, None)
+
     # Sets a secure cookie
-    def set_secure_cookie(self, name, value):
+    def set_secure_cookie(self, name, val):
         # Turns value into a string
-        secure_value = secure.make_secure_val(str(value))
-        self.response.set_cookie(name, secure_value)
+        secure_val = secure.make_secure_val(str(val))
+        self.response.set_cookie(name, secure_val)
+
+    def get_secure_cookie(self, name):
+        secure_val = self.request.cookies.get(name)
+        if secure_val:
+            return secure.check_secure_val(secure_val)
