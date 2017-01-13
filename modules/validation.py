@@ -8,29 +8,32 @@ import auth
 def get_user(f):
     @wraps(f)
     def wrapper(self, *a, **kw):
-        user_id = auth.get_user_cookie_id(self)
+        user_id = self.get_secure_cookie('user_id')
         if user_id:
             user = ndb.Key('User', int(user_id)).get()
         else:
             user = None
-        if not user:
-            # if there isn't a logged in user, clear user cookies
-            auth.clear_user_cookie(self)
         return f(self, user, *a, **kw)
     return wrapper
 
 
-def require_user(f):
-    @wraps(f)
-    # TODO: is this setup correct
-    @get_user
-    def wrapper(self, user, *a, **kw):
-        if user:
-            return f(self, user, *a, **kw)
-        else:
-            self.abort(404)
-            return
-    return wrapper
+def require_user(redirect=None):
+    def decorated_function(f):
+        @wraps(f)
+        @get_user
+        def wrapper(self, user, *a, **kw):
+            if user:
+                return f(self, user, *a, **kw)
+            else:
+                # If there isn't a logged in user, clear user cookies
+                self.clear_cookie('user_id')
+                # TODO: is this something that can be handled with errors and exceptions?
+                if redirect:
+                    self.redirect_to(redirect)
+                else:
+                    self.abort(404)
+        return wrapper
+    return decorated_function
 
 
 # TODO: is this something that can be handled with errors and exceptions?
