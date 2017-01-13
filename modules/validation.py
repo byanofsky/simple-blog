@@ -8,11 +8,11 @@ import auth
 def get_user(f):
     @wraps(f)
     def wrapper(self, *a, **kw):
+        # Default user to None
+        user = None
         user_id = self.get_secure_cookie('user_id')
         if user_id:
             user = ndb.Key('User', int(user_id)).get()
-        else:
-            user = None
         return f(self, user, *a, **kw)
     return wrapper
 
@@ -36,19 +36,16 @@ def require_user(redirect=None):
     return decorated_function
 
 
-# TODO: is this something that can be handled with errors and exceptions?
-def require_user_or_redirect(name):
-    def decorated_function(f):
-        @wraps(f)
-        @get_user
-        def wrapper(self, user, *a, **kw):
-            if user:
-                return f(self, user, *a, **kw)
-            else:
-                self.redirect_to(name)
-                return
-        return wrapper
-    return decorated_function
+def post_exists(f):
+    @wraps(f)
+    def wrapper(self, post_id, *a, **kw):
+        post = ndb.Key('Post', int(post_id)).get()
+        if post:
+            return f(self, post, post_id, *a, **kw)
+        else:
+            self.abort(404)
+            return
+    return wrapper
 
 
 # Decorator which checks if post exists. And if it does,
@@ -118,18 +115,6 @@ def comment_exists(f):
             comment = None
         if comment:
             return f(self, comment, *a, **kw)
-        else:
-            self.abort(404)
-            return
-    return wrapper
-
-
-def post_exists(f):
-    @wraps(f)
-    def wrapper(self, post_id, *a, **kw):
-        post = ndb.Key('Post', int(post_id)).get()
-        if post:
-            return f(self, post_id, post, *a, **kw)
         else:
             self.abort(404)
             return
