@@ -41,11 +41,14 @@ def check_signup(email, pw, verify_pw):
     return errors
 
 
-def check_login(email):
+def check_login(email, pw):
     errors = {}
 
     if not valid_email(email):
         errors['email'] = True
+
+    if not pw:
+        errors['pw'] = True
 
     return errors
 

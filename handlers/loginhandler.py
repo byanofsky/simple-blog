@@ -1,6 +1,7 @@
 from handlers.basehandler import BaseHandler
-import modules.user_auth as user_auth
+import modules.secure as secure
 import modules.form_validation as form_validation
+from models.user import User
 # TODO: can we get rid of so many imports? User, auth, validate
 
 
@@ -9,24 +10,43 @@ class LoginHandler(BaseHandler):
         self.render('login.html')
 
     def post(self):
+        # Default state
+        user = None
+        valid_login = False
+
         # Get Login POST data
         email = self.request.get('email')
         pw = self.request.get('password')
 
         # Check for login form errors
-        # errors, user = user_auth.validate_login(email, pw)
-        form_errors = form_validation.check_login(email)
-        if form_errors:
-            self.render('login.html', email=email, form_errors=form_errors)
-        else:
-            user, login_errors = user_auth.validate_login(email, pw)
-            if login_errors:
-                self.render(
-                    'login.html',
-                    email=email,
-                    login_errors=login_errors
-                )
+        # TODO: can this be simplified?
+        errors = form_validation.check_login(email, pw)
+        if not errors:
+            # Let's get user associated with email
+            user = User.get_by_email(email)
+            if not user:
+                # User does not exist. Set error.
+                errors['user'] = True
             else:
-                # If form validates, set user cookie and direct to welcome page
-                self.set_secure_cookie('user_id', user.key.id())
-                self.redirect_to('welcome')
+                # User does exist, so let's check if
+                # pw entered matches hashed_pw.
+                valid_login = secure.verify_pw(pw, user.hashed_pw)
+                if not valid_login:
+                    # Password is incorrect
+                    errors['login'] = True
+
+        # Let's double check that user checks
+        if not errors and user and secure.verify_pw(pw, user.hashed_pw):
+            # Passes checks, and login is valid
+            valid_login = True
+
+        if valid_login:
+            # If form validates, set user cookie and direct to welcome page
+            self.set_secure_cookie('user_id', user.key.id())
+            self.redirect_to('welcome')
+        else:
+            self.render(
+                'login.html',
+                email=email,
+                errors=errors
+            )
