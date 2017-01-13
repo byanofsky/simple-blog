@@ -41,13 +41,13 @@ def check_signup(email, pw, verify_pw):
     return errors
 
 
-def login_errors(u, email, pw):
+def check_login(email):
+    errors = {}
+
     if not valid_email(email):
-        return 'Please enter a valid email address.'
-    elif not u:
-        return 'There is no user with this email address.'
-    elif not valid_login(u, pw):
-        return 'The password is incorrect. Please try again.'
+        errors['email'] = True
+
+    return errors
 
 
 def newpost_errors(title, body):

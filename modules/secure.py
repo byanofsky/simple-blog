@@ -1,9 +1,19 @@
 import hmac
 
+from passlib.hash import pbkdf2_sha256
+
 from config import app_config
 
 # Get secret key from config file
 SECRET_KEY = app_config['secret_key']
+
+
+def make_hashed_pw(pw):
+    return pbkdf2_sha256.hash(pw)
+
+
+def verify_pw(pw, hash):
+    return pbkdf2_sha256.verify(pw, hash)
 
 
 # Hash values, for use with cookies

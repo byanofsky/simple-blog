@@ -5,7 +5,6 @@
 {% block body %}
 <h1>Login</h1>
 
-<!-- TODO: error styling -->
 <form method="post">
     <label>
         <div>Email</div>
@@ -19,7 +18,13 @@
 
     {% if errors %}
     <div class="error">
-        {{ errors }}
+        {% if errors.email %}
+            Please enter a valid email address.
+        {% elif errors.user %}
+            There is no user with this email address.
+        {% elif errors.valid_login %}
+            The password is incorrect. Please try again.
+        {% endif %}
     </div>
     {% endif %}
 
