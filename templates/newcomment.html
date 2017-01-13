@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}Leave a Comment - Simple Blog{% endblock %}
+{% block title %}New Comment - Simple Blog{% endblock %}
 
 {% block body %}
-<h1>Leave a Comment</h1>
+<h1>New Comment</h1>
 
 {% if msg %}
     {{ msg }}
@@ -15,9 +15,9 @@
     <label>
         <div>Comment</div>
         <textarea name="comment_body">{{ comment_body }}</textarea>
-        {% if errors %}
+        {% if errors and errors.comment_body %}
             <div class="error">
-                {{ errors.comment_body }}
+                Comment cannot be blank.
             </div>
         {% endif %}
     </label>
@@ -25,11 +25,6 @@
     <div>
         <input type="submit">
     </div>
-</form>
-
-<form method="POST">
-    <input type="hidden" name="action" value="delete">
-    <input type="submit" value="Delete">
 </form>
 
 {% endblock %}

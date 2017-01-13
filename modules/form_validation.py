@@ -65,10 +65,12 @@ def check_newpost(title, body):
     return errors
 
 
-def comment_errors(comment_body):
+def check_comment(comment_body):
     errors = {}
+
     if not comment_body:
-        errors['comment_body'] = 'Comment cannot be blank.'
+        errors['comment_body'] = True
+
     return errors
 
 

@@ -1,19 +1,24 @@
 from handlers.basehandler import BaseHandler
 from modules.validation import require_user, post_exists
-import modules.form_validation as validate
+import modules.form_validation as form_validation
 
 
 class NewCommentHandler(BaseHandler):
-    # TODO: do I need a get request handelr?
-    def get(self):
-        pass
+    @post_exists
+    @require_user()
+    def get(self, user, post, post_id):
+        self.render(
+            'newcomment.html',
+            post_id=post_id
+        )
 
     @post_exists
-    @require_user
-    def post(self, user, post_id, post):
-        # TODO: should this be comment_body or comment?
+    @require_user()
+    def post(self, user, post, post_id):
         comment_body = self.request.get('comment_body')
-        errors = validate.comment_errors(comment_body)
+
+        errors = form_validation.check_comment(comment_body)
+
         if errors:
             # TODO: may be able to combine editcomment and new comment
             self.render(

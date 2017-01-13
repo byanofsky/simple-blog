@@ -2,7 +2,7 @@ from google.appengine.ext import ndb
 
 
 class Comment(ndb.Model):
-    body = ndb.TextProperty(required=True)
+    comment_body = ndb.TextProperty(required=True)
     created = ndb.DateTimeProperty(auto_now_add=True)
     last_modified = ndb.DateTimeProperty(auto_now=True)
     author = ndb.KeyProperty(required=True, kind='User')
@@ -15,8 +15,8 @@ class Comment(ndb.Model):
         self.key.delete()
 
     @classmethod
-    def create(cls, body, author, p):
-        c = cls(body=body, author=author.key, parent=p.key)
+    def create(cls, comment_body, author, post):
+        c = cls(comment_body=comment_body, author=author.key, parent=post.key)
         return c.put()
 
     @classmethod
