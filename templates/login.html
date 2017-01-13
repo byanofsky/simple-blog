@@ -9,6 +9,16 @@
     <label>
         <div>Email</div>
         <input type="text" name="email" value="{{ email }}">
+        {% if form_errors and form_errors.email %}
+            <div class="error">
+                Please enter a valid email address.
+            </div>
+        {% endif %}
+        {% if login_errors and login_errors.user %}
+            <div class="error">
+                There is no user with this email address.
+            </div>
+        {% endif %}
     </label>
 
     <label>
@@ -16,16 +26,10 @@
         <input type="password" name="password">
     </label>
 
-    {% if errors %}
-    <div class="error">
-        {% if errors.email %}
-            Please enter a valid email address.
-        {% elif errors.user %}
-            There is no user with this email address.
-        {% elif errors.valid_login %}
+    {% if login_errors and login_errors.wrong_pw %}
+        <div class="error">
             The password is incorrect. Please try again.
-        {% endif %}
-    </div>
+        </div>
     {% endif %}
 
     <div>
