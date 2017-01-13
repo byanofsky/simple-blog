@@ -1,7 +1,5 @@
 from handlers.basehandler import BaseHandler
-import modules.secure as secure
-import modules.form_validation as form_validation
-from models.user import User
+import modules.user_auth as user_auth
 # TODO: can we get rid of so many imports? User, auth, validate
 
 
@@ -18,22 +16,10 @@ class LoginHandler(BaseHandler):
         email = self.request.get('email')
         pw = self.request.get('password')
 
-        # Check for login form errors
+        # Check for login errors
         # TODO: can this be simplified? Might be with exceptions
-        errors = form_validation.check_login(email, pw)
-        if not errors:
-            # Let's get user associated with email
-            user = User.get_by_email(email)
-            if not user:
-                # User does not exist. Set error.
-                errors['user'] = True
-            else:
-                # User does exist, so let's check if
-                # pw entered matches hashed_pw.
-                valid_login = secure.verify_pw(pw, user.hashed_pw)
-                if not valid_login:
-                    # Password is incorrect
-                    errors['login'] = True
+        errors, user = user_auth.validate_login(email, pw)
+        valid_login = user and not errors
 
         if valid_login:
             # If form validates, set user cookie and direct to welcome page
