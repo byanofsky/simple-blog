@@ -28,6 +28,11 @@ def validate_login(email, pw):
     return errors, user
 
 
+def create_user(email, pw, displayname):
+    hashed_pw = secure.make_hashed_pw(pw)
+    return User.create(email, hashed_pw, displayname)
+
+
 def validate_signup(email, pw, verify_pw, displayname):
     # Set default
     user_key = None
@@ -48,6 +53,6 @@ def validate_signup(email, pw, verify_pw, displayname):
         else:
             # User does not already exist, and no errors.
             # Create new user.
-            user_key = User.create(email, pw, displayname)
+            user_key = create_user(email, pw, displayname)
 
     return errors, user_key

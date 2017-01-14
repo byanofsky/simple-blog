@@ -1,8 +1,5 @@
 from google.appengine.ext import ndb
 from comment import Comment
-# TODO: I want to remove auth here
-from modules.auth import (make_secure_val, check_secure_val, make_hashed_pw,
-                  set_user_cookie)
 
 
 class User(ndb.Model):
@@ -47,9 +44,7 @@ class User(ndb.Model):
 
     # Creates a user and returns the db key
     @classmethod
-    def create(cls, email, pw, displayname):
-        # Hash pw for storage
-        hashed_pw = make_hashed_pw(pw)
+    def create(cls, email, hashed_pw, displayname):
         u = cls(
             email=email,
             hashed_pw=hashed_pw,
