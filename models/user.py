@@ -15,26 +15,26 @@ class User(ndb.Model):
     def get_displayname(self):
         return self.displayname or self.email
 
-    def like(self, p):
+    def like(self, post):
         # Checks if user can like post, and if so, calls add_like
-        if self.can_like_post(p):
-            return p.add_like(self)
+        if self.can_like_post(post):
+            return post.add_like(self)
 
-    def unlike(self, p):
+    def unlike(self, post):
         # Checks if user liked post before removing like
-        if self.liked_post(p):
+        if self.liked_post(post):
             # TODO: Because liked_post can get index, can we pass that here?
-            return p.remove_like(self)
+            return post.remove_like(self)
 
-    def liked_post(self, p):
+    def liked_post(self, post):
         # TODO: if found, can we return index to save some time in unlike?
-        return self.key in p.likes
+        return self.key in post.likes
 
     # Check if user can like post
-    def can_like_post(self, p):
+    def can_like_post(self, post):
         # Makes sure user is not post author, and that user hasn't already
         # liked the post.
-        return self.key != p.author and not self.liked_post(p)
+        return self.key != post.author and not self.liked_post(post)
 
     # Checks if user can edit object. Assumes object has
     # an author property.

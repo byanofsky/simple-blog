@@ -20,15 +20,15 @@ class Post(ndb.Model):
         Comment.delete_post_comments(self)
         self.key.delete()
 
-    def add_like(self, u):
+    def add_like(self, user):
         # Add user to list of likes. Assumes user is not on list, or will add
         # a duplicate entry.
-        self.likes.append(u.key)
+        self.likes.append(user.key)
         return self.put()
 
-    def remove_like(self, u):
+    def remove_like(self, user):
         # Remove user from list of likes. Assumes user is on list.
-        self.likes.remove(u.key)
+        self.likes.remove(user.key)
         return self.put()
 
     def get_comments(self):
