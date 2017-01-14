@@ -35,7 +35,7 @@ route_list = [
                   name='unlikepost'),
     webapp2.Route('/newcomment/<post_id:[0-9]+>', handler=NewCommentHandler,
                   name='newcomment'),
-    webapp2.Route('/editcomment/<comment_key:[a-zA-Z0-9_-]+>',
+    webapp2.Route('/editcomment/<url_comment_key:[a-zA-Z0-9_-]+>',
                   handler=EditCommentHandler,
                   name='editcomment'),
     webapp2.Route('/deletecomment/<comment_key:[a-zA-Z0-9_-]+>',
