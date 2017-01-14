@@ -8,6 +8,6 @@ class LikePostHandler(BaseHandler):
     #     print 'get liked'
 
     @user_can_like_post
-    def post(self, user, post_id, post):
+    def post(self, user, post, post_id):
         user.like(post)
         self.redirect_to('viewpost', post_id=post_id)

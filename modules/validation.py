@@ -25,7 +25,8 @@ def require_user(redirect=None):
             else:
                 # If there isn't a logged in user, clear user cookies
                 self.clear_cookie('user_id')
-                # TODO: is this something that can be handled with errors and exceptions?
+                # TODO: is this something that can be
+                # handled with errors and exceptions?
                 if redirect:
                     self.redirect_to(redirect)
                 else:
@@ -97,10 +98,10 @@ def user_owns_comment(f):
 def user_can_like_post(f):
     @wraps(f)
     @post_exists
-    @require_user
-    def wrapper(self, user, post_id, post, *a, **kw):
+    @require_user()
+    def wrapper(self, user, post, post_id, *a, **kw):
         if user.can_like_post(post):
-            return f(self, user, post_id, post, *a, **kw)
+            return f(self, user, post, post_id, *a, **kw)
         else:
             self.abort(404)
             return
@@ -109,10 +110,10 @@ def user_can_like_post(f):
 def user_can_unlike_post(f):
     @wraps(f)
     @post_exists
-    @require_user
-    def wrapper(self, user, post_id, post, *a, **kw):
+    @require_user()
+    def wrapper(self, user, post, post_id, *a, **kw):
         if user.liked_post(post):
-            return f(self, user, post_id, post, *a, **kw)
+            return f(self, user, post, post_id, *a, **kw)
         else:
             self.abort(404)
             return
