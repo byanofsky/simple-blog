@@ -1,6 +1,5 @@
 import re
 
-from models.user import User
 
 PASSWORD_RE = re.compile(r'^.{3,20}$')
 EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
@@ -8,10 +7,6 @@ EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
 
 def valid_email(email):
     return EMAIL_RE.match(email)
-
-
-def user_exists(email):
-    return User.get_by_email(email)
 
 
 def valid_password(pw):
@@ -27,8 +22,6 @@ def check_signup(email, pw, verify_pw):
 
     if not valid_email(email):
         errors['email'] = True
-    elif user_exists(email):
-        errors['user_exists'] = True
 
     if not valid_password(pw):
         errors['password'] = True
