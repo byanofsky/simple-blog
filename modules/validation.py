@@ -51,14 +51,13 @@ def post_exists(f):
 def user_owns_post(f):
     @wraps(f)
     @post_exists
-    # TODO: requre user instead
-    @get_user
-    def wrapper(self, user, post_id, post, *a, **kw):
-        if user and user.key == post.author:
-            return f(self, user, post_id, post, *a, **kw)
+    @require_user()
+    def wrapper(self, user, post, post_id, *a, **kw):
+        if user.key == post.author:
+            return f(self, user, post, post_id, *a, **kw)
         else:
             # TODO: should this be a redirect or error?
-            self.redirect_to('viewpost', post_id=post_id)
+            self.abort(404)
             return
     return wrapper
 

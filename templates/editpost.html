@@ -5,8 +5,10 @@
 {% block body %}
 <h1>Edit Post</h1>
 
-{% if msg %}
-    {{ msg }}
+{% if errors %}
+    <p>Your post was not edited. Please fix errors and resubmit.</p>
+{% elif updated %}
+    <p>Post successfully updated.</p>
 {% endif %}
 
 <a href="{{ uri_for('viewpost', post_id=post.key.id()) }}">View Post</a>
@@ -16,9 +18,11 @@
         <div>Title</div>
         {% if errors %}
             <input type="text" name="title" value="{{ title }}">
-            <div class="error">
-                {{ errors.title }}
-            </div>
+            {% if errors.title %}
+                <div class="error">
+                    Title cannot be blank.
+                </div>
+            {% endif %}
         {% else %}
             <input type="text" name="title" value="{{ post.title }}">
         {% endif %}
@@ -28,9 +32,11 @@
         <div>Body</div>
         {% if errors %}
             <textarea name="body">{{ body }}</textarea>
-            <div class="error">
-                {{ errors.body }}
-            </div>
+            {% if errors.body %}
+                <div class="error">
+                    Body cannot be blank.
+                </div>
+            {% endif %}
         {% else %}
             <textarea name="body">{{ post.body }}</textarea>
         {% endif %}

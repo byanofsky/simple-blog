@@ -44,7 +44,7 @@ def check_login(email, pw):
     return errors
 
 
-def check_newpost(title, body):
+def check_post(title, body):
     errors = {}
 
     if not title:
@@ -62,13 +62,4 @@ def check_comment(comment_body):
     if not comment_body:
         errors['comment_body'] = True
 
-    return errors
-
-
-def editpost_errors(title, body):
-    errors = {}
-    if not title:
-        errors['title'] = 'Title cannot be blank.'
-    if not body:
-        errors['body'] = 'Your blog post cannot be blank.'
     return errors
