@@ -4,6 +4,7 @@ from passlib.hash import pbkdf2_sha256
 
 from config import app_config
 
+
 # Get secret key from config file
 SECRET_KEY = app_config['secret_key']
 

@@ -1,6 +1,5 @@
 from handlers.basehandler import BaseHandler
 import modules.user_auth as user_auth
-# TODO: can we get rid of so many imports? User, auth, validate
 
 
 class LoginHandler(BaseHandler):

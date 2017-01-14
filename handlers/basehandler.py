@@ -7,6 +7,7 @@ import jinja2
 from config import app_config
 import modules.secure as secure
 
+
 # Jinja templating setup
 # TODO: Should this be moved to its own file?
 template_dir = os.path.join(app_config['root_dir'], 'templates')

@@ -1,7 +1,7 @@
 import secure
 
-from models.user import User
 import modules.form_validation as form_validation
+from models.user import User
 
 
 # Takes an email and pw from login form,
