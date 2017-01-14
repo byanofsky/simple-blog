@@ -5,9 +5,12 @@
 {% block body %}
 <h1>Edit Comment</h1>
 
-{% if msg %}
-    {{ msg }}
+{% if success %}
+    Comment successfully updated.
+{% elif errors %}
+    Your comment was not edited. Please fix errors and resubmit.
 {% endif %}
+
 
 <a href="{{ uri_for('viewpost', post_id=comment.key.parent().id()) }}">Back To Post</a>
 
@@ -15,12 +18,12 @@
     <label>
         <div>Comment</div>
         {% if errors %}
-            <textarea name="body">{{ body }}</textarea>
+            <textarea name="comment_body">{{ comment_body }}</textarea>
             <div class="error">
-                {{ errors.body }}
+                Comment cannot be blank.
             </div>
         {% else %}
-            <textarea name="body">{{ comment.body }}</textarea>
+            <textarea name="comment_body">{{ comment.comment_body }}</textarea>
         {% endif %}
     </label>
 
@@ -29,6 +32,7 @@
     </div>
 </form>
 
+<a href="{{ uri_for('viewpost', post_id=comment.key.parent().id()) }}">Cancel</a>
 <a href="{{ uri_for('deletecomment', comment_key=comment.key.urlsafe()) }}">Delete Comment</a>
 
 {% endblock %}
