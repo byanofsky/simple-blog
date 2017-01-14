@@ -45,12 +45,12 @@ class User(ndb.Model):
     # Creates a user and returns the db key
     @classmethod
     def create(cls, email, hashed_pw, displayname):
-        u = cls(
+        user = cls(
             email=email,
             hashed_pw=hashed_pw,
             displayname=displayname
         )
-        return u.put()
+        return user.put()
 
     # Get user object by email
     @classmethod
