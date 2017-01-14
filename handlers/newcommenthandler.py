@@ -5,6 +5,7 @@ import modules.form_validation as form_validation
 
 class NewCommentHandler(BaseHandler):
     @post_exists
+    # TODO: should we redirect instead of error?
     @require_user()
     def get(self, user, post, post_id):
         self.render(
@@ -13,6 +14,7 @@ class NewCommentHandler(BaseHandler):
         )
 
     @post_exists
+    # TODO: should we redirect instead of error?
     @require_user()
     def post(self, user, post, post_id):
         comment_body = self.request.get('comment_body')
