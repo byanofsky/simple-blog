@@ -25,7 +25,7 @@ class Comment(ndb.Model):
 
     # Delete all of post p's comments
     @classmethod
-    def delete_post_comments(cls, p):
-        query = cls.query(ancestor=p.key).order(-cls.created)
+    def delete_post_comments(cls, post):
+        query = cls.query(ancestor=post.key).order(-cls.created)
         comments = query.fetch(keys_only=True)
         ndb.delete_multi(comments)
