@@ -8,7 +8,7 @@
 <div class="post">
     {% if user and user.can_edit(post) %}
         <div>
-            <a href="{{ uri_for('editpost', post_id=post.key.id()) }}">Edit</a>
+            <a href="{{ uri_for('editpost', post_id=post_id) }}">Edit</a>
         </div>
     {% endif %}
 
@@ -19,7 +19,7 @@
     {% if user %}
         {% if user.can_like_post(post) %}
             <div>
-                <form action="{{ uri_for('likepost', post_id=post.key.id()) }}" method="post">
+                <form action="{{ uri_for('likepost', post_id=post_id) }}" method="post">
                     <input type="submit" value="Like">
                 </form>
             </div>
@@ -28,7 +28,7 @@
                 You liked this post
             </div>
             <div>
-                <form action="{{ uri_for('unlikepost', post_id=post.key.id()) }}" method="post">
+                <form action="{{ uri_for('unlikepost', post_id=post_id) }}" method="post">
                     <input type="submit" value="Unlike">
                 </form>
             </div>
