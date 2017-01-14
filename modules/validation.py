@@ -65,14 +65,31 @@ def user_owns_post(f):
     return wrapper
 
 
+def comment_exists(f):
+    @wraps(f)
+    def wrapper(self, url_comment_key, *a, **kw):
+        # TODO: is there really no better way to handle this?
+        try:
+            comment = ndb.Key(urlsafe=url_comment_key).get()
+        except ndb.google_imports.ProtocolBuffer.ProtocolBufferDecodeError:
+            comment = None
+        if comment:
+            comment_key = comment.key
+            return f(self, comment, comment_key, *a, **kw)
+        else:
+            self.abort(404)
+            return
+    return wrapper
+
+
 def user_owns_comment(f):
     @wraps(f)
     @comment_exists
     # TODO: requre user instead
-    @get_user
-    def wrapper(self, user, comment, *a, **kw):
-        if user and user.key == comment.author:
-            return f(self, user, comment, *a, **kw)
+    @require_user()
+    def wrapper(self, user, comment, comment_key, *a, **kw):
+        if user.key == comment.author:
+            return f(self, user, comment, comment_key, *a, **kw)
         else:
             # TODO: should this be a redirect or error?
             self.abort(404)
@@ -99,22 +116,6 @@ def user_can_unlike_post(f):
     def wrapper(self, user, post_id, post, *a, **kw):
         if user.liked_post(post):
             return f(self, user, post_id, post, *a, **kw)
-        else:
-            self.abort(404)
-            return
-    return wrapper
-
-
-def comment_exists(f):
-    @wraps(f)
-    def wrapper(self, comment_key, *a, **kw):
-        # TODO: is there really no better way to handle this?
-        try:
-            comment = ndb.Key(urlsafe=comment_key).get()
-        except ndb.google_imports.ProtocolBuffer.ProtocolBufferDecodeError:
-            comment = None
-        if comment:
-            return f(self, comment, *a, **kw)
         else:
             self.abort(404)
             return
