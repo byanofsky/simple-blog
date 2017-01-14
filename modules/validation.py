@@ -2,8 +2,6 @@ from functools import wraps
 
 from google.appengine.ext import ndb
 
-import auth
-
 
 def get_user(f):
     @wraps(f)
