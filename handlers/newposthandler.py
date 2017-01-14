@@ -15,7 +15,7 @@ class NewPostHandler(BaseHandler):
         body = self.request.get('body')
 
         # Validate newpost form
-        errors = validate.check_newpost(title, body)
+        errors = validate.check_post(title, body)
 
         if errors:
             self.render(
