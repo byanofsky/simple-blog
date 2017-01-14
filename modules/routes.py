@@ -38,7 +38,7 @@ route_list = [
     webapp2.Route('/editcomment/<url_comment_key:[a-zA-Z0-9_-]+>',
                   handler=EditCommentHandler,
                   name='editcomment'),
-    webapp2.Route('/deletecomment/<comment_key:[a-zA-Z0-9_-]+>',
+    webapp2.Route('/deletecomment/<url_comment_key:[a-zA-Z0-9_-]+>',
                   handler=DeleteCommentHandler,
                   name='deletecomment')
 ]

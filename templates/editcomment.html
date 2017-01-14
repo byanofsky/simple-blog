@@ -33,6 +33,6 @@
 </form>
 
 <a href="{{ uri_for('viewpost', post_id=comment.key.parent().id()) }}">Cancel</a>
-<a href="{{ uri_for('deletecomment', comment_key=comment.key.urlsafe()) }}">Delete Comment</a>
+<a href="{{ uri_for('deletecomment', url_comment_key=comment.key.urlsafe()) }}">Delete Comment</a>
 
 {% endblock %}
