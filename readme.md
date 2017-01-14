@@ -2,13 +2,28 @@
 
 Simple Blog is a simple blogging framework that can be modified and built upon to meet your needs.
 
-It is built to be deployed on [Google App Engine](https://cloud.google.com/appengine/docs/python/), upon the [webapp2 framework] (https://cloud.google.com/appengine/docs/python/tools/webapp2) and [jinja2 template engine](http://jinja.pocoo.org/).
+It was built to be deployed on [Google App Engine](https://cloud.google.com/appengine/docs/python/).
 
 ## Motivation
 
 This is one of my projects for my Udacity Full Stack Developer Nanodegree.
 
-See working example here: https://simple-blog-151718.appspot.com
+[See working example here](https://simple-blog-151718.appspot.com).
+
+## Technologies
+
+Language: Python
+
+APIs: [NDB Datastore API](https://developers.google.com/appengine/docs/python/ndb/)
+
+Dependencies:
+
+- [webapp2 framework] (https://cloud.google.com/appengine/docs/python/tools/webapp2)
+- [jinja2 template engine](http://jinja.pocoo.org/)
+
+3rd Party Python Libraries:
+
+- [Passlib](https://pythonhosted.org/passlib/)
 
 ## Installation
 
@@ -16,7 +31,7 @@ Download Simple Blog first.
 
 Simple Blog requires Python 2.7.x. Please ensure it is installed.
 
-You will need to install required third party libraries. To do so, create a directory at the root of Simple Blog and run:
+You will need to install required third party libraries. To do so, create a directory called `lib` at the root of Simple Blog and run:
 `pip install -t lib -r requirements.txt`
 
 Because Simple Blog is meant to run on Google App Engine, you will need to deploy it to Google App Engine or run it locally.
@@ -39,20 +54,17 @@ Simple Blog is, as you guessed, a simple blog. It allows basic functionality you
 The front page allows you to view all blog posts.
 
 A visitor can:
+
 1. create a new account (`/signup`)
 2. login (`/login`)
 3. (`/logout`)
 
 When logged in, a user can:
+
 1. create a new post
-2. edit an existing post
+2. edit their existing posts
 3. comment on posts
 4. like/unlike posts
-
-
-## Acknowledgements
-
-[Google App Engine Boilerplate] (https://github.com/droot/gae-boilerplate) from Sunil Arora
 
 ## License
 
