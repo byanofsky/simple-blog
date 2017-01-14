@@ -37,8 +37,8 @@ class Post(ndb.Model):
     # Creates a post. Author assumed to be user object.
     @classmethod
     def create(cls, title, body, author):
-        p = cls(title=title, body=body, author=author.key)
-        return p.put()
+        post = cls(title=title, body=body, author=author.key)
+        return post.put()
 
     @classmethod
     def get_all_posts(cls):
