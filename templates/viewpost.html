@@ -16,39 +16,38 @@
         {{ post.body }}
     </pre>
 
-    {% if user and user.can_like_post(post) %}
-        <div>
-            <form action="{{ uri_for('likepost', post_id=post.key.id()) }}" method="post">
-                <input type="submit" value="Like">
-            </form>
-        </div>
-    {% endif %}
-
-    {% if user and user.liked_post(post) %}
-        <div>
-            You liked this post
-        </div>
-        <div>
-            <form action="{{ uri_for('unlikepost', post_id=post.key.id()) }}" method="post">
-                <input type="submit" value="Unlike">
-            </form>
-        </div>
+    {% if user %}
+        {% if user.can_like_post(post) %}
+            <div>
+                <form action="{{ uri_for('likepost', post_id=post.key.id()) }}" method="post">
+                    <input type="submit" value="Like">
+                </form>
+            </div>
+        {% elif user.liked_post(post) %}
+            <div>
+                You liked this post
+            </div>
+            <div>
+                <form action="{{ uri_for('unlikepost', post_id=post.key.id()) }}" method="post">
+                    <input type="submit" value="Unlike">
+                </form>
+            </div>
+        {% endif %}
     {% endif %}
 
     <div class="comments">
-        <!-- TODO: list comments, or say no comments -->
         {% if comments %}
-            {% for c in comments %}
+            {% for comment in comments %}
                 <div class="comment">
                     <div class="comment-body">
-                        {{ c.body }}
+                        {{ comment.comment_body }}
                     </div>
                     <div class="comment-author">
-                        {{ c.author.get().get_displayname() }}
+                        {{ comment.author.get().get_displayname() }}
                     </div>
-                    {% if user and user.can_edit(c) %}
+                    {% if user and user.can_edit(comment) %}
                         <div class="comment-edit">
-                            <a href="{{ uri_for('editcomment', comment_key=c.key.urlsafe()) }}">Edit Comment</a>
+                            <a href="{{ uri_for('editcomment', url_comment_key=comment.key.urlsafe()) }}">Edit Comment</a>
                         </div>
                     {% endif %}
                 </div>
@@ -60,7 +59,7 @@
 
     {% if user %}
     <div class="comment-form">
-        <form action="{{ uri_for('newcomment', post_id=post.key.id()) }}" method="post">
+        <form action="{{ uri_for('newcomment', post_id=post_id) }}" method="post">
             <label>
                 <div>Comment</div>
                 <textarea name="comment_body"></textarea>
