@@ -1,7 +1,5 @@
 import re
 
-from auth import valid_login
-
 from models.user import User
 
 PASSWORD_RE = re.compile(r'^.{3,20}$')
