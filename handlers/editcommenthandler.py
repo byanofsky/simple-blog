@@ -29,5 +29,5 @@ class EditCommentHandler(BaseHandler):
             self.render(
                 'editcomment.html',
                 comment=comment,
-                success=True
+                updated=True
             )
