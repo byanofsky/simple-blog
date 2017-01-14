@@ -20,10 +20,10 @@ class Comment(ndb.Model):
         return c.put()
 
     @classmethod
-    def get_comments(cls, p):
-        return cls.query(ancestor=p.key).order(-cls.created).fetch()
+    def get_comments(cls, post):
+        return cls.query(ancestor=post.key).order(-cls.created).fetch()
 
-    # Delete all of post p's comments
+    # Delete all comments associated with post
     @classmethod
     def delete_post_comments(cls, post):
         query = cls.query(ancestor=post.key).order(-cls.created)
